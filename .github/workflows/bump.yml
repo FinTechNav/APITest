@@ -14,37 +14,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Fix incorrect references in transactions.yaml
+      - name: Fix YAML references and create symlinks
         run: |
-          echo "Fixing references in transactions.yaml..."
-          # Backup the original file
-          cp components/schemas/transactions.yaml components/schemas/transactions.yaml.bak
+          echo "Creating symbolic links for missing files..."
 
-          # Replace '../errors.yaml' with './errors.yaml'
-          sed -i "s/'..\/errors.yaml/'.\\/errors.yaml/g" components/schemas/transactions.yaml
+          # Create parent directories if they don't exist
+          mkdir -p components
 
-          # Check if references to cards.yaml and receipts.yaml need fixing
-          if grep -q "'../cards.yaml" components/schemas/transactions.yaml; then
-            echo "Fixing references to cards.yaml..."
-            sed -i "s/'..\/cards.yaml/'.\\/cards.yaml/g" components/schemas/transactions.yaml
+          # Create symlinks to handle incorrect paths
+          ln -sf "$(pwd)/components/schemas/errors.yaml" "$(pwd)/components/errors.yaml"
+          ln -sf "$(pwd)/components/schemas/cards.yaml" "$(pwd)/components/cards.yaml"
+          ln -sf "$(pwd)/components/schemas/receipts.yaml" "$(pwd)/components/receipts.yaml"
+          ln -sf "$(pwd)/components/schemas/transactions.yaml" "$(pwd)/components/transactions.yaml"
+
+          echo "Verifying symlinks..."
+          ls -la components/
+
+          # Check if the symlinks actually work
+          if [ -f components/errors.yaml ]; then
+            echo "components/errors.yaml is accessible"
+            head -n 5 components/errors.yaml
+          else
+            echo "components/errors.yaml is not accessible"
           fi
 
-          if grep -q "'../receipts.yaml" components/schemas/transactions.yaml; then
-            echo "Fixing references to receipts.yaml..."
-            sed -i "s/'..\/receipts.yaml/'.\\/receipts.yaml/g" components/schemas/transactions.yaml
+          if [ -f components/transactions.yaml ]; then
+            echo "components/transactions.yaml is accessible"
+            head -n 5 components/transactions.yaml
+          else
+            echo "components/transactions.yaml is not accessible"
           fi
-
-          # Check if references to transactions.yaml in webhooks.yaml need fixing
-          if [ -f components/schemas/webhooks.yaml ]; then
-            if grep -q "'../transactions.yaml" components/schemas/webhooks.yaml; then
-              echo "Fixing references to transactions.yaml in webhooks.yaml..."
-              cp components/schemas/webhooks.yaml components/schemas/webhooks.yaml.bak
-              sed -i "s/'..\/transactions.yaml/'.\\/transactions.yaml/g" components/schemas/webhooks.yaml
-            fi
-          fi
-
-          echo "Verifying changes..."
-          grep -r "./errors.yaml" --include="*.yaml" components/schemas/
 
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
