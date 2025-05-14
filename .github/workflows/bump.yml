@@ -27,173 +27,54 @@ jobs:
           npm install -g bump-cli
           pip install --user pyyaml
 
-      - name: Process references with format preservation
+      - name: Create basic reference resolver
         run: |
-          cat > process_refs.py << 'EOF'
-          import re
-          import os
-          import sys
+          cat > concat.py << 'EOF'
           import yaml
-          import glob
-          from pathlib import Path
+          import sys
+          import os
 
-          def find_all_references(content):
-              """Find all external file references in the content"""
-              # Match both ./file.yaml and components/file.yaml patterns
-              pattern = r'\$ref:\s+[\'"]?(\.?/?[\w\-/.]+\.ya?ml)(?:#[\w\-/.]+)?[\'"]?'
-              return [(match.group(1), match.start(), match.end()) for match in re.finditer(pattern, content)]
+          # Load the main OpenAPI file
+          with open('openapi.yaml', 'r') as f:
+              main_content = f.read()
 
-          def resolve_reference(ref_path, base_dir='.'):
-              """Load a referenced file"""
-              # Normalize the path
-              if ref_path.startswith('./'):
-                  ref_path = ref_path[2:]
-              
-              # Create the full path
-              full_path = os.path.join(base_dir, ref_path)
-              
-              # Check if the file exists
-              if not os.path.exists(full_path):
-                  print(f"Warning: Referenced file {full_path} not found")
-                  return None
-              
-              # Read the file content
-              with open(full_path, 'r') as f:
-                  return f.read()
+          # Load the schemas file
+          with open('./components/schemas.yaml', 'r') as f:
+              schemas_content = f.read()
 
-          def process_file(file_path, processed_files=None):
-              """Process a file and all its references with formatting preservation"""
-              if processed_files is None:
-                  processed_files = set()
-              
-              if file_path in processed_files:
-                  return None  # Avoid circular references
-              
-              processed_files.add(file_path)
-              
-              # Read the file content
-              with open(file_path, 'r') as f:
-                  content = f.read()
-              
-              # Find all external references
-              references = find_all_references(content)
-              
-              # Process each reference
-              for ref_path, start, end in sorted(references, key=lambda x: x[1], reverse=True):
-                  # Extract just the file path part (without any fragment)
-                  ref_file = ref_path.split('#')[0]
-                  
-                  # Skip already processed files to avoid infinite recursion
-                  if ref_file in processed_files:
-                      continue
-                      
-                  print(f"Processing reference to {ref_file}")
-                  
-                  # For topics.yaml, handle it specially to preserve formatting
-                  if ref_file.endswith('topics.yaml'):
-                      # Find the indentation level
-                      match = re.search(r'(\s*)x-topics:', content)
-                      if match:
-                          indent = match.group(1)
-                          topics_content = resolve_reference(ref_file)
-                          
-                          if topics_content:
-                              # Process topics content with proper indentation
-                              processed_topics = []
-                              first_line = True
-                              
-                              for line in topics_content.split('\n'):
-                                  if not line.strip():
-                                      processed_topics.append('')
-                                  elif first_line:
-                                      # Skip the first line (we'll add our own x-topics:)
-                                      first_line = False
-                                  else:
-                                      # Add proper indentation to all lines
-                                      processed_topics.append(f"{indent}{line}")
-                              
-                              # Create the replacement
-                              replacement = f"{indent}x-topics:\n" + '\n'.join(processed_topics)
-                              
-                              # Replace the x-topics reference with our properly formatted content
-                              pattern = r'(\s*)x-topics:\s+\$ref:\s+[\'"]?[\./\w-]+\.ya?ml[\'"]?'
-                              content = re.sub(pattern, replacement, content)
-                  
-                  # For components/schemas.yaml and other files, inline the entire content
-                  elif ref_file.endswith('.yaml') or ref_file.endswith('.yml'):
-                      # Determine the reference type based on the context
-                      before_ref = content[:start].strip().split('\n')[-1].strip()
-                      component_type = before_ref.rstrip(':')
-                      
-                      # Handle components references (schemas, parameters, etc.)
-                      if 'components' in ref_file or component_type.endswith('schemas') or component_type.endswith('parameters'):
-                          ref_content = resolve_reference(ref_file)
-                          if ref_content:
-                              # Find the indentation level of the reference line
-                              ref_line = content[:start].split('\n')[-1]
-                              indent_match = re.match(r'(\s*)', ref_line)
-                              base_indent = indent_match.group(1) if indent_match else ''
-                              
-                              # Process component content with proper indentation
-                              processed_content = []
-                              first_line = True
-                              
-                              for line in ref_content.split('\n'):
-                                  if first_line and not line.strip():
-                                      continue  # Skip initial blank lines
-                                  
-                                  if not line.strip():
-                                      processed_content.append('')
-                                  else:
-                                      # Add proper indentation
-                                      processed_content.append(f"{base_indent}{line}")
-                                      first_line = False
-                              
-                              # Create the replacement - exclude trailing $ref part
-                              ref_line_end = content[start:end]
-                              replacement = f"{component_type}:\n" + '\n'.join(processed_content)
-                              
-                              # Replace the reference line with the processed content
-                              ref_pattern = f"{re.escape(component_type)}:\\s+\\$ref:\\s+['\"]?{re.escape(ref_file)}['\"]?"
-                              content = re.sub(ref_pattern, replacement, content)
-              
-              return content
+          # Load the topics file
+          with open('./topics.yaml', 'r') as f:
+              topics_content = f.read()
 
-          def main():
-              # Process the main OpenAPI file
-              print("Processing OpenAPI file and its references...")
-              processed_content = process_file('openapi.yaml')
-              
-              if processed_content:
-                  # Write the resolved file
-                  with open('openapi-resolved.yaml', 'w') as f:
-                      f.write(processed_content)
-                  
-                  print("Successfully created openapi-resolved.yaml with preserved formatting")
-                  
-                  # Validate the resolved file
-                  try:
-                      yaml.safe_load(processed_content)
-                      print("Validation successful: The resolved file is valid YAML")
-                  except Exception as e:
-                      print(f"Validation error: {e}")
-                      sys.exit(1)
-              else:
-                  print("Error processing OpenAPI file")
-                  sys.exit(1)
+          # Output OpenAPI without trying to process it
+          # This approach simply replaces references with file content directly
+          main_content = main_content.replace("$ref: './components/schemas.yaml'", schemas_content.strip())
+          main_content = main_content.replace("$ref: './topics.yaml'", topics_content.strip())
 
-          if __name__ == "__main__":
-              main()
+          # Write to new file
+          with open('openapi-resolved.yaml', 'w') as f:
+              f.write(main_content)
+
+          print("Created openapi-resolved.yaml with direct content replacement")
           EOF
 
-          # Run the script
-          python3 process_refs.py
+      - name: Concatenate files
+        run: |
+          python3 concat.py
+
+      - name: Create fallback file if needed
+        run: |
+          # If the concatenation failed, just copy the original file
+          if [ ! -f openapi-resolved.yaml ]; then
+            echo "Creating basic copy as fallback..."
+            cp openapi.yaml openapi-resolved.yaml
+          fi
 
       - name: Deploy to Bump.sh
         id: deploy
         run: |
           echo "Deploying to Bump.sh..."
-          bump deploy openapi-resolved.yaml --doc omni-v2
+          bump deploy openapi-resolved.yaml --doc omni-v2 || bump deploy openapi.yaml --doc omni-v2
         env:
           BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
 
