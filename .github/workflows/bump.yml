@@ -6,7 +6,7 @@ on:
     paths:
       - '**/*.yaml'
       - '**/*.yml'
-  workflow_dispatch: # Allow manual triggering
+  workflow_dispatch:
 
 jobs:
   deploy-to-bump:
@@ -15,48 +15,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # Fetch all history for proper versioning
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20' # Use Node.js 20 as recommended by Bump.sh
+          node-version: '20'
 
       - name: Install Bump.sh CLI
         run: npm install -g bump-cli
 
-      - name: Verify files
+      - name: Advanced Diagnostics
         run: |
-          echo "Checking for required files..."
-          [ -f "openapi.yaml" ] && echo "✓ openapi.yaml exists" || echo "✗ openapi.yaml missing"
-          [ -f "topics.yaml" ] && echo "✓ topics.yaml exists" || echo "✗ topics.yaml missing"
+          echo "Full diagnostic check..."
 
-          echo "Checking references in openapi.yaml..."
-          grep -n "topics.yaml" openapi.yaml || echo "No reference to topics.yaml found"
+          echo "1. Examining openapi.yaml:"
+          grep -n "x-topics" -A3 openapi.yaml
 
-      # Optional: Validate OpenAPI file before deployment
-      - name: Validate OpenAPI
+          echo "2. Testing reference syntax:"
+          # Create a test file with a slightly different reference format
+          cp openapi.yaml openapi-test.yaml
+
+          # Replace the reference line with a variation to test
+          sed -i 's|x-topics:.*|x-topics: { "$ref": "./topics.yaml" }|' openapi-test.yaml
+
+          echo "Modified reference in test file:"
+          grep -n "x-topics" -A3 openapi-test.yaml
+
+      - name: Deploy test file to Bump.sh
         run: |
-          echo "Validating OpenAPI specification..."
-          npx @stoplight/spectral-cli lint openapi.yaml || echo "Validation warnings detected, continuing deployment"
-
-      # Deploy using Bump.sh CLI (recommended approach)
-      - name: Deploy to Bump.sh
-        run: |
-          echo "Deploying to Bump.sh..."
-          bump deploy openapi.yaml --doc omni-v2
+          echo "Deploying test file with modified reference..."
+          bump deploy openapi-test.yaml --doc omni-v2
         env:
           BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
-
-      # Optional: Add a comment to PRs with a preview link
-      - name: Comment on PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `📚 API Documentation has been updated! View it at: https://bump.sh/doc/omni-v2`
-            })
