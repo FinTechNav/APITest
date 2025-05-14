@@ -14,15 +14,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install Bump.sh CLI
-        run: npm install -g @bump.sh/cli
-
-      - name: Deploy with Bump.sh CLI
+      - name: Prepare directory structure
         run: |
-          echo "Deploying with Bump.sh CLI directly"
-          bump deploy openapi.yaml --doc ${{ secrets.BUMP_DOC_ID }} --token ${{ secrets.BUMP_TOKEN }}
+          # Create the exact directory the action is looking in
+          mkdir -p /home/runner/work/APITest/APITest
+
+          # Copy all files to that directory
+          cp -R ./* /home/runner/work/APITest/APITest/
+
+          # Show contents to verify
+          echo "Files copied to expected location:"
+          ls -la /home/runner/work/APITest/APITest/
+
+          # Verify servers.yaml exists in that location
+          if [ -f /home/runner/work/APITest/APITest/servers.yaml ]; then
+            echo "servers.yaml exists in the expected location"
+          else
+            echo "servers.yaml not found in the expected location"
+          fi
+
+      - name: Deploy API documentation
+        uses: bump-sh/github-action@v1
+        with:
+          doc: ${{ secrets.BUMP_DOC_ID }}
+          token: ${{ secrets.BUMP_TOKEN }}
+          file: openapi.yaml
