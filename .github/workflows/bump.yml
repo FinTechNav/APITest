@@ -27,54 +27,84 @@ jobs:
           npm install -g bump-cli
           pip install --user pyyaml
 
-      - name: Create basic reference resolver
+      - name: Process only x-topics
         run: |
-          cat > concat.py << 'EOF'
-          import yaml
-          import sys
+          cat > process_topics.py << 'EOF'
+          import re
           import os
+          import sys
+          import yaml
 
-          # Load the main OpenAPI file
-          with open('openapi.yaml', 'r') as f:
-              main_content = f.read()
+          def main():
+              # Read the main OpenAPI file as text
+              with open('openapi.yaml', 'r') as f:
+                  content = f.read()
+              
+              # Read the topics file as text first
+              with open('topics.yaml', 'r') as f:
+                  topics_content = f.read()
+                  
+              # Load the topics file to validate it's proper YAML
+              try:
+                  topics = yaml.safe_load(topics_content)
+              except Exception as e:
+                  print(f"Error loading topics.yaml: {e}")
+                  sys.exit(1)
+                  
+              # Find the indentation level of the x-topics line
+              match = re.search(r'(\s*)x-topics:', content)
+              if not match:
+                  print("x-topics not found in openapi.yaml")
+                  with open('openapi-resolved.yaml', 'w') as f:
+                      f.write(content)
+                  return
+                  
+              indent = match.group(1)
+              
+              # Process the topics content with proper indentation
+              processed_topics = []
+              first_line = True
+              
+              for line in topics_content.split('\n'):
+                  if not line.strip():
+                      processed_topics.append('')
+                  elif first_line:
+                      # Skip the first line (we'll add our own x-topics:)
+                      first_line = False
+                  else:
+                      # Add proper indentation to all lines
+                      processed_topics.append(f"{indent}{line}")
+              
+              # Create the replacement
+              replacement = f"{indent}x-topics:\n" + '\n'.join(processed_topics)
+              
+              # Replace the x-topics reference with our properly formatted content
+              pattern = r'(\s*)x-topics:\s+\$ref:\s+[\'"]?[\./\w-]+\.ya?ml[\'"]?'
+              updated_content = re.sub(pattern, replacement, content)
+              
+              # Write the result to the output file
+              with open('openapi-resolved.yaml', 'w') as f:
+                  f.write(updated_content)
+                  
+              print("Successfully created openapi-resolved.yaml with preserved formatting")
 
-          # Load the schemas file
-          with open('./components/schemas.yaml', 'r') as f:
-              schemas_content = f.read()
-
-          # Load the topics file
-          with open('./topics.yaml', 'r') as f:
-              topics_content = f.read()
-
-          # Output OpenAPI without trying to process it
-          # This approach simply replaces references with file content directly
-          main_content = main_content.replace("$ref: './components/schemas.yaml'", schemas_content.strip())
-          main_content = main_content.replace("$ref: './topics.yaml'", topics_content.strip())
-
-          # Write to new file
-          with open('openapi-resolved.yaml', 'w') as f:
-              f.write(main_content)
-
-          print("Created openapi-resolved.yaml with direct content replacement")
+          if __name__ == "__main__":
+              main()
           EOF
 
-      - name: Concatenate files
-        run: |
-          python3 concat.py
+          # Run the script
+          python3 process_topics.py
 
-      - name: Create fallback file if needed
+      - name: Validate YAML
         run: |
-          # If the concatenation failed, just copy the original file
-          if [ ! -f openapi-resolved.yaml ]; then
-            echo "Creating basic copy as fallback..."
-            cp openapi.yaml openapi-resolved.yaml
-          fi
+          echo "Validating the resolved YAML file..."
+          python3 -c "import yaml; yaml.safe_load(open('openapi-resolved.yaml'))"
 
       - name: Deploy to Bump.sh
         id: deploy
         run: |
           echo "Deploying to Bump.sh..."
-          bump deploy openapi-resolved.yaml --doc omni-v2 || bump deploy openapi.yaml --doc omni-v2
+          bump deploy openapi-resolved.yaml --doc omni-v2
         env:
           BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
 
