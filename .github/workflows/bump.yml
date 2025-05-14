@@ -19,10 +19,15 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install Bump.sh CLI
-        run: npm install -g @bump.sh/cli
+      - name: Install Redocly
+        run: npm install -g @redocly/cli
 
-      - name: Deploy to Bump.sh
-        run: bump deploy ./openapi.yaml --doc omni-v2
-        env:
-          BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
+      - name: Bundle OpenAPI files
+        run: redocly bundle openapi.yaml -o bundled.yaml
+
+      - name: Deploy API documentation
+        uses: bump-sh/github-action@v1
+        with:
+          doc: omni-v2
+          token: ${{ secrets.BUMP_TOKEN }}
+          file: bundled.yaml
