@@ -14,12 +14,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: List files to debug
-        run: find . -name "*.yaml" -o -name "*.yml" | sort
-
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
         with:
           doc: omni-v2
           token: ${{ secrets.BUMP_TOKEN }}
+          # Use your main OpenAPI file instead of servers.yaml
           file: openapi.yaml
