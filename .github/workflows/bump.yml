@@ -1,0 +1,42 @@
+name: Deploy API Documentation to Bump.sh
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.yaml'
+      - '**/*.yml'
+
+jobs:
+  deploy-to-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Option 1: Use Bump.sh CLI directly with references
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install Bump.sh CLI
+        run: npm install -g @bump.sh/cli
+
+      - name: Deploy to Bump.sh (with references)
+        run: bump deploy openapi.yaml --doc omni-v2
+        env:
+          BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
+
+      # Option 2 (Alternative): Bundle first if needed
+      # Uncomment this section if you encounter any issues with references
+      # - name: Install Redocly
+      #   run: npm install -g @redocly/cli
+      #
+      # - name: Bundle OpenAPI files
+      #   run: redocly bundle openapi.yaml -o bundled.yaml
+      #
+      # - name: Deploy bundled file to Bump.sh
+      #   run: bump deploy bundled.yaml --doc omni-v2
+      #   env:
+      #     BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
