@@ -2511,7 +2511,11 @@ paths:
       operationId: saleCardNotPresent
       summary: Sale (Card Not Present)
       description: |
-        Process a financial transaction using a hosted payment page or iframe where the card is not physically present. The card will be tokenized for future use.
+        Process a financial transaction using a hosted payment page or iframe where the card is not physically present. This POST request initiates a payment session and returns a short-lived iframe URL to embed in your payment page, rather than using a static iframe URL.
+
+        When the customer submits their payment information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete transaction result will be delivered via the Sale Completed webhook.
+
+        The card will be tokenized for future use.
 
         #### Webhook Events
 
