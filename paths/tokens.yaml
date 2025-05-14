@@ -17,43 +17,43 @@ createCardPresentToken:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/CardOnFileAddRequest"
+            $ref: '../components/schemas/transactions.yaml#/CardOnFileAddRequest'
           examples:
             cofAddRequest:
               summary: Card On File Add request example
               value:
-                paymentMethodId: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
-                referenceId: "ref_add_card_12345"
+                paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                referenceId: 'ref_add_card_12345'
     responses:
-      "200":
+      '200':
         description: A successful card tokenization response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/CardOnFileAddResponse"
+              $ref: '../components/schemas/transactions.yaml#/CardOnFileAddResponse'
             examples:
               successfulResponse:
-                $ref: "../components/examples.yaml#/CreateTokenCardPresentResponse"
-      "400":
+                $ref: '../components/examples.yaml#/CreateTokenCardPresentResponse'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
               allOf:
-                - $ref: "../components/schemas/errors.yaml#/Error"
+                - $ref: '../components/schemas/errors.yaml#/Error'
                 - type: object
                   properties:
                     errorDetails:
                       allOf:
-                        - $ref: "../components/schemas/errors.yaml#/ValidationError"
+                        - $ref: '../components/schemas/errors.yaml#/ValidationError'
                         - type: object
                           properties:
                             field:
-                              example: "paymentMethodId"
+                              example: 'paymentMethodId'
                             details:
                               example: "'PaymentMethodId' must not be empty."
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 createCardNotPresentToken:
   post:
@@ -74,57 +74,57 @@ createCardNotPresentToken:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/CardOnFileVirtualAddRequest"
+            $ref: '../components/schemas/transactions.yaml#/CardOnFileVirtualAddRequest'
           examples:
             cofVirtualAddRequest:
               summary: Card Not Present Token Creation request example
               value:
-                paymentMethodId: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
-                referenceId: "ref_add_card_12345"
-                returnUrl: "https://merchant.example.com/payment-complete"
+                paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                referenceId: 'ref_add_card_12345'
+                returnUrl: 'https://merchant.example.com/payment-complete'
     responses:
-      "200":
+      '200':
         description: A successful Card Not Present tokenization response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/CardOnFileVirtualAddResponse"
+              $ref: '../components/schemas/transactions.yaml#/CardOnFileVirtualAddResponse'
             examples:
               successfulResponse:
                 summary: A successful response for a Card Not Present tokenization transaction.
                 value:
-                  id: "trx_01J2F0ZJ2JW5B63CJFPXRGAB1S"
+                  id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
                   paymentMethod:
-                    id: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
-                    type: "virtual"
-                    currency: "USD"
-                    description: "Online Checkout Iframe"
-                  referenceId: "ref_add_card_12345"
+                    id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                    type: 'virtual'
+                    currency: 'USD'
+                    description: 'Online Checkout Iframe'
+                  referenceId: 'ref_add_card_12345'
                   requestedAmount: 0
-                  sessionId: "ses_01JSFAMY0AGW27QKP30C727512"
-                  iframeUrl: "https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512"
-                  expirationTimestamp: "2025-04-17T14:19:03Z"
-                  status: "pending"
-      "400":
+                  sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
+                  iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                  expirationTimestamp: '2025-04-17T14:19:03Z'
+                  status: 'pending'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
               allOf:
-                - $ref: "../components/schemas/errors.yaml#/Error"
+                - $ref: '../components/schemas/errors.yaml#/Error'
                 - type: object
                   properties:
                     errorDetails:
                       allOf:
-                        - $ref: "../components/schemas/errors.yaml#/ValidationError"
+                        - $ref: '../components/schemas/errors.yaml#/ValidationError'
                         - type: object
                           properties:
                             field:
-                              example: "paymentMethodId"
+                              example: 'paymentMethodId'
                             details:
                               example: "'PaymentMethodId' must not be empty."
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 tokenOperations:
   put:
@@ -153,43 +153,43 @@ tokenOperations:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/CardOnFileUpdateRequest"
+            $ref: '../components/schemas/transactions.yaml#/CardOnFileUpdateRequest'
           examples:
             cofUpdateRequest:
               summary: Card On File Update request example
               value:
-                referenceId: "ref_update_card_12345"
-                cardExpDate: "1225"
+                referenceId: 'ref_update_card_12345'
+                cardExpDate: '1225'
     responses:
-      "200":
+      '200':
         description: A successful card update response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/CardOnFileUpdateResponse"
+              $ref: '../components/schemas/transactions.yaml#/CardOnFileUpdateResponse'
             examples:
               successfulResponse:
-                $ref: "../components/examples.yaml#/UpdateTokenResponse"
-      "400":
+                $ref: '../components/examples.yaml#/UpdateTokenResponse'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
               allOf:
-                - $ref: "../components/schemas/errors.yaml#/Error"
+                - $ref: '../components/schemas/errors.yaml#/Error'
                 - type: object
                   properties:
                     errorDetails:
                       allOf:
-                        - $ref: "../components/schemas/errors.yaml#/ValidationError"
+                        - $ref: '../components/schemas/errors.yaml#/ValidationError'
                         - type: object
                           properties:
                             field:
-                              example: "cardExpDate"
+                              example: 'cardExpDate'
                             details:
                               example: "The length of 'CardExpDate' must be 4 characters or fewer."
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
   delete:
     operationId: removeToken
@@ -219,32 +219,32 @@ tokenOperations:
           type: string
         example: ref_remove_card_12345
     responses:
-      "200":
+      '200':
         description: A successful card removal response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/CardOnFileRemoveResponse"
+              $ref: '../components/schemas/transactions.yaml#/CardOnFileRemoveResponse'
             examples:
               successfulResponse:
-                $ref: "../components/examples.yaml#/RemoveTokenResponse"
-      "400":
+                $ref: '../components/examples.yaml#/RemoveTokenResponse'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
               allOf:
-                - $ref: "../components/schemas/errors.yaml#/Error"
+                - $ref: '../components/schemas/errors.yaml#/Error'
                 - type: object
                   properties:
                     errorDetails:
                       allOf:
-                        - $ref: "../components/schemas/errors.yaml#/ValidationError"
+                        - $ref: '../components/schemas/errors.yaml#/ValidationError'
                         - type: object
                           properties:
                             field:
-                              example: "id"
+                              example: 'id'
                             details:
                               example: "'Id' must not be empty."
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'

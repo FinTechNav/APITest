@@ -18,7 +18,7 @@ saleCardPresent:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/CardPresentRequest"
+            $ref: '../components/schemas/transactions.yaml#/CardPresentRequest'
           examples:
             cpSaleRequest:
               summary: Card Present Sale request example
@@ -29,23 +29,23 @@ saleCardPresent:
                   tax: 0
                   cashBack: 0
                   tip: 0
-                paymentMethodId: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
-                invoiceNumber: "inv_12345678"
-                orderNumber: "order_number_1234"
-                referenceId: "ref_s192i49i"
+                paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                invoiceNumber: 'inv_12345678'
+                orderNumber: 'order_number_1234'
+                referenceId: 'ref_s192i49i'
     responses:
-      "200":
+      '200':
         description: A successful Card Present sale response
         content:
           application/json:
             schema:
               allOf:
-                - $ref: "../components/schemas/transactions.yaml#/TransactionResponseObject"
+                - $ref: '../components/schemas/transactions.yaml#/TransactionResponseObject'
                 - type: object
                   properties:
                     paymentMethod:
                       allOf:
-                        - $ref: "../components/schemas/transactions.yaml#/PaymentMethodDetails"
+                        - $ref: '../components/schemas/transactions.yaml#/PaymentMethodDetails'
                         - type: object
                           description: |
                             The payment method used for this Card Present transaction.
@@ -53,18 +53,18 @@ saleCardPresent:
                             If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
                           properties:
                             id:
-                              example: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+                              example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
             examples:
               successfulResponse:
-                $ref: "../components/examples.yaml#/SaleCardPresentResponse"
-      "400":
+                $ref: '../components/examples.yaml#/SaleCardPresentResponse'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/errors.yaml#/Error"
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+              $ref: '../components/schemas/errors.yaml#/Error'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 saleCardNotPresent:
   post:
@@ -86,7 +86,7 @@ saleCardNotPresent:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/CardNotPresentRequest"
+            $ref: '../components/schemas/transactions.yaml#/CardNotPresentRequest'
           examples:
             cnpSaleRequest:
               summary: Card Not Present Sale request example
@@ -97,44 +97,44 @@ saleCardNotPresent:
                   tax: 0
                   cashBack: 0
                   tip: 0
-                paymentMethodId: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
-                invoiceNumber: "inv_12345678"
-                orderNumber: "order_number_1234"
-                referenceId: "ref_s192i49i"
-                returnUrl: "https://merchant.example.com/payment-complete"
+                paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                invoiceNumber: 'inv_12345678'
+                orderNumber: 'order_number_1234'
+                referenceId: 'ref_s192i49i'
+                returnUrl: 'https://merchant.example.com/payment-complete'
     responses:
-      "200":
+      '200':
         description: A successful Card Not Present sale response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/CNPVirtualResponse"
+              $ref: '../components/schemas/transactions.yaml#/CNPVirtualResponse'
             examples:
               successfulResponse:
                 summary: A successful response for a Card Not Present sale transaction.
                 value:
-                  id: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+                  id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                   paymentMethod:
-                    id: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
-                    type: "virtual"
-                    currency: "USD"
-                    description: "Online Checkout Iframe"
-                  invoiceNumber: "inv_12345678"
-                  orderNumber: "order_number_1234"
-                  referenceId: "ref_s192i49i"
+                    id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                    type: 'virtual'
+                    currency: 'USD'
+                    description: 'Online Checkout Iframe'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
                   requestedAmount: 1000
-                  sessionId: "ses_01JSFAMY0AGW27QKP30C727512"
-                  iframeUrl: "https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512"
-                  expirationTimestamp: "2025-04-17T14:19:03Z"
-                  status: "pending"
-      "400":
+                  sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
+                  iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                  expirationTimestamp: '2025-04-17T14:19:03Z'
+                  status: 'pending'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/errors.yaml#/Error"
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+              $ref: '../components/schemas/errors.yaml#/Error'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 saleToken:
   post:
@@ -155,7 +155,7 @@ saleToken:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/CardOnFileRequest"
+            $ref: '../components/schemas/transactions.yaml#/CardOnFileRequest'
           examples:
             cofSaleRequest:
               summary: Card On File Sale request example
@@ -166,34 +166,34 @@ saleToken:
                   tax: 0
                   cashBack: 0
                   tip: 0
-                paymentMethodId: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
-                invoiceNumber: "inv_12345678"
-                orderNumber: "order_number_1234"
-                referenceId: "ref_s192i49i"
+                paymentMethodId: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                invoiceNumber: 'inv_12345678'
+                orderNumber: 'order_number_1234'
+                referenceId: 'ref_s192i49i'
     responses:
-      "200":
+      '200':
         description: A successful Card On File sale response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/CNPTransactionResponse"
+              $ref: '../components/schemas/transactions.yaml#/CNPTransactionResponse'
             examples:
               successfulResponse:
                 summary: A successful response for a Card On File sale transaction.
                 value:
-                  id: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+                  id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                   paymentMethod:
-                    id: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
-                    type: "token"
-                    currency: "USD"
+                    id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                    type: 'token'
+                    currency: 'USD'
                     description: "Token for John Doe's Visa"
-                    maskedCardNumber: "************0011"
-                    cardExpDate: "1225"
-                  invoiceNumber: "inv_12345678"
-                  orderNumber: "order_number_1234"
-                  referenceId: "ref_s192i49i"
+                    maskedCardNumber: '************0011'
+                    cardExpDate: '1225'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
                   resultCode: 0
-                  resultText: "Successful transaction request"
+                  resultText: 'Successful transaction request'
                   requestedAmount: 1000
                   approvedAmount: 1000
                   balanceAmount: 0
@@ -201,39 +201,34 @@ saleToken:
                     [
                       {
                         responseCode: 1,
-                        authCode: "000AAA",
+                        authCode: '000AAA',
                         amountApproved: 1000,
                         approvedAmountBreakdown:
-                          {
-                            amountGoodsAndServices: 1000,
-                            tax: 0,
-                            cashBack: 0,
-                            tip: 0
-                          },
+                          { amountGoodsAndServices: 1000, tax: 0, cashBack: 0, tip: 0 },
                         paymentMethod:
                           {
-                            id: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J",
-                            type: "token",
-                            currency: "USD",
+                            id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
+                            type: 'token',
+                            currency: 'USD',
                             description: "Token for John Doe's Visa",
-                            maskedCardNumber: "************0011",
-                            cardExpDate: "1225"
+                            maskedCardNumber: '************0011',
+                            cardExpDate: '1225',
                           },
-                        cardType: "VISA",
-                        avsResult: "A",
-                        cvvResult: "M",
-                        accountType: "Credit",
-                        hostResponseText: "APPROVED 00"
-                      }
+                        cardType: 'VISA',
+                        avsResult: 'A',
+                        cvvResult: 'M',
+                        accountType: 'Credit',
+                        hostResponseText: 'APPROVED 00',
+                      },
                     ]
-      "400":
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/errors.yaml#/Error"
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+              $ref: '../components/schemas/errors.yaml#/Error'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 authCardPresent:
   post:
@@ -255,7 +250,7 @@ authCardPresent:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/CardPresentRequest"
+            $ref: '../components/schemas/transactions.yaml#/CardPresentRequest'
           examples:
             cpAuthRequest:
               summary: Card Present Authorization request example
@@ -266,23 +261,23 @@ authCardPresent:
                   tax: 0
                   cashBack: 0
                   tip: 0
-                paymentMethodId: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
-                invoiceNumber: "inv_12345678"
-                orderNumber: "order_number_1234"
-                referenceId: "ref_s192i49i"
+                paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                invoiceNumber: 'inv_12345678'
+                orderNumber: 'order_number_1234'
+                referenceId: 'ref_s192i49i'
     responses:
-      "200":
+      '200':
         description: A successful Card Present authorization response
         content:
           application/json:
             schema:
               allOf:
-                - $ref: "../components/schemas/transactions.yaml#/TransactionResponseObject"
+                - $ref: '../components/schemas/transactions.yaml#/TransactionResponseObject'
                 - type: object
                   properties:
                     paymentMethod:
                       allOf:
-                        - $ref: "../components/schemas/transactions.yaml#/PaymentMethodDetails"
+                        - $ref: '../components/schemas/transactions.yaml#/PaymentMethodDetails'
                         - type: object
                           description: |
                             The payment method used for this Card Present transaction.
@@ -290,18 +285,18 @@ authCardPresent:
                             If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
                           properties:
                             id:
-                              example: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+                              example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
             examples:
               successfulResponse:
-                $ref: "../components/examples.yaml#/AuthCardPresentResponse"
-      "400":
+                $ref: '../components/examples.yaml#/AuthCardPresentResponse'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/errors.yaml#/Error"
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+              $ref: '../components/schemas/errors.yaml#/Error'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 authCardNotPresent:
   post:
@@ -323,7 +318,7 @@ authCardNotPresent:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/CardNotPresentRequest"
+            $ref: '../components/schemas/transactions.yaml#/CardNotPresentRequest'
           examples:
             cnpAuthRequest:
               summary: Card Not Present Authorization request example
@@ -334,44 +329,44 @@ authCardNotPresent:
                   tax: 0
                   cashBack: 0
                   tip: 0
-                paymentMethodId: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
-                invoiceNumber: "inv_12345678"
-                orderNumber: "order_number_1234"
-                referenceId: "ref_s192i49i"
-                returnUrl: "https://merchant.example.com/payment-complete"
+                paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                invoiceNumber: 'inv_12345678'
+                orderNumber: 'order_number_1234'
+                referenceId: 'ref_s192i49i'
+                returnUrl: 'https://merchant.example.com/payment-complete'
     responses:
-      "200":
+      '200':
         description: A successful Card Not Present authorization response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/CNPVirtualResponse"
+              $ref: '../components/schemas/transactions.yaml#/CNPVirtualResponse'
             examples:
               successfulResponse:
                 summary: A successful response for a Card Not Present authorization transaction.
                 value:
-                  id: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+                  id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                   paymentMethod:
-                    id: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
-                    type: "virtual"
-                    currency: "USD"
-                    description: "Online Checkout Iframe"
-                  invoiceNumber: "inv_12345678"
-                  orderNumber: "order_number_1234"
-                  referenceId: "ref_s192i49i"
+                    id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                    type: 'virtual'
+                    currency: 'USD'
+                    description: 'Online Checkout Iframe'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
                   requestedAmount: 1000
-                  sessionId: "ses_01JSFAMY0AGW27QKP30C727512"
-                  iframeUrl: "https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512"
-                  expirationTimestamp: "2025-04-17T14:19:03Z"
-                  status: "pending"
-      "400":
+                  sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
+                  iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                  expirationTimestamp: '2025-04-17T14:19:03Z'
+                  status: 'pending'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/errors.yaml#/Error"
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+              $ref: '../components/schemas/errors.yaml#/Error'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 authToken:
   post:
@@ -392,7 +387,7 @@ authToken:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/CardOnFileRequest"
+            $ref: '../components/schemas/transactions.yaml#/CardOnFileRequest'
           examples:
             cofAuthRequest:
               summary: Card On File Authorization request example
@@ -403,34 +398,34 @@ authToken:
                   tax: 0
                   cashBack: 0
                   tip: 0
-                paymentMethodId: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
-                invoiceNumber: "inv_12345678"
-                orderNumber: "order_number_1234"
-                referenceId: "ref_s192i49i"
+                paymentMethodId: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                invoiceNumber: 'inv_12345678'
+                orderNumber: 'order_number_1234'
+                referenceId: 'ref_s192i49i'
     responses:
-      "200":
+      '200':
         description: A successful Card On File authorization response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/CNPTransactionResponse"
+              $ref: '../components/schemas/transactions.yaml#/CNPTransactionResponse'
             examples:
               successfulResponse:
                 summary: A successful response for a Card On File authorization transaction.
                 value:
-                  id: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+                  id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                   paymentMethod:
-                    id: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
-                    type: "token"
-                    currency: "USD"
+                    id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                    type: 'token'
+                    currency: 'USD'
                     description: "Token for John Doe's Visa"
-                    maskedCardNumber: "************0011"
-                    cardExpDate: "1225"
-                  invoiceNumber: "inv_12345678"
-                  orderNumber: "order_number_1234"
-                  referenceId: "ref_s192i49i"
+                    maskedCardNumber: '************0011'
+                    cardExpDate: '1225'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
                   resultCode: 0
-                  resultText: "Successful transaction request"
+                  resultText: 'Successful transaction request'
                   requestedAmount: 1000
                   approvedAmount: 1000
                   balanceAmount: 0
@@ -438,39 +433,34 @@ authToken:
                     [
                       {
                         responseCode: 1,
-                        authCode: "000AAA",
+                        authCode: '000AAA',
                         amountApproved: 1000,
                         approvedAmountBreakdown:
-                          {
-                            amountGoodsAndServices: 1000,
-                            tax: 0,
-                            cashBack: 0,
-                            tip: 0
-                          },
+                          { amountGoodsAndServices: 1000, tax: 0, cashBack: 0, tip: 0 },
                         paymentMethod:
                           {
-                            id: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J",
-                            type: "token",
-                            currency: "USD",
+                            id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
+                            type: 'token',
+                            currency: 'USD',
                             description: "Token for John Doe's Visa",
-                            maskedCardNumber: "************0011",
-                            cardExpDate: "1225"
+                            maskedCardNumber: '************0011',
+                            cardExpDate: '1225',
                           },
-                        cardType: "VISA",
-                        avsResult: "A",
-                        cvvResult: "M",
-                        accountType: "Credit",
-                        hostResponseText: "APPROVED 00"
-                      }
+                        cardType: 'VISA',
+                        avsResult: 'A',
+                        cvvResult: 'M',
+                        accountType: 'Credit',
+                        hostResponseText: 'APPROVED 00',
+                      },
                     ]
-      "400":
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/errors.yaml#/Error"
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+              $ref: '../components/schemas/errors.yaml#/Error'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 capture:
   post:
@@ -491,33 +481,33 @@ capture:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/CaptureRequest"
+            $ref: '../components/schemas/transactions.yaml#/CaptureRequest'
           examples:
             captureRequest:
               summary: Capture request example
               value:
-                referenceId: "ref_s192i49i"
+                referenceId: 'ref_s192i49i'
                 amount: 1000
-                invoiceNumber: "inv_12345678"
-                orderNumber: "order_number_1234"
+                invoiceNumber: 'inv_12345678'
+                orderNumber: 'order_number_1234'
     responses:
-      "200":
+      '200':
         description: A successful capture response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/CaptureResponse"
+              $ref: '../components/schemas/transactions.yaml#/CaptureResponse'
             examples:
               successfulResponse:
-                $ref: "../components/examples.yaml#/CaptureResponse"
-      "400":
+                $ref: '../components/examples.yaml#/CaptureResponse'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/errors.yaml#/Error"
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+              $ref: '../components/schemas/errors.yaml#/Error'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 refund:
   post:
@@ -538,33 +528,33 @@ refund:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/RefundRequest"
+            $ref: '../components/schemas/transactions.yaml#/RefundRequest'
           examples:
             refundRequest:
               summary: Refund request example
               value:
-                referenceId: "ref_s192i49i"
+                referenceId: 'ref_s192i49i'
                 amount: 1000
-                invoiceNumber: "ref_inv_12345678"
-                orderNumber: "ref_order_1234"
+                invoiceNumber: 'ref_inv_12345678'
+                orderNumber: 'ref_order_1234'
     responses:
-      "200":
+      '200':
         description: A successful refund response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/RefundResponse"
+              $ref: '../components/schemas/transactions.yaml#/RefundResponse'
             examples:
               successfulResponse:
-                $ref: "../components/examples.yaml#/RefundResponse"
-      "400":
+                $ref: '../components/examples.yaml#/RefundResponse'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/errors.yaml#/Error"
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+              $ref: '../components/schemas/errors.yaml#/Error'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 unreferencedRefundCardPresent:
   post:
@@ -588,29 +578,29 @@ unreferencedRefundCardPresent:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/UnreferencedPhysicalRefundRequest"
+            $ref: '../components/schemas/transactions.yaml#/UnreferencedPhysicalRefundRequest'
           examples:
             unreferencedPhysicalRefundRequest:
               summary: Unreferenced Card Present refund request example
               value:
                 amount: 1000
-                paymentMethodId: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
-                invoiceNumber: "inv_12345678"
-                orderNumber: "order_number_1234"
-                referenceId: "ref_s192i49i"
+                paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                invoiceNumber: 'inv_12345678'
+                orderNumber: 'order_number_1234'
+                referenceId: 'ref_s192i49i'
     responses:
-      "200":
+      '200':
         description: A successful Card Present unreferenced refund response
         content:
           application/json:
             schema:
               allOf:
-                - $ref: "../components/schemas/transactions.yaml#/TransactionResponseObject"
+                - $ref: '../components/schemas/transactions.yaml#/TransactionResponseObject'
                 - type: object
                   properties:
                     paymentMethod:
                       allOf:
-                        - $ref: "../components/schemas/transactions.yaml#/PaymentMethodDetails"
+                        - $ref: '../components/schemas/transactions.yaml#/PaymentMethodDetails'
                         - type: object
                           description: |
                             The payment method used for this Card Present unreferenced refund.
@@ -618,18 +608,18 @@ unreferencedRefundCardPresent:
                             If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
                           properties:
                             id:
-                              example: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+                              example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
             examples:
               successfulResponse:
-                $ref: "../components/examples.yaml#/UnreferencedRefundCardPresentResponse"
-      "400":
+                $ref: '../components/examples.yaml#/UnreferencedRefundCardPresentResponse'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/errors.yaml#/Error"
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+              $ref: '../components/schemas/errors.yaml#/Error'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
 
 unreferencedRefundCardNotPresent:
   post:
@@ -653,47 +643,47 @@ unreferencedRefundCardNotPresent:
       content:
         application/json:
           schema:
-            $ref: "../components/schemas/transactions.yaml#/UnreferencedVirtualRefundRequest"
+            $ref: '../components/schemas/transactions.yaml#/UnreferencedVirtualRefundRequest'
           examples:
             unreferencedVirtualRefundRequest:
               summary: Unreferenced Card Not Present refund request example
               value:
                 amount: 1000
-                paymentMethodId: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
-                invoiceNumber: "inv_12345678"
-                orderNumber: "order_number_1234"
-                referenceId: "ref_s192i49i"
-                returnUrl: "https://merchant.example.com/payment-complete"
+                paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                invoiceNumber: 'inv_12345678'
+                orderNumber: 'order_number_1234'
+                referenceId: 'ref_s192i49i'
+                returnUrl: 'https://merchant.example.com/payment-complete'
     responses:
-      "200":
+      '200':
         description: A successful Card Not Present unreferenced refund response
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/transactions.yaml#/CNPVirtualResponse"
+              $ref: '../components/schemas/transactions.yaml#/CNPVirtualResponse'
             examples:
               successfulResponse:
                 summary: A successful response for a Card Not Present unreferenced refund transaction.
                 value:
-                  id: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+                  id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                   paymentMethod:
-                    id: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
-                    type: "virtual"
-                    currency: "USD"
-                    description: "Online Checkout Iframe"
-                  invoiceNumber: "inv_12345678"
-                  orderNumber: "order_number_1234"
-                  referenceId: "ref_s192i49i"
+                    id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                    type: 'virtual'
+                    currency: 'USD'
+                    description: 'Online Checkout Iframe'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
                   requestedAmount: 1000
-                  sessionId: "ses_01JSFAMY0AGW27QKP30C727512"
-                  iframeUrl: "https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512"
-                  expirationTimestamp: "2025-04-17T14:19:03Z"
-                  status: "pending"
-      "400":
+                  sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
+                  iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                  expirationTimestamp: '2025-04-17T14:19:03Z'
+                  status: 'pending'
+      '400':
         description: Request Error
         content:
           application/json:
             schema:
-              $ref: "../components/schemas/errors.yaml#/Error"
-      "401":
-        $ref: "../components/responses.yaml#/UnauthorizedError"
+              $ref: '../components/schemas/errors.yaml#/Error'
+      '401':
+        $ref: '../components/responses.yaml#/UnauthorizedError'
