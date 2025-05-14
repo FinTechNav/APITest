@@ -1,0 +1,11 @@
+- title: Getting Started
+  slug: getting-started
+  description: Learn how to get started with the API
+
+- title: Authentication
+  slug: authentication
+  description: How to authenticate with the API
+
+- title: Error Handling
+  slug: error-handling
+  description: How the API handles errors

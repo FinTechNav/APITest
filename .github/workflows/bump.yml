@@ -14,9 +14,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy original API documentation
-        uses: bump-sh/github-action@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          doc: omni-v2
-          token: ${{ secrets.BUMP_TOKEN }}
-          file: openapi.yaml # Replace with your original file name if different
+          node-version: '20'
+
+      - name: Install Bump.sh CLI
+        run: npm install -g bump-cli
+
+      - name: List files
+        run: |
+          echo "Repository contents:"
+          ls -la
+          echo "Content of topics.yaml:"
+          cat topics.yaml || echo "topics.yaml not found"
+
+      - name: Deploy with Bump.sh CLI
+        run: bump deploy openapi.yaml --doc omni-v2 --resolve-refs
+        env:
+          BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}

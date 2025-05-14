@@ -74,6 +74,9 @@ servers:
 security:
   - ApiKeyHeader: []
 
+x-topics:
+  $ref: './topics.yaml'
+
 tags:
   - name: Transactions
     description: Endpoints for processing payments
