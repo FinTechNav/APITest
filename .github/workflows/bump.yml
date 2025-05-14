@@ -6,7 +6,6 @@ on:
     paths:
       - '**/*.yaml'
       - '**/*.yml'
-  workflow_dispatch:
 
 jobs:
   deploy-to-bump:
@@ -14,10 +13,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: Setup Node.js v20
         uses: actions/setup-node@v3
         with:
           node-version: '20'
@@ -25,51 +22,30 @@ jobs:
       - name: Install Bump.sh CLI
         run: npm install -g bump-cli
 
-      - name: Print file paths
+      - name: Fix x-topics with Python
         run: |
-          echo "Working directory: $(pwd)"
-          echo "List of YAML files:"
-          find . -name "*.yaml" -o -name "*.yml" | sort
+          echo "Creating fixed OpenAPI file with Python..."
+          python3 -c '
+          import yaml, sys
 
-          echo "Content of topics.yaml:"
-          cat topics.yaml | head -20
-
-      - name: Check if topics.yaml is valid YAML
-        run: |
-          echo "Validating topics.yaml..."
-          python3 -c 'import yaml, sys; yaml.safe_load(open("topics.yaml")); print("topics.yaml is valid YAML")'
-
-      - name: Try using absolute path for reference
-        run: |
-          echo "Creating openapi file with absolute path reference..."
-          cp openapi.yaml openapi-absolute.yaml
-
-          # Get absolute path to topics.yaml
-          TOPICS_PATH="$(pwd)/topics.yaml"
-
-          # Replace the relative path with absolute path
-          python3 -c "
-          import yaml
-          import os
-
-          # Load the OpenAPI file
-          with open('openapi-absolute.yaml', 'r') as f:
+          # Load the files
+          with open("openapi.yaml", "r") as f:
               openapi = yaml.safe_load(f)
+              
+          with open("topics.yaml", "r") as f:
+              topics = yaml.safe_load(f)
 
-          # Update to use absolute path
-          if 'x-topics' in openapi and '\$ref' in openapi['x-topics']:
-              openapi['x-topics'] = {'\\$ref': '$TOPICS_PATH'}
+          # Replace the x-topics reference with the actual content
+          openapi["x-topics"] = topics
 
           # Write the updated file
-          with open('openapi-absolute.yaml', 'w') as f:
+          with open("openapi-fixed.yaml", "w") as f:
               yaml.dump(openapi, f, default_flow_style=False)
 
-          print('Successfully updated reference to use absolute path')
-          "
+          print("Successfully created openapi-fixed.yaml")
+          '
 
-      - name: Deploy using absolute path reference
-        run: |
-          echo "Deploying with absolute path reference..."
-          bump deploy openapi-absolute.yaml --doc omni-v2
+      - name: Deploy using Bump.sh CLI
+        run: bump deploy openapi-fixed.yaml --doc omni-v2
         env:
           BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
