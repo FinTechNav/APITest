@@ -14,17 +14,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Bump.sh CLI
-        run: npm install -g @bump.sh/cli
-
-      - name: Deploy with Bump.sh CLI
+      - name: Debug information
         run: |
-          # Print debug info
           echo "Current directory:"
           pwd
           echo "Files in directory:"
           ls -la
+          echo "Content of openapi.yaml:"
+          cat openapi.yaml | head -n 20
+          echo "YAML files in repository:"
+          find . -name "*.yaml" | sort
 
-          # Deploy using Bump CLI directly
-          bump deploy openapi.yaml --doc ${{ secrets.BUMP_DOC_ID }} --token ${{ secrets.BUMP_TOKEN }}
-        shell: bash
+      - name: Deploy API documentation
+        uses: bump-sh/github-action@v1
+        with:
+          doc: ${{ secrets.BUMP_DOC_ID }}
+          token: ${{ secrets.BUMP_TOKEN }}
+          file: openapi.yaml
