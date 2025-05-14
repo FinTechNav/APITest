@@ -1,11 +1,52 @@
 - title: Getting Started
   slug: getting-started
   description: Learn how to get started with the API
+  content: |
+    # Getting Started
+
+    This section covers the basics of getting started with our API.
+
+    ## Authentication
+
+    First, you'll need to obtain an API key for authentication.
+
+    ## Making Your First Request
+
+    Once you have your API key, you can make your first API request.
 
 - title: Authentication
   slug: authentication
   description: How to authenticate with the API
+  content: |
+    # Authentication
+
+    All API requests must include your API key in the `x-api-key` header.
+
+    ```
+    x-api-key: your_api_key_here
+    ```
+
+    ## API Key Management
+
+    Keep your API key secure and never share it publicly.
 
 - title: Error Handling
   slug: error-handling
   description: How the API handles errors
+  content: |
+    # Error Handling
+
+    The API uses standard HTTP status codes to indicate the success or failure of requests.
+
+    ## Error Response Format
+
+    All error responses follow this format:
+
+    ```json
+    {
+      "error": {
+        "code": "ERROR_CODE",
+        "message": "A human-readable error message"
+      }
+    }
+    ```
