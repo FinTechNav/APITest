@@ -6,7 +6,7 @@ on:
     paths:
       - '**/*.yaml'
       - '**/*.yml'
-  workflow_dispatch: # Allow manual triggering
+  workflow_dispatch:
 
 jobs:
   deploy-to-bump:
@@ -15,60 +15,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # Get full history for better error context
+          fetch-depth: 0 # Get full history for better context
 
       - name: Setup Node.js v20
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Install Bump.sh CLI and dependencies
+      - name: Install Bump.sh CLI
         run: |
-          echo "Installing required tools..."
           npm install -g bump-cli
-          # Install spectral for validation
-          npm install -g @stoplight/spectral-cli
+          pip install --user pyyaml
 
-          # Ensure Python YAML is available
-          pip install pyyaml
-
-      - name: Validate OpenAPI files
-        id: validate
-        continue-on-error: true
+      - name: Consolidate OpenAPI files
+        id: consolidate
         run: |
-          echo "Validating OpenAPI files..."
-          # Check if main file exists
-          if [ ! -f "openapi.yaml" ]; then
-            echo "::error::Main OpenAPI file (openapi.yaml) not found!"
-            exit 1
-          fi
-
-          # List all referenced files for diagnosis
-          echo "Referenced YAML files:"
-          grep -r "\$ref:" --include="*.yaml" --include="*.yml" . | sort
-
-          # Basic structure validation with spectral
-          echo "Running Spectral validation..."
-          spectral lint openapi.yaml || echo "::warning::Spectral validation found issues - continuing anyway"
-
-      - name: Resolve references with Python
-        id: resolve_refs
-        run: |
-          echo "Creating consolidated OpenAPI file with Python..."
+          echo "Creating consolidated OpenAPI file..."
           cat > resolve_refs.py << 'EOL'
           import yaml
           import os
           import sys
-          import re
-          import json
           from pathlib import Path
-
-          def find_yaml_files():
-              """Find all YAML files in the current directory"""
-              yaml_files = []
-              for ext in ['*.yaml', '*.yml']:
-                  yaml_files.extend(list(Path('.').glob(f'**/{ext}')))
-              return [str(f) for f in yaml_files]
 
           def load_yaml_safely(file_path):
               """Load a YAML file with error handling"""
@@ -76,7 +43,7 @@ jobs:
                   with open(file_path, 'r') as f:
                       return yaml.safe_load(f)
               except Exception as e:
-                  print(f"::error::Error loading {file_path}: {str(e)}")
+                  print(f"Error loading {file_path}: {str(e)}")
                   return None
 
           def resolve_refs(openapi_content, base_dir='.'):
@@ -103,12 +70,12 @@ jobs:
                                   # Combine with base directory
                                   full_path = os.path.join(base_dir, file_path)
                                   
-                                  print(f"Resolving external reference: {value} -> {full_path}")
+                                  print(f"Resolving: {value}")
                                   
                                   # Load the referenced file
                                   ref_content = load_yaml_safely(full_path)
                                   if ref_content is None:
-                                      print(f"::warning::Failed to resolve reference {value}")
+                                      print(f"Warning: Failed to resolve reference {value}")
                                       resolved_dict[key] = value  # Keep original reference
                                   else:
                                       # If there's an internal reference, extract it
@@ -124,13 +91,13 @@ jobs:
                                               # Replace with resolved content
                                               return resolve_refs(current, os.path.dirname(full_path))
                                           except (KeyError, TypeError) as e:
-                                              print(f"::warning::Failed to resolve path {ref_path} in {full_path}: {e}")
+                                              print(f"Warning: Failed to resolve path {ref_path} in {full_path}: {e}")
                                               resolved_dict[key] = value  # Keep original reference
                                       else:
                                           # Replace with entire file content
                                           return resolve_refs(ref_content, os.path.dirname(full_path))
                               except Exception as e:
-                                  print(f"::warning::Error resolving reference {value}: {str(e)}")
+                                  print(f"Warning: Error resolving reference {value}: {str(e)}")
                                   resolved_dict[key] = value  # Keep original reference
                       else:
                           # Recursively resolve nested references
@@ -166,10 +133,10 @@ jobs:
                       print(f"Loaded topics file with {len(topics)} topics")
                       openapi['x-topics'] = topics
                   else:
-                      print("::error::Failed to load topics file")
+                      print("Error: Failed to load topics file")
               
               # Resolve other references
-              print("Resolving all references...")
+              print("Resolving references...")
               try:
                   resolved_openapi = resolve_refs(openapi)
                   
@@ -185,11 +152,11 @@ jobs:
                           yaml.safe_load(f)
                       print("Verification: openapi-resolved.yaml is valid YAML")
                   except Exception as e:
-                      print(f"::error::Generated file is not valid YAML: {str(e)}")
+                      print(f"Error: Generated file is not valid YAML: {str(e)}")
                       sys.exit(1)
                   
               except Exception as e:
-                  print(f"::error::Failed to resolve references: {str(e)}")
+                  print(f"Error: Failed to resolve references: {str(e)}")
                   import traceback
                   traceback.print_exc()
                   sys.exit(1)
@@ -201,46 +168,36 @@ jobs:
           # Run the reference resolution script
           python3 resolve_refs.py
 
-          # Check if the resolved file was created successfully
-          if [ ! -f "openapi-resolved.yaml" ]; then
-            echo "::error::Failed to create resolved OpenAPI file"
-            exit 1
-          fi
-
           # Print file size for verification
           echo "Original OpenAPI file size: $(wc -c openapi.yaml | awk '{print $1}') bytes"
           echo "Resolved OpenAPI file size: $(wc -c openapi-resolved.yaml | awk '{print $1}') bytes"
 
-      - name: Deploy using Bump.sh CLI
+      - name: Deploy to Bump.sh
         id: deploy
         run: |
           echo "Deploying to Bump.sh..."
-          # Set a timeout to prevent hanging deployments
-          timeout 180s bump deploy openapi-resolved.yaml --doc omni-v2 || {
+          if bump deploy openapi-resolved.yaml --doc omni-v2; then
+            echo "Deployment successful!"
+          else
             EXIT_CODE=$?
-            if [ $EXIT_CODE -eq 124 ]; then
-              echo "::error::Deployment timed out after 3 minutes"
-              exit 1
+            if grep -q "Your omni-v2 documentation has not changed" <<< "$output"; then
+              echo "No changes detected in documentation. Skipping deployment."
+              exit 0
             else
-              echo "::error::Deployment failed with exit code $EXIT_CODE"
+              echo "Deployment failed with exit code $EXIT_CODE"
               exit $EXIT_CODE
             fi
-          }
-
-          echo "::notice::Successfully deployed to Bump.sh"
+          fi
         env:
           BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
 
-      - name: Post-deployment validation
+      - name: Summary
         if: always()
         run: |
-          echo "Workflow completed with status: ${{ job.status }}"
-          if [ "${{ steps.deploy.outcome }}" == "success" ]; then
-            echo "View your documentation at: https://bump.sh/doc/omni-v2"
-          else
-            echo "Deployment failed. Check the logs for more information."
-            
-            # List files that might help with debugging
-            echo "Files in repository:"
-            find . -type f -name "*.yaml" -o -name "*.yml" | sort
-          fi
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "* Source file: openapi.yaml ($(wc -c openapi.yaml | awk '{print $1}') bytes)" >> $GITHUB_STEP_SUMMARY
+          echo "* Resolved file: openapi-resolved.yaml ($(wc -c openapi-resolved.yaml | awk '{print $1}') bytes)" >> $GITHUB_STEP_SUMMARY
+          echo "* Status: ${{ steps.deploy.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View documentation at: https://bump.sh/doc/omni-v2" >> $GITHUB_STEP_SUMMARY
