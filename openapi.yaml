@@ -1,66 +1,3234 @@
 openapi: 3.1.0
 info:
-  $ref: './info.yaml'
+  title: Integrated Commerce Omni-Channel Payment API
+  description: |
+    ### Introduction
+
+    The Integrated Commerce Omni-Channel Payment API is a RESTful API that provides a unified interface for processing payments across multiple channels. This API enables developers to integrate payment processing capabilities into their applications with a single set of endpoints, simplifying implementation and reducing development time.
+
+    The API supports integration in both the United States and Canada, using USD and CAD currencies.
+
+    ### Features
+
+    #### Card Present Transactions
+
+    The API supports the following Card Present transaction types:
+    - Authorization: Verification with the Issuer if the card is valid for payment.  The authorization amount is reserved, but not captured/settled.
+    - Capture: Complete a previously authorized transaction.  The cardholder is billed for the transaction, and the transaction is settled to the merchant.
+    - Sale: Combined authorization and capture in a single step.
+    - Refund: Process reversal of a previous sale transaction (automatically performs a void if the transaction is in the current batch, or a refund if already settled)
+
+    Card Present transactions are processed through Verifone T650c (countertop) and T650p (portable) Android-based payment terminals.
+
+    #### Card Not Present Transactions
+
+    For online payments, the API provides Hosted payment pages/iframes for payment transactions and secure card data collection for tokenization.  The API supports the following Card Not Present transaction types:
+    - Authorization: Verification with the Issuer if the card is valid for payment.  The authorization amount is reserved, but not captured/settled.
+      - Includes AVS (Address Verification Service) and CVV validation support
+    - Capture: Complete a previously authorized transaction.  The cardholder is billed for the transaction, and the transaction is settled to the merchant.
+    - Sale: Combined authorization and capture in a single step.
+      - Includes AVS (Address Verification Service) and CVV validation support
+    - Refund: Process reversal of a previous sale transaction (automatically performs a void if the transaction is in the current batch, or a refund if already settled)
+    - AVS (Address Verification Service) and CVV validation
+
+    #### Tokenization
+
+    The API implements a tokenization system that:
+    - Creates payment tokens from both Card Present and Card Not Present transactions
+    - Maintains tokens that work across all channels (in-person and online)
+    - Supports token management operations (create, update, delete)
+
+    #### Webhooks
+
+    Real-time notifications via webhooks for:
+    - Transaction events ([sales](#operation-post-SaleCompleted), [authorizations](#operation-post-AuthCompleted), [captures](#operation-post-CaptureCompleted), [refunds](#operation-post-RefundCompleted))
+    - Token operations ([creation](#operation-post-TokenCreated), [updates](#operation-post-TokenUpdated), [deletion](#operation-post-TokenRemoved))
+
+    #### Payment Methods
+
+    The API uses "Payment Methods" as the foundation for processing transactions. Each payment method has a unique paymentMethodId that represents a specific way to accept payments:
+
+    - **Physical Terminals**: For Card Present, in-person transactions
+    - **Virtual Terminals**: For Card Not Present, online transactions
+    - **Tokenized Cards**: For processing Card On File transactions where customer payment information has been securely stored for recurring or future transactions
+
+    When you call the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint, the API returns a list of all payment methods available to your account. This includes physical payment terminals for in-store transactions and virtual payment terminals for online payments.
+
+    For example, a virtual payment method might be a customized checkout iframe for your website, a dedicated payment form for your mobile app, or a hosted payment page for email invoices. Each virtual method can be tailored for different use cases – some optimized for desktop browsers, others for mobile devices, or specialized for recurring subscriptions.
+
+    Each payment method includes details such as its ID, type (physical or virtual), currency, description, and whether it's set as a default. This information helps you determine which payment method to use for different transaction scenarios.
+
+    ### Support
+
+    For technical assistance, please contact our support team at [support@integratedcommerce.io](mailto:support@integratedcommerce.io).
+
+  version: 2025.04.28
+  contact:
+    name: Integrated Commerce Support
+    url: https://docs.omni.integratedcommerce.io
+    email: support@integratedcommerce.io
+
 servers:
-  $ref: './servers.yaml'
+  - url: https://api.omni.integratedcommerce.io/v1
+
 security:
   - ApiKeyHeader: []
+
 tags:
-  $ref: './tags/index.yaml'
+  - name: Transactions
+    description: Endpoints for processing payments
+  - name: Tokens
+    description: Endpoints for managing tokenized payment methods
+  - name: Payment Methods
+    description: Endpoints for managing payment methods
+  - name: Transaction Notifications
+    description: |
+      Our webhooks provide real-time notifications for completed transaction and token events. You can configure webhooks to receive notifications for specific events, such as when a sale transaction is completed or a token is created. Each event type is separate, so you can choose to subscribe to only the events you want to receive notifications for. See the individual endpoint documentation for more details about when each event is triggered.
+
+      Each event is sent as a `POST` request to the URL you specify in your webhook configuration, and events can all be sent to the same URL or to different URLs (per event type). The request body will contain a JSON payload with the details of the event.
+
+      Our system will attempt to deliver event notifications to your configured destination multiple times. When a notification request fails to deliver, the system will retry failed requests with an exponential backoff strategy. If the request continues to fail after multiple attempts, the event will be marked as failed and will not be retried again.
+
+      You can subscribe to receive notifications for the following transaction events:
+      - [`sale.completed`](#operation-post-SaleCompleted)
+      - [`auth.completed`](#operation-post-AuthCompleted)
+      - [`capture.completed`](#operation-post-CaptureCompleted)
+      - [`refund.completed`](#operation-post-RefundCompleted)
+
+      See the [Token Notifications](#webhook-token-notifications) section for available token notifications.
+
+      ### Webhook Configuration
+
+      Before configuring webhooks, a shared secret value must be exchanged. This shared secret value is used to calculate the SHA-256 checksum to validate the authenticity of the webhook request. The shared secret value is a random string that is generated by us and securely shared with you. This secret value must be kept confidential and should not be shared with anyone else.
+
+      The header request sent to your configured webhook URL will contain a `x-fsk-wh-chksm` header with the SHA-256 checksum of several concatenated request body fields, and the shared secret. The checksum is calculated using the following fields:
+
+      - `event.id`
+      - `event.type`
+      - `event.timestamp`
+      - `shared_secret` (not in the request body)
+
+      Note that the correct order of the fields in the checksum calculation is important.
+
+      #### Example
+
+      Given the following webhook request body:
+      ```json
+      {
+        "event": {
+          "id": "evt_01JSQ33SMQKET4DMRV46W9WY84",
+          "type": "sale.completed",
+          "timestamp": "2025-04-07T20:03:05Z"
+        },
+        ...
+      }
+      ```
+
+      And using `secret_value` as the shared secret, the SHA-256 checksum would be calculated as follows:
+
+      - Concatenate the request body fields into a single string in the following order: `event.id, event.type, event.timestamp`
+        - Result:
+          `evt_01JSQ33SMQKET4DMRV46W9WY84sale.completed2025-04-07T20:03:05Z`
+
+      - Append the `shared_secret` value (`secret_value`) to the concatenated string:
+        - Result:
+          `evt_01JSQ33SMQKET4DMRV46W9WY84sale.completed2025-04-07T20:03:05Zsecret_value`
+
+      - Hash the string using SHA-256, using Base64 output encoding:
+        - Result:
+          `OU6bkK1/nScyy8fA+3QTZj1i3xaVMmAarTEnvogFFTA=`
+
+      The value in the `x-fsk-wh-chksm` request header must match `OU6bkK1/nScyy8fA+3QTZj1i3xaVMmAarTEnvogFFTA=`.
+
+  - name: Token Notifications
+    description: |
+      In addition to [transaction notifications](#webhook-transaction-notifications), you can also subscribe to receive notifications for the following token events:
+
+      - [`token.created`](#operation-post-TokenCreated)
+      - [`token.updated`](#operation-post-TokenUpdated)
+      - [`token.removed`](#operation-post-TokenRemoved)
+
+      The same rules as [transaction notifications](#topic-webhook-configuration) apply:
+
+      - The request body will contain a JSON payload with the details of the event
+      - The header request sent to your configured webhook URL will contain a `x-fsk-wh-chksm` header with the SHA-256 checksum calculated from the request body and shared secret
+
 components:
   securitySchemes:
-    $ref: './components/securitySchemes.yaml'
+    ApiKeyHeader:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: |
+        All API requests must be authenticated using an API key. The API key should be included in the `x-api-key` header of each request.
+
+        ### API Key Format
+
+        ```
+        x-api-key: <api-key>
+        ```
+
+        ### Environment-Specific Keys
+
+        We provide two distinct API keys for different environments. The base URL for both environments is the same (`https://api.omni.integratedcommerce.io/v1`), but the keys are different.
+
+        #### Sandbox Environment
+        - Format: `key_test_xxxxxxxxxxxxxxxx`
+        - Use this key for development and testing
+
+        #### Production Environment
+        - Format: `key_live_xxxxxxxxxxxxxxxx`
+        - Use this key for live production traffic
+
+        ### Error Responses
+
+        If authentication fails, you will receive a `401 Unauthorized` response:
+
+        ```json
+        {
+          "error": {
+            "code": "1000",
+            "message": "Invalid or missing API key"
+          }
+        }
+        ```
+
+        ## Rate Limiting
+
+        API requests are subject to rate limiting based on your subscription plan. Rate limit headers are included in all responses:
+
+        - `X-RateLimit-Limit`: Maximum number of requests allowed per time window
+        - `X-RateLimit-Remaining`: Number of requests remaining in the current time window
+        - `X-RateLimit-Reset`: Unix timestamp when the rate limit will reset
+
+        When you exceed the rate limit, you will receive a `429 Too Many Requests` response.
+
   schemas:
-    $ref: './components/schemas/common.yaml'
+    ResponseCode:
+      type: number
+      enum: [0, 1, 2, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 50, 51, 52, 53, 54, 55, 56]
+      description: >
+        Response codes:
+         * `0` - UNKNOWN
+         * `1` - APPROVED - Transaction was approved
+         * `2` - PARTIAL_APPROVED - Transaction was partially approved, but not for the full requested amount.
+         * `10` - DECLINED - Declined by the issuer or bank.
+         * `11` - INSUFFICIENT_FUNDS - Rejected due to insufficient funds in the account.
+         * `12` - CARD_EXPIRED - The card used for the transaction has expired.
+         * `13` - FRAUD_SUSPECTED - The transaction was flagged for potential fraud.
+         * `14` - INVALID_PAYMENT_INFO - The provided information is invalid (e.g.: card number).
+         * `15` - LIMIT_EXCEEDED - Rejected due to reaching a limit (e.g.: credit limit).
+         * `16` - VERIFICATION_REQUIRED - Additional customer verification is required for the transaction to proceed (e.g.: 3D Secure).
+         * `17` - AUTHENTICATION_FAILED - Rejected due to incorrect PIN or authentication failure.
+         * `18` - POLICY_VIOLATION - Rejected due to a violation of the payment gateway's terms of service or policies.
+         * `19` - BATCH_EMPTY - Indicates that the batch for processing is empty.
+         * `20` - RECORD_NOT_FOUND - Indicates that the requested record for a transaction was not found (e.g.: to VOID a reference).
+         * `21` - ALREADY_VOIDED - Indicates that the transaction has already been voided and cannot be processed again.
+         * `50` - NETWORK_ERROR - Rejected due to network or communication issues with the payment gateway.
+         * `51` - INVALID_ECR_PARAMETER - Terminal or system-specific errors.
+         * `52` - NOT_SUPPORTED - Rejected because the requested operation is not supported.
+         * `53` - BUSY_OR_UNAVAILABLE - Terminal or system is busy or unavailable.
+         * `54` - CANCELLED - Cancelled by the user or merchant.
+         * `55` - USER_CANCELLED - Specific to scenarios where the user cancels the transaction.
+         * `56` - TIMED_OUT_ON_USER_INPUT - Failed to complete the transaction in time.
+
+    CardType:
+      type: string
+      enum:
+        [
+          UNKNOWN,
+          DEBIT,
+          VISA,
+          MASTERCARD,
+          AMEX,
+          DINERS,
+          DISCOVER,
+          JCB,
+          UNIONPAY,
+          GIFT,
+          CASH,
+          EBT,
+          OTHER,
+        ]
+      description: >
+        The type of card used for this transaction:
+         * `UNKNOWN` - The card type is unknown
+         * `DEBIT` - Debit Card
+         * `VISA` - Visa Credit Card
+         * `MASTERCARD` - MasterCard Credit Card
+         * `AMEX` - American Express Credit Card
+         * `DINERS` - Diners Club Credit Card
+         * `DISCOVER` - Discover Credit Card
+         * `JCB` - JCB Credit Card
+         * `UNIONPAY` - UnionPay Credit Card
+         * `GIFT` - Gift Card
+         * `CASH` - All-cash Transaction
+         * `EBT` - Electronic Benefits Transfer Card
+         * `OTHER` - Other tender types
+
+    CVVResult:
+      type: string
+      enum: [M, N, P, S, U]
+      description: >
+        The CVV verification result. Typically returned on Card Not Present transactions.
+         * `M` - CVV Match
+         * `N` - CVV No Match
+         * `P` - Not Processed
+         * `S` - CVV should be on the card but the merchant indicates it is not.
+         * `U` - User is unregistered
+
+        NOTE: Transactions can still be authorized if the CVV responses are no match or failure. CVV responses are for merchant information only, and usually do not influence the overall Authorization result. This can vary based on the Issuing Bank.
+
+    AVSResult:
+      type: string
+      enum: [A, E, N, R, S, U, G, W, X, Y, Z]
+      description: >
+        The AVS (Address Verification Service) result. Typically returned on Card Not Present transactions.
+         * `A` - Address matches, ZIP does not. The first five numerical characters contained in the address match those stored at the VIC or issuer's center. However, the ZIP code does not match.
+         * `E` - Ineligible transaction.
+         * `N` - Neither address nor ZIP matches. Neither the first five numerical characters contained in the address match with those stored at the VIC nor issuer's center nor the ZIP code match.
+         * `R` - Retry (system unavailable or timed out).
+         * `S` - Card type not supported. The card type for this transaction is not supported by AVS. AVS can verify addresses for Visa cards, MasterCard, proprietary cards, and private label transactions.
+         * `U` - Address information unavailable.
+         * `G` - Address information unavailable, International - Visa only, The address information was not available at the VIC or issuer's center.
+         * `W` - Nine-digit ZIP match, address does not. The nine-digit Postal ZIP code matches that stored at the VIC or card issuer's centre. However, the first five numerical characters contained in the address do not match.
+         * `X` - Exact match (nine digit ZIP and address). Both the nine-digit Postal ZIP code as well as the first five numerical characters contained in the address match.
+         * `Y` - Address and five-digit ZIP match. Both the five-digit Postal ZIP code as well as the first five numerical characters contained in the address match.
+         * `Z` - Five-digit ZIP matches, address does not. The five-digit Postal ZIP code matches that stored at the VIC or card issuer's centre.
+
+        NOTE: Transactions can still be authorized if the AVS responses are no match or failure. AVS responses are for merchant information only, and usually do not influence the overall Authorization result. This can vary based on the Issuing Bank.
+
+    ValidationError:
+      type: object
+      description: Represents a validation error that occurred during the request.
+      properties:
+        code:
+          type: number
+          description: Error code
+          example: 2000
+        field:
+          type: string
+          description: The field with the error
+          example: amount
+        message:
+          type: string
+          description: Error message
+          example: Request validation failed
+        details:
+          type: string
+          description: Additional details about the error
+          example: "'Amount' must be between 1 and 999999999."
+
+    Receipt:
+      type: object
+      description: The receipt associated with this transaction.
+      properties:
+        lines:
+          type: array
+          items:
+            type: string
+          description: The receipt lines.
+          example:
+            [
+              '     Test Merchant      ',
+              '      300 S Wacker      ',
+              '         Loop,          ',
+              '                        ',
+              '                        ',
+              'TERM #          11000367',
+              'RECORD #         0656191',
+              'HOST INVOICE #    000038',
+              'HOST SEQ #    1720656191',
+              'MERCH INVOICE.  fgj24344',
+              '------------------------',
+              'CARD    ************0011',
+              'VISA             Contact',
+              '07/10/2024      20:03:05',
+              '------------------------',
+              'Purchase       CAD $1.00',
+              'Tip            CAD $0.00',
+              'Cashback       CAD $0.00',
+              '       ',
+              'TOTAL          CAD $1.00',
+              '------------------------',
+              'AUTH#:794697       B:171',
+              '          Sale          ',
+              '      APPROVED 00       ',
+              '       THANK YOU        ',
+              '                        ',
+              '      Visa Credit       ',
+              'AID:      A0000000031010',
+              'TC:     43F4ACF64B07551A',
+              'TVR:          8000008000',
+              'TSI:                7800',
+              '  Retain this copy for  ',
+              '  statement validation ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '     MERCHANT COPY      ',
+              '     Test Merchant      ',
+              '      300 S Wacker      ',
+              '         Loop,          ',
+              '                        ',
+              '                        ',
+              'TERM #          11000367',
+              'RECORD #         0656191',
+              'HOST INVOICE #    000038',
+              'HOST SEQ #    1720656191',
+              'MERCH INVOICE.  fgj24344',
+              '------------------------',
+              'CARD    ************0011',
+              'VISA             Contact',
+              '07/10/2024      20:03:05',
+              '------------------------',
+              'Purchase       CAD $1.00',
+              'Tip            CAD $0.00',
+              'Cashback       CAD $0.00',
+              '       ',
+              'TOTAL          CAD $1.00',
+              '------------------------',
+              'AUTH#:794697       B:171',
+              '          Sale          ',
+              '      APPROVED 00       ',
+              '       THANK YOU        ',
+              '                        ',
+              '      Visa Credit       ',
+              'AID:      A0000000031010',
+              'TC:     43F4ACF64B07551A',
+              'TVR:          8000008000',
+              'TSI:                7800',
+              '  Retain this copy for  ',
+              '  statement validation ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '     CUSTOMER COPY      ',
+            ]
+
+    ApprovedAmountBreakdown:
+      type: object
+      description: A breakdown of approvedAmount, where each amounts approved on the payment terminal are returned separately.
+      properties:
+        amountGoodsAndServices:
+          type: number
+          description: The approved amount for goods and services.
+          example: 1000
+        tax:
+          type: number
+          description: The approved tax amount.
+          example: 0
+        cashBack:
+          type: number
+          description: The approved cashback amount.
+          example: 0
+        tip:
+          type: number
+          description: The approved tip amount.
+          example: 0
+
+    ReferenceId:
+      type: string
+      maxLength: 100
+      description: >
+        A reference ID to tag and track this transaction for reconciliation. The reference ID
+        is also used for processing referenced refunds. This value can be set by the merchant,
+        or a unique reference ID will be generated automatically if not set by the merchant.
+      example: ref_s192i49i
+
+    ReferenceIdForResponse:
+      type: string
+      maxLength: 100
+      description: >
+        The value returned will either be the reference ID set in the transaction request or if
+        no value was set, it will be a value that is generated automatically by the system.
+        The reference ID is needed for processing referenced transactions like captures and refunds.
+      example: ref_s192i49i
+
+    ReferenceIdForCapture:
+      type: string
+      maxLength: 100
+      description: >
+        The reference ID that identifies the original authorization transaction being captured.
+      example: ref_s192i49i
+
+    ReferenceIdForRefund:
+      type: string
+      maxLength: 100
+      description: >
+        The reference ID that identifies the original transaction being refunded.
+      example: ref_s192i49i
+
+    InvoiceNumber:
+      type: string
+      maxLength: 100
+      description: >
+        An optional alphanumeric invoice number for this transaction.
+        If provided, the same value will be populated in the response.
+      example: inv_12345678
+
+    OrderNumber:
+      type: string
+      maxLength: 100
+      description: >
+        An optional alphanumeric order number for this transaction.
+        If provided, the same value will be populated in the response.
+      example: order_number_1234
+
+    Amount:
+      type: number
+      format: uint32
+      minimum: 1
+      maximum: 999999999
+      description: >
+        The total transaction amount. This is the full amount that will be processed in the transaction. Transaction amounts are positive integers representing the amount in its smallest denomination of the configured currency (e.g. cents for USD or CAD).
+      example: 1000
+
+    AmountBreakdown:
+      type: object
+      description: Optional fields to specify the portion of the total transaction amount that represents goods/services, tax, cashback and/or tip. These values are for reporting purposes only and will not be added to the Amount field. These amount are represented as a positive integer in the smallest denomination of the configured currency (e.g. cents for USD or CAD).
+      properties:
+        amountGoodsAndServices:
+          type: number
+          description: The amount for goods and services.
+          example: 1000
+        tax:
+          type: number
+          description: The tax amount.
+          example: 0
+        cashBack:
+          type: number
+          description: The cashback amount.
+          example: 0
+        tip:
+          type: number
+          description: The tip amount.
+          example: 0
+
+    AmountToCapture:
+      type: number
+      format: uint32
+      minimum: 1
+      maximum: 999999999
+      description: >
+        The amount to capture. Must be less than or equal to the original authorization amount. If not specified, the full authorized amount will be captured.
+      example: 1000
+
+    AmountToRefund:
+      type: number
+      format: uint32
+      minimum: 1
+      maximum: 999999999
+      description: >
+        The requested amount to refund or void. If not specified, the full transaction amount will be refunded or voided. For partial refunds, must be less than the original transaction amount.
+      example: 1000
+
+    AmountToRefundUnreferenced:
+      type: number
+      format: uint32
+      minimum: 1
+      maximum: 999999999
+      description: The requested amount to refund.
+      example: 1000
+
+    ResultCode:
+      type: number
+      enum:
+        [
+          0,
+          1003,
+          1005,
+          3000,
+          3002,
+          3005,
+          3006,
+          3009,
+          3010,
+          3011,
+          3012,
+          3013,
+          3014,
+          3020,
+          9998,
+          9999,
+        ]
+      description: |
+        Result codes:
+        * `0` - Successful transaction request. (Check each transactionResponse's responseCode to determine if a transaction was approved or declined)
+        * `1003` - No payment terminal available.
+        * `1005` - The specified terminal could not be found.
+        * `3000` - An unexpected error occurred. Please try again.
+        * `3002` - The transaction could not be completed because the payment terminal could not find the related transaction.
+        * `3005` - To resolve this error, power off your payment terminal, wait one minute and retry the transaction. If the error persists, please contact support.
+        * `3006` - The transaction could not be completed because the payment terminal is low on battery.
+        * `3009` - The transaction could not be completed because of network connectivity issues with the payment terminal. Please restore connectivity and try again.
+        * `3010` - The transaction took too long and was cancelled by the application.
+        * `3011` - Invalid transaction request. Please consult the documentation for valid transaction requests.
+        * `3012` - Invalid transaction request. paymentMethodId is invalid.
+        * `3013` - Invalid transaction request. The specified amount appears to be incorrect. Please retry with a smaller amount.
+        * `3014` - Invalid amount. Please try your transaction again with an amount greater than $0.
+        * `3020` - An unsupported transaction result was received.
+        * `9998` - The system is not ready to process a transaction.
+        * `9999` - An unknown error has occurred. If available, an auxiliary error code will be provided in the message.
+
+    ResultText:
+      type: string
+      description: A message describing the result code in more detail.
+      example: 'Successful transaction request'
+
+    PaymentMethodDetails:
+      type: object
+      description: The payment method used for this transaction.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the payment method. This ID has a prefix that makes it human-readable (pmt_trm_* for physical terminals, pmt_vrt_* for virtual terminals, pmt_tkn_* for tokenized cards), but applications should always use the `type` field to determine the payment method type rather than parsing this ID.
+          example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+        type:
+          type: string
+          enum: [physical, virtual, token]
+          description: |
+            The type of payment method:
+            - `physical` - A physical payment terminal for Card Present transactions
+            - `virtual` - A hosted payment page/iframe for Card Not Present transactions
+            - `token` - A tokenized card for card-on-file transactions
+          example: 'token'
+        currency:
+          type: string
+          enum: [USD, CAD]
+          description: The currency of the payment method.
+          example: 'USD'
+        description:
+          type: string
+          description: A human-readable name for the payment method.
+          example: "Token for John Doe's Visa"
+        maskedCardNumber:
+          type: string
+          description: The masked card number.
+          example: '************0011'
+        cardExpDate:
+          type: string
+          description: The expiration date of the card in MMYY format.
+          example: '1225'
+      required:
+        - id
+        - type
+        - currency
+
+    TransactionResponse:
+      type: object
+      description: A single Sale Transaction may result in multiple Responses.
+      properties:
+        responseCode:
+          $ref: '#/components/schemas/ResponseCode'
+        authCode:
+          type: string
+          description: The authorization code provided by the card issuer, confirming transaction approval.
+          example: 000AAA
+        amountApproved:
+          type: number
+          description: The amount approved for this transaction response.
+          example: 1000
+        approvedAmountBreakdown:
+          $ref: '#/components/schemas/ApprovedAmountBreakdown'
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: The payment method used for this transaction response.
+        cardType:
+          $ref: '#/components/schemas/CardType'
+        avsResult:
+          $ref: '#/components/schemas/AVSResult'
+        cvvResult:
+          $ref: '#/components/schemas/CVVResult'
+        accountType:
+          type: string
+          description: The account type of the card (e.g. Credit or Debit)
+          example: Credit
+        hostResponseText:
+          type: string
+          description: A meaningful text explaining the response code from the host.
+          example: 'APPROVED 00'
+        receipt:
+          $ref: '#/components/schemas/Receipt'
+
+    Error:
+      type: object
+      description: Represents an error that occurred during the request.
+      properties:
+        message:
+          type: string
+          description: Developer-facing error message.
+          example: Request failed validation
+        code:
+          type: number
+          enum: [1000, 2000, 3000, 9000]
+          description: >
+            Numeric error code. These are grouped into ranges for easier identification and troubleshooting.
+            Error codes:
+             * `1000` - AuthenticationGenericError
+             * `2000` - RequestValidationGenericError
+             * `3000` - UnknownServerGenericError
+             * `9000` - UnhandledGenericError
+          example: 2000
+        status:
+          type: number
+          enum: [0, 1, 2, 3]
+          description: >
+            Execution status of the request sent to the payment gateway.
+
+            Status codes:
+             * `0` - UNKNOWN
+             * `1` - COMPLETED - The request completed successfully.
+             * `2` - REJECTED - The request was rejected by the payment gateway.
+             * `3` - INTERRUPTED - The request was interrupted, and the final status is unknown.
+          example: 1
+        errorDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+
+    CardPresentRequest:
+      type: object
+      description: Represents the request to process a Card Present transaction using a physical payment terminal.
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+        amountBreakdown:
+          $ref: '#/components/schemas/AmountBreakdown'
+        paymentMethodId:
+          type: string
+          description: |
+            The ID of the physical payment terminal that will process this Card Present transaction.
+
+            - Example format: `pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF`
+            - OPTIONAL ONLY if you have a single terminal configured
+            - REQUIRED if you have multiple virtual and/or physical terminals configured
+
+            You can retrieve all available physical payment terminal IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+          example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceId'
+      required:
+        - amount
+
+    CardNotPresentRequest:
+      type: object
+      description: Represents the request to process a Card Not Present transaction using a hosted payment page or iframe.
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+        amountBreakdown:
+          $ref: '#/components/schemas/AmountBreakdown'
+        paymentMethodId:
+          type: string
+          description: |
+            The ID of the hosted payment page or iframe that will collect card information for this Card Not Present transaction.
+
+            - Example format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
+            - OPTIONAL ONLY if you have a single hosted payment page configured
+            - REQUIRED if you have multiple virtual and/or physical terminals configured
+
+            You can retrieve all available hosted payment page or iframe IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+          example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceId'
+        returnUrl:
+          type: string
+          description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided.
+          example: https://merchant.example.com/payment-complete
+      required:
+        - amount
+
+    CardOnFileRequest:
+      type: object
+      description: Represents the request to process a Card On File transaction using a tokenized card.
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+        amountBreakdown:
+          $ref: '#/components/schemas/AmountBreakdown'
+        paymentMethodId:
+          type: string
+          description: |
+            The ID of the tokenized card that will be used for this Card On File transaction.
+
+            - Example format: `pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J`
+            - ALWAYS REQUIRED when using a tokenized card
+          example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceId'
+      required:
+        - amount
+        - paymentMethodId
+
+    CaptureRequest:
+      type: object
+      description: Represents the request to capture a previously authorized transaction.
+      properties:
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForCapture'
+        amount:
+          $ref: '#/components/schemas/AmountToCapture'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+      required:
+        - referenceId
+
+    RefundRequest:
+      type: object
+      description: Represents the request to refund or void a previously completed transaction.
+      properties:
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForRefund'
+        amount:
+          $ref: '#/components/schemas/AmountToRefund'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+      required:
+        - referenceId
+
+    UnreferencedPhysicalRefundRequest:
+      type: object
+      description: Represents the request to process a Card Present unreferenced refund without a matching completed sale or capture transaction.
+      properties:
+        amount:
+          $ref: '#/components/schemas/AmountToRefundUnreferenced'
+        paymentMethodId:
+          type: string
+          description: |
+            The ID of the physical payment terminal that will process this Card Present unreferenced refund.
+
+            - Example format: `pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF`
+            - OPTIONAL ONLY if you have a single terminal configured
+            - REQUIRED if you have multiple virtual and/or physical terminals configured
+
+            You can retrieve all available physical payment terminal IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+          example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceId'
+      required:
+        - amount
+
+    UnreferencedVirtualRefundRequest:
+      type: object
+      description: Represents the request to process a Card Not Present unreferenced refund without a matching completed sale or capture transaction.
+      properties:
+        amount:
+          $ref: '#/components/schemas/AmountToRefundUnreferenced'
+        paymentMethodId:
+          type: string
+          description: |
+            The ID of the hosted payment page or iframe that will collect card information for this Card Not Present unreferenced refund.
+
+            - Example format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
+            - OPTIONAL ONLY if you have a single hosted payment page configured
+            - REQUIRED if you have multiple virtual and/or physical terminals configured
+
+            You can retrieve all available hosted payment page or iframe IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceId'
+        returnUrl:
+          type: string
+          description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided.
+          example: https://merchant.example.com/refund-complete
+      required:
+        - amount
+
+    CardOnFileAddRequest:
+      type: object
+      description: Represents the request to tokenize a card using a physical terminal.
+      properties:
+        paymentMethodId:
+          type: string
+          description: |
+            The ID of the payment method (physical terminal) to use for adding a card.
+            You can retrieve all available payment method IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+          example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+        referenceId:
+          $ref: '#/components/schemas/ReferenceId'
+      required:
+        - paymentMethodId
+
+    CardOnFileVirtualAddRequest:
+      type: object
+      description: Represents the request to tokenize a card using a hosted payment page or iframe.
+      properties:
+        paymentMethodId:
+          type: string
+          description: |
+            The ID of the payment method (hosted payment page/iframe) to use for adding a card.
+            You can retrieve all available payment method IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+          example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+        referenceId:
+          $ref: '#/components/schemas/ReferenceId'
+        returnUrl:
+          type: string
+          description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided.
+          example: https://merchant.example.com/payment-complete
+      required:
+        - paymentMethodId
+
+    CardOnFileUpdateRequest:
+      type: object
+      description: Represents the request to update a previously tokenized card.
+      properties:
+        referenceId:
+          $ref: '#/components/schemas/ReferenceId'
+        cardExpDate:
+          type: string
+          description: The new expiration date of the card in MMYY format.
+          example: '1225'
+      required:
+        - cardExpDate
+
+    CNPVirtualResponse:
+      type: object
+      description: Represents the response to a Card Not Present sale or authorization using a hosted payment page or iframe.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this transaction.
+          example: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: The payment method used for this Card Not Present transaction.
+              properties:
+                id:
+                  example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForResponse'
+        requestedAmount:
+          type: number
+          description: The amount sent in the transaction request. The amount is always a non-null positive integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+          example: 1000
+        sessionId:
+          type: string
+          description: Session ID for the iframe transaction.
+          example: 'ses_01JSFAMY0AGW27QKP30C727512'
+        iframeUrl:
+          type: string
+          description: URL for the iframe to collect payment information, or null if iframe could not be created due to invalid credentials, etc.
+          example: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+        expirationTimestamp:
+          type: string
+          format: date-time
+          description: When the iframe session will expire.
+          example: '2025-04-17T14:19:03Z'
+        status:
+          type: string
+          enum: [pending, completed, expired, error]
+          description: Status of the iframe session. When created, this will always be pending. The status values will be updated as the customer goes through the iframe process.
+          example: 'pending'
+
+    TransactionResponseObject:
+      type: object
+      description: Represents the response to a sale or authorization transaction.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this transaction.
+          example: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: |
+                The payment method used for this transaction. This could be:
+
+                - The payment method used for this Card Present transaction.
+                - The payment method used for this Card Not Present transaction.
+                - The payment method used for this tokenized card transaction.
+
+                If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
+              properties:
+                id:
+                  example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForResponse'
+        resultCode:
+          $ref: '#/components/schemas/ResultCode'
+        resultText:
+          $ref: '#/components/schemas/ResultText'
+        requestedAmount:
+          type: number
+          description: The amount sent in the transaction request. The amount is always a non-null positive integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+          example: 1000
+        approvedAmount:
+          type: number
+          description: The amount approved. The approved amount is always a non-null positive integer in the smallest denomination of the currency (e.g. cents for USD or CAD). If approvedAmount is different from amount, it implies that an amount was adjusted by the merchant or customer (for example, a tip or surcharge added directly on a payment terminal).
+          example: 1000
+        balanceAmount:
+          type: number
+          description: The balance that remains to be paid on the transaction. This amount is always an integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+          example: 0
+        transactionResponses:
+          type: array
+          description: A list of all transaction responses received during the transaction. In most cases, there will be only one response. However, when performing Card Present transactions, some Payment Terminals can return more than one transaction response.
+          items:
+            allOf:
+              - $ref: '#/components/schemas/TransactionResponse'
+              - type: object
+                properties:
+                  paymentMethod:
+                    allOf:
+                      - $ref: '#/components/schemas/PaymentMethodDetails'
+                      - type: object
+                        description: |
+                          If a new card was tokenized during the transaction, the tokenized card ID and details will be returned (`pmt_tkn_*`). This value should be stored in your system if you wish to use it for subsequent Card On File transactions.
+                        properties:
+                          id:
+                            example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+
+    CNPTransactionResponse:
+      type: object
+      description: Represents the response to a Card Not Present sale or authorization using a previously tokenized card.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this transaction.
+          example: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: The payment method used for this transaction.
+              properties:
+                id:
+                  example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForResponse'
+        resultCode:
+          $ref: '#/components/schemas/ResultCode'
+        resultText:
+          $ref: '#/components/schemas/ResultText'
+        requestedAmount:
+          type: number
+          description: The amount sent in the transaction request. The amount is always a non-null positive integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+          example: 1000
+        approvedAmount:
+          type: number
+          description: The amount approved. The approved amount is always a non-null positive integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+          example: 1000
+        balanceAmount:
+          type: number
+          description: The balance that remains to be paid on the transaction. This amount is always an integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+          example: 0
+        transactionResponses:
+          type: array
+          description: A list of all transaction responses received during the transaction. In most cases, there will be only one response.
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+
+    CaptureResponse:
+      type: object
+      description: Represents the response to a capture request.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this capture transaction.
+          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: The payment method used for this transaction.
+              properties:
+                id:
+                  example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForCapture'
+        resultCode:
+          $ref: '#/components/schemas/ResultCode'
+        resultText:
+          $ref: '#/components/schemas/ResultText'
+        requestedAmount:
+          type: number
+          description: The amount requested for capture. If not specified in the request, this will be the full authorized amount.
+          example: 1000
+        approvedAmount:
+          type: number
+          description: The amount that was successfully captured.
+          example: 1000
+        receipt:
+          allOf:
+            - $ref: '#/components/schemas/Receipt'
+            - type: object
+              description: |
+                The receipt for the capture transaction, if available. If the original transaction was a Card Present transaction, the receipt will be included. For Card Not Present transactions, the receipt will be empty.
+              properties:
+                lines:
+                  description: The receipt lines.
+
+    RefundResponse:
+      type: object
+      description: Represents the response to a refund request.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this refund transaction.
+          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: The payment method used for this transaction.
+              properties:
+                id:
+                  example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForRefund'
+        resultCode:
+          $ref: '#/components/schemas/ResultCode'
+        resultText:
+          $ref: '#/components/schemas/ResultText'
+        requestedAmount:
+          type: number
+          description: The amount requested for refund. If not specified in the request, this will be the full transaction amount.
+          example: 1000
+        approvedAmount:
+          type: number
+          description: The amount that was successfully refunded or voided.
+          example: 1000
+        receipt:
+          allOf:
+            - $ref: '#/components/schemas/Receipt'
+            - type: object
+              description: |
+                The receipt for the refund transaction, if available. If the original transaction was a Card Present transaction, the receipt will be included. For Card Not Present transactions, the receipt will be empty.
+              properties:
+                lines:
+                  description: The receipt lines.
+
+    CardOnFileAddResponse:
+      type: object
+      description: Represents the response to a physical card tokenization request.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this card tokenization transaction.
+          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: |
+                The tokenized card that was created.
+
+                Example format: `pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J`
+              properties:
+                id:
+                  example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForResponse'
+        resultCode:
+          $ref: '#/components/schemas/ResultCode'
+        resultText:
+          $ref: '#/components/schemas/ResultText'
+        transactionResponses:
+          type: array
+          description: A list of all transaction responses received during the $0 authorization verification of the card.
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+
+    CardOnFileVirtualAddResponse:
+      type: object
+      description: Represents the response to a hosted payment page or iframe card tokenization request.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this card tokenization transaction.
+          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: The payment method used for this transaction.
+              properties:
+                id:
+                  example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForResponse'
+        requestedAmount:
+          type: number
+          description: Will be null or 0 for token creation.
+          example: 0
+        sessionId:
+          type: string
+          description: Session ID for the iframe transaction.
+          example: 'ses_01JSFAMY0AGW27QKP30C727512'
+        iframeUrl:
+          type: string
+          description: URL for the iframe to collect payment information, or null if iframe could not be created due to invalid credentials, etc.
+          example: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+        expirationTimestamp:
+          type: string
+          format: date-time
+          description: When the iframe session will expire.
+          example: '2025-04-17T14:19:03Z'
+        status:
+          type: string
+          enum: [pending, completed, expired, error]
+          description: Status of the iframe session. When created, this will always be pending. The status values will be updated as the customer goes through the iframe process.
+          example: 'pending'
+
+    CardOnFileUpdateResponse:
+      type: object
+      description: Represents the response to a tokenized card update request.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this card update transaction.
+          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: The tokenized card that was updated.
+              properties:
+                id:
+                  example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForResponse'
+        resultCode:
+          $ref: '#/components/schemas/ResultCode'
+        resultText:
+          $ref: '#/components/schemas/ResultText'
+
+    CardOnFileRemoveResponse:
+      type: object
+      description: Represents the response to a tokenized card removal request.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this card removal transaction.
+          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: The tokenized card that was removed.
+              properties:
+                id:
+                  example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForResponse'
+        resultCode:
+          $ref: '#/components/schemas/ResultCode'
+        resultText:
+          $ref: '#/components/schemas/ResultText'
+
+    WebhookEvent:
+      type: object
+      description: Webhook event details.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this webhook event.
+          example: 'evt_01JS21X856RR8R69GV5F17XK9C'
+        type:
+          type: string
+          description: The type of event that occurred.
+          example: 'event.completed'
+        timestamp:
+          type: string
+          format: date-time
+          description: The time when the event was triggered.
+          example: '2025-04-16T14:30:00Z'
+      required:
+        - id
+        - type
+        - timestamp
+
+    SaleCompletedWebhook:
+      type: object
+      description: Represents the webhook triggered when a financial transaction is processed and completed.
+      properties:
+        event:
+          allOf:
+            - $ref: '#/components/schemas/WebhookEvent'
+            - type: object
+              properties:
+                type:
+                  example: 'sale.completed'
+        originalResponse:
+          $ref: '#/components/schemas/TransactionResponseObject'
+      required:
+        - event
+        - originalResponse
+
+    AuthCompletedWebhook:
+      type: object
+      description: Represents the webhook triggered when a transaction authorization is completed.
+      properties:
+        event:
+          allOf:
+            - $ref: '#/components/schemas/WebhookEvent'
+            - type: object
+              properties:
+                type:
+                  example: 'auth.completed'
+        originalResponse:
+          $ref: '#/components/schemas/TransactionResponseObject'
+      required:
+        - event
+        - originalResponse
+
+    CaptureCompletedWebhook:
+      type: object
+      description: Represents the webhook triggered when a transaction capture for a previously authorized transaction is completed.
+      properties:
+        event:
+          allOf:
+            - $ref: '#/components/schemas/WebhookEvent'
+            - type: object
+              properties:
+                type:
+                  example: 'capture.completed'
+        originalResponse:
+          $ref: '#/components/schemas/CaptureResponse'
+      required:
+        - event
+        - originalResponse
+
+    RefundCompletedWebhook:
+      type: object
+      description: Represents the webhook triggered when a transaction void or refund for a previously completed transaction is completed.
+      properties:
+        event:
+          allOf:
+            - $ref: '#/components/schemas/WebhookEvent'
+            - type: object
+              properties:
+                type:
+                  example: 'refund.completed'
+        originalResponse:
+          $ref: '#/components/schemas/RefundResponse'
+      required:
+        - event
+        - originalResponse
+
+    TokenCreatedWebhook:
+      type: object
+      description: Represents the webhook triggered when a card is tokenized and stored as a payment method.
+      properties:
+        event:
+          allOf:
+            - $ref: '#/components/schemas/WebhookEvent'
+            - type: object
+              properties:
+                type:
+                  example: 'token.created'
+        originalResponse:
+          $ref: '#/components/schemas/CardOnFileAddResponse'
+      required:
+        - event
+        - originalResponse
+
+    TokenUpdatedWebhook:
+      type: object
+      description: Represents the webhook triggered when an expiration date for a previously tokenized card is updated.
+      properties:
+        event:
+          allOf:
+            - $ref: '#/components/schemas/WebhookEvent'
+            - type: object
+              properties:
+                type:
+                  example: 'token.updated'
+        originalResponse:
+          $ref: '#/components/schemas/CardOnFileUpdateResponse'
+      required:
+        - event
+        - originalResponse
+
+    TokenRemovedWebhook:
+      type: object
+      description: Represents the webhook triggered when a previously tokenized card is removed from the system.
+      properties:
+        event:
+          allOf:
+            - $ref: '#/components/schemas/WebhookEvent'
+            - type: object
+              properties:
+                type:
+                  example: 'token.removed'
+        originalResponse:
+          $ref: '#/components/schemas/CardOnFileRemoveResponse'
+      required:
+        - event
+        - originalResponse
+
   parameters:
-    $ref: './components/parameters.yaml'
+    WebhookSignatureHeader:
+      name: x-fsk-wh-chksm
+      in: header
+      description: The SHA-256 hash signature of the webhook payload, encoded in base64.
+      example: 'OU6bkK1/nScyy8fA+3QTZj1i3xaVMmAarTEnvogFFTA='
+      required: true
+      schema:
+        type: string
+
   requestBodies:
-    $ref: './components/requestBodies.yaml'
+    SaleCompletedWebhook:
+      description: The request body for the `sale.completed` webhook event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SaleCompletedWebhook'
+          example:
+            event:
+              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+              type: 'sale.completed'
+              timestamp: '2025-04-16T14:30:00Z'
+            originalResponse:
+              $ref: '#/components/examples/SaleCardPresentResponse/value'
+
+    AuthCompletedWebhook:
+      description: The request body for the `auth.completed` webhook event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthCompletedWebhook'
+          example:
+            event:
+              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+              type: 'auth.completed'
+              timestamp: '2025-04-16T14:30:00Z'
+            originalResponse:
+              $ref: '#/components/examples/AuthCardPresentResponse/value'
+
+    CaptureCompletedWebhook:
+      description: The request body for the `capture.completed` webhook event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CaptureCompletedWebhook'
+          example:
+            event:
+              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+              type: 'capture.completed'
+              timestamp: '2025-04-16T14:30:00Z'
+            originalResponse:
+              $ref: '#/components/examples/CaptureResponse/value'
+
+    RefundCompletedWebhook:
+      description: The request body for the `refund.completed` webhook event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RefundCompletedWebhook'
+          example:
+            event:
+              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+              type: 'refund.completed'
+              timestamp: '2025-04-16T14:30:00Z'
+            originalResponse:
+              $ref: '#/components/examples/RefundResponse/value'
+
+    TokenCreatedWebhook:
+      description: The request body for the `token.created` webhook event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TokenCreatedWebhook'
+          example:
+            event:
+              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+              type: 'token.created'
+              timestamp: '2025-04-16T14:30:00Z'
+            originalResponse:
+              $ref: '#/components/examples/CreateTokenCardPresentResponse/value'
+
+    TokenUpdatedWebhook:
+      description: The request body for the `token.updated` webhook event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TokenUpdatedWebhook'
+          example:
+            event:
+              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+              type: 'token.updated'
+              timestamp: '2025-04-16T14:30:00Z'
+            originalResponse:
+              $ref: '#/components/examples/UpdateTokenResponse/value'
+
+    TokenRemovedWebhook:
+      description: The request body for the `token.removed` webhook event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TokenRemovedWebhook'
+          example:
+            event:
+              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+              type: 'token.removed'
+              timestamp: '2025-04-16T14:30:00Z'
+            originalResponse:
+              $ref: '#/components/examples/RemoveTokenResponse/value'
+
   responses:
-    $ref: './components/responses.yaml'
+    UnauthorizedError:
+      description: Unauthorized response due to an invalid or missing API key.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    example: 1000
+                  message:
+                    type: string
+                    example: Invalid or missing API key
+          examples:
+            UnauthorizedError:
+              value:
+                error:
+                  code: 1000
+                  message: Invalid or missing API key
+
+    SuccessfulWebhookAcknowledgement:
+      description: Successful acknowledgement of a webhook event. The response should be a 200 OK status with an empty body.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties: {}
+          examples:
+            SuccessfulWebhookResponse:
+              value: {}
+
   examples:
-    $ref: './components/examples.yaml'
+    SaleCardPresentResponse:
+      description: A successful response for a Card Present sale transaction.
+      value:
+        id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+        paymentMethod:
+          id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+          type: 'physical'
+          currency: 'USD'
+          description: 'Main Store Terminal'
+        invoiceNumber: 'inv_12345678'
+        orderNumber: 'order_number_1234'
+        referenceId: 'ref_s192i49i'
+        resultCode: 0
+        resultText: 'Successful transaction request'
+        requestedAmount: 1000
+        approvedAmount: 1000
+        balanceAmount: 0
+        transactionResponses:
+          - responseCode: 1
+            authCode: '000AAA'
+            amountApproved: 1000
+            approvedAmountBreakdown:
+              amountGoodsAndServices: 1000
+              tax: 0
+              cashBack: 0
+              tip: 0
+            paymentMethod:
+              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+              type: 'token'
+              currency: 'USD'
+              description: "Token for John Doe's Visa"
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
+            cardType: 'VISA'
+            accountType: 'Credit'
+            hostResponseText: 'APPROVED 00'
+            receipt:
+              lines:
+                [
+                  '     Test Merchant      ',
+                  '      300 S Wacker      ',
+                  '         Loop,          ',
+                  '                        ',
+                  '                        ',
+                  'TERM #          11000367',
+                  'RECORD #         0656191',
+                  'HOST INVOICE #    000038',
+                  'HOST SEQ #    1720656191',
+                  'MERCH INVOICE.  fgj24344',
+                  '------------------------',
+                  'CARD    ************0011',
+                  'VISA             Contact',
+                  '07/10/2024      20:03:05',
+                  '------------------------',
+                  'Purchase      USD $10.00',
+                  'Tip           USD  $0.00',
+                  'Cashback      USD  $0.00',
+                  '                        ',
+                  'TOTAL         USD $10.00',
+                  '------------------------',
+                  'AUTH#:000AAA       B:171',
+                  '          Sale          ',
+                  '      APPROVED 00       ',
+                  '       THANK YOU        ',
+                  '                        ',
+                  '      Visa Credit       ',
+                  'AID:      A0000000031010',
+                  'TC:     43F4ACF64B07551A',
+                  'TVR:          8000008000',
+                  'TSI:                7800',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '     MERCHANT COPY      ',
+                  '     Test Merchant      ',
+                  '      300 S Wacker      ',
+                  '         Loop,          ',
+                  '                        ',
+                  '                        ',
+                  'TERM #          11000367',
+                  'RECORD #         0656191',
+                  'HOST INVOICE #    000038',
+                  'HOST SEQ #    1720656191',
+                  'MERCH INVOICE.  fgj24344',
+                  '------------------------',
+                  'CARD    ************0011',
+                  'VISA             Contact',
+                  '07/10/2024      20:03:05',
+                  '------------------------',
+                  'Purchase      USD $10.00',
+                  'Tip           USD  $0.00',
+                  'Cashback      USD  $0.00',
+                  '                        ',
+                  'TOTAL         USD $10.00',
+                  '------------------------',
+                  'AUTH#:000AAA       B:171',
+                  '          Sale          ',
+                  '      APPROVED 00       ',
+                  '       THANK YOU        ',
+                  '                        ',
+                  '      Visa Credit       ',
+                  'AID:      A0000000031010',
+                  'TC:     43F4ACF64B07551A',
+                  'TVR:          8000008000',
+                  'TSI:                7800',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '     CUSTOMER COPY      ',
+                ]
+
+    AuthCardPresentResponse:
+      description: A successful response for a Card Present authorization transaction.
+      value:
+        id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+        paymentMethod:
+          id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+          type: 'physical'
+          currency: 'USD'
+          description: 'Main Store Terminal'
+        invoiceNumber: 'inv_12345678'
+        orderNumber: 'order_number_1234'
+        referenceId: 'ref_s192i49i'
+        resultCode: 0
+        resultText: 'Successful transaction request'
+        requestedAmount: 1000
+        approvedAmount: 1000
+        balanceAmount: 0
+        transactionResponses:
+          - responseCode: 1
+            authCode: '000AAA'
+            amountApproved: 1000
+            approvedAmountBreakdown:
+              amountGoodsAndServices: 1000
+              tax: 0
+              cashBack: 0
+              tip: 0
+            paymentMethod:
+              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+              type: 'token'
+              currency: 'USD'
+              description: "Token for John Doe's Visa"
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
+            cardType: 'VISA'
+            accountType: 'Credit'
+            hostResponseText: 'APPROVED 00'
+            receipt:
+              lines:
+                [
+                  '     Test Merchant      ',
+                  '      300 S Wacker      ',
+                  '         Loop,          ',
+                  '                        ',
+                  '                        ',
+                  'TERM #          11000367',
+                  'RECORD #         0656191',
+                  'HOST INVOICE #    000038',
+                  'HOST SEQ #    1720656191',
+                  'MERCH INVOICE.  fgj24344',
+                  '------------------------',
+                  'CARD    ************0011',
+                  'VISA             Contact',
+                  '07/10/2024      20:03:05',
+                  '------------------------',
+                  '        PRE AUTH        ',
+                  'TOTAL         USD $10.00',
+                  '------------------------',
+                  'AUTH#:000AAA            ',
+                  '                        ',
+                  '      APPROVED 00       ',
+                  '       THANK YOU        ',
+                  '                        ',
+                  '      Visa Credit       ',
+                  'AID:      A0000000031010',
+                  'TC:     43F4ACF64B07551A',
+                  'TVR:          8000008000',
+                  'TSI:                7800',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '     MERCHANT COPY      ',
+                  '     Test Merchant      ',
+                  '      300 S Wacker      ',
+                  '         Loop,          ',
+                  '                        ',
+                  '                        ',
+                  'TERM #          11000367',
+                  'RECORD #         0656191',
+                  'HOST INVOICE #    000038',
+                  'HOST SEQ #    1720656191',
+                  'MERCH INVOICE.  fgj24344',
+                  '------------------------',
+                  'CARD    ************0011',
+                  'VISA             Contact',
+                  '07/10/2024      20:03:05',
+                  '------------------------',
+                  '        PRE AUTH        ',
+                  'TOTAL         USD $10.00',
+                  '------------------------',
+                  'AUTH#:000AAA            ',
+                  '                        ',
+                  '      APPROVED 00       ',
+                  '       THANK YOU        ',
+                  '                        ',
+                  '      Visa Credit       ',
+                  'AID:      A0000000031010',
+                  'TC:     43F4ACF64B07551A',
+                  'TVR:          8000008000',
+                  'TSI:                7800',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '                        ',
+                  '     CUSTOMER COPY      ',
+                ]
+
+    CaptureResponse:
+      description: A successful response for a capture transaction.
+      value:
+        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        referenceId: 'ref_s192i49i'
+        paymentMethod:
+          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+          type: 'token'
+          currency: 'USD'
+          description: "Token for John Doe's Visa"
+          maskedCardNumber: '************0011'
+          cardExpDate: '1225'
+        invoiceNumber: 'inv_12345678'
+        orderNumber: 'order_number_1234'
+        resultCode: 0
+        resultText: 'Successful transaction request'
+        requestedAmount: 1000
+        approvedAmount: 1000
+        receipt:
+          lines:
+            [
+              '     Test Merchant      ',
+              '      300 S Wacker      ',
+              '         Loop,          ',
+              '                        ',
+              '                        ',
+              'TERM #          11000367',
+              'RECORD #         0656191',
+              'HOST INVOICE #    000038',
+              'HOST SEQ #    1720656191',
+              'MERCH INVOICE.  fgj24344',
+              '------------------------',
+              'CARD    ************0011',
+              'VISA             Contact',
+              '07/10/2024      20:03:05',
+              '------------------------',
+              '                        ',
+              '   PRE AUTH COMPLETE    ',
+              '                        ',
+              'TOTAL         USD $10.00',
+              '------------------------',
+              'AUTH#:000AAA       B:171',
+              '                        ',
+              '      APPROVED 00       ',
+              '       THANK YOU        ',
+              '                        ',
+              '      Visa Credit       ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '     MERCHANT COPY      ',
+              '     Test Merchant      ',
+              '      300 S Wacker      ',
+              '         Loop,          ',
+              '                        ',
+              '                        ',
+              'TERM #          11000367',
+              'RECORD #         0656191',
+              'HOST INVOICE #    000038',
+              'HOST SEQ #    1720656191',
+              'MERCH INVOICE.  fgj24344',
+              '------------------------',
+              'CARD    ************0011',
+              'VISA             Contact',
+              '07/10/2024      20:03:05',
+              '------------------------',
+              '                        ',
+              '   PRE AUTH COMPLETE    ',
+              '                        ',
+              'TOTAL         USD $10.00',
+              '------------------------',
+              'AUTH#:000AAA       B:171',
+              '                        ',
+              '      APPROVED 00       ',
+              '       THANK YOU        ',
+              '                        ',
+              '      Visa Credit       ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '     CUSTOMER COPY      ',
+            ]
+
+    RefundResponse:
+      description: A successful response for a refund transaction.
+      value:
+        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        referenceId: 'ref_s192i49i'
+        paymentMethod:
+          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+          type: 'token'
+          currency: 'USD'
+          description: "Token for John Doe's Visa"
+          maskedCardNumber: '************0011'
+          cardExpDate: '1225'
+        invoiceNumber: 'ref_inv_12345678'
+        orderNumber: 'ref_order_1234'
+        resultCode: 0
+        resultText: 'Successful transaction request'
+        requestedAmount: 1000
+        approvedAmount: 1000
+        receipt:
+          lines:
+            [
+              '     Test Merchant      ',
+              '      300 S Wacker      ',
+              '         Loop,          ',
+              '                        ',
+              '                        ',
+              'TERM #          11000367',
+              'RECORD #         0656191',
+              'HOST INVOICE #    000038',
+              'HOST SEQ #    1720656191',
+              'MERCH INVOICE.  fgj24344',
+              '------------------------',
+              'CARD    ************0011',
+              'VISA             Contact',
+              '07/10/2024      20:03:05',
+              '------------------------',
+              '       VOID SALE        ',
+              '                        ',
+              'TOTAL         USD $10.00',
+              '------------------------',
+              'AUTH#:000AAA       B:171',
+              '                        ',
+              '      APPROVED 00       ',
+              '       THANK YOU        ',
+              '                        ',
+              '      Visa Credit       ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '     MERCHANT COPY      ',
+              '     Test Merchant      ',
+              '      300 S Wacker      ',
+              '         Loop,          ',
+              '                        ',
+              '                        ',
+              'TERM #          11000367',
+              'RECORD #         0656191',
+              'HOST INVOICE #    000038',
+              'HOST SEQ #    1720656191',
+              'MERCH INVOICE.  fgj24344',
+              '------------------------',
+              'CARD    ************0011',
+              'VISA             Contact',
+              '07/10/2024      20:03:05',
+              '------------------------',
+              '       VOID SALE        ',
+              '                        ',
+              'TOTAL         USD $10.00',
+              '------------------------',
+              'AUTH#:000AAA       B:171',
+              '                        ',
+              '      APPROVED 00       ',
+              '       THANK YOU        ',
+              '                        ',
+              '      Visa Credit       ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '     CUSTOMER COPY      ',
+            ]
+
+    UnreferencedRefundCardPresentResponse:
+      description: A successful response for a Card Present unreferenced refund transaction.
+      value:
+        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        referenceId: 'ref_s192i49i'
+        paymentMethod:
+          id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+          type: 'physical'
+          currency: 'USD'
+          description: 'Main Store Terminal'
+        invoiceNumber: 'inv_12345678'
+        orderNumber: 'order_number_1234'
+        resultCode: 0
+        resultText: 'Successful transaction request'
+        requestedAmount: 1000
+        approvedAmount: 1000
+        receipt:
+          lines:
+            [
+              '     Test Merchant      ',
+              '      300 S Wacker      ',
+              '         Loop,          ',
+              '                        ',
+              '                        ',
+              'TERM #          11000367',
+              'RECORD #         0656191',
+              'HOST INVOICE #    000038',
+              'HOST SEQ #    1720656191',
+              'MERCH INVOICE.  fgj24344',
+              '------------------------',
+              'CARD    ************0011',
+              'VISA             Contact',
+              '07/10/2024      20:03:05',
+              '------------------------',
+              '         REFUND         ',
+              '                        ',
+              'TOTAL         USD $10.00',
+              '------------------------',
+              'AUTH#:000AAA       B:171',
+              '                        ',
+              '      APPROVED 00       ',
+              '       THANK YOU        ',
+              '                        ',
+              '      Visa Credit       ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '     MERCHANT COPY      ',
+              '     Test Merchant      ',
+              '      300 S Wacker      ',
+              '         Loop,          ',
+              '                        ',
+              '                        ',
+              'TERM #          11000367',
+              'RECORD #         0656191',
+              'HOST INVOICE #    000038',
+              'HOST SEQ #    1720656191',
+              'MERCH INVOICE.  fgj24344',
+              '------------------------',
+              'CARD    ************0011',
+              'VISA             Contact',
+              '07/10/2024      20:03:05',
+              '------------------------',
+              '         REFUND         ',
+              '                        ',
+              'TOTAL         USD $10.00',
+              '------------------------',
+              'AUTH#:000AAA       B:171',
+              '                        ',
+              '      APPROVED 00       ',
+              '       THANK YOU        ',
+              '                        ',
+              '      Visa Credit       ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '                        ',
+              '     CUSTOMER COPY      ',
+            ]
+
+    CreateTokenCardPresentResponse:
+      description: A successful response for a card tokenization transaction.
+      value:
+        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        paymentMethod:
+          id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+          type: 'physical'
+          currency: 'USD'
+          description: 'Main Store Terminal'
+        referenceId: 'ref_add_card_12345'
+        resultCode: 0
+        resultText: 'Card successfully tokenized'
+        transactionResponses:
+          - responseCode: 1
+            authCode: '000AAA'
+            paymentMethod:
+              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+              type: 'token'
+              currency: 'USD'
+              description: "Token for John Doe's Visa"
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
+            cardType: 'VISA'
+            accountType: 'Credit'
+            hostResponseText: 'APPROVED 00'
+            customerVerificationMethod: 'SIGNATURE'
+
+    UpdateTokenResponse:
+      description: A successful response for a tokenized card update transaction.
+      value:
+        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        paymentMethod:
+          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+          type: 'token'
+          currency: 'USD'
+          description: "Token for John Doe's Visa"
+          maskedCardNumber: '************0011'
+          cardExpDate: '1225'
+        referenceId: 'ref_update_card_12345'
+        resultCode: 0
+        resultText: 'Card successfully updated'
+
+    RemoveTokenResponse:
+      description: A successful response for a tokenized card removal transaction.
+      value:
+        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        paymentMethod:
+          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+          type: 'token'
+          currency: 'USD'
+          description: "Token for John Doe's Visa"
+          maskedCardNumber: '************0011'
+          cardExpDate: '1225'
+        referenceId: 'ref_remove_card_12345'
+        resultCode: 0
+        resultText: 'Card successfully removed'
+
 paths:
-  '/payment-methods':
-    $ref: './paths/payment-methods.yaml#/getPaymentMethods'
-  '/payment-methods/physical':
-    $ref: './paths/tokens.yaml#/createCardPresentToken'
-  '/payment-methods/virtual':
-    $ref: './paths/tokens.yaml#/createCardNotPresentToken'
-  '/payment-methods/token/{id}':
-    $ref: './paths/tokens.yaml#/tokenOperations'
-  '/transactions/physical-sale':
-    $ref: './paths/transactions.yaml#/saleCardPresent'
-  '/transactions/virtual-sale':
-    $ref: './paths/transactions.yaml#/saleCardNotPresent'
-  '/transactions/token-sale':
-    $ref: './paths/transactions.yaml#/saleToken'
-  '/transactions/physical-auth':
-    $ref: './paths/transactions.yaml#/authCardPresent'
-  '/transactions/virtual-auth':
-    $ref: './paths/transactions.yaml#/authCardNotPresent'
-  '/transactions/token-auth':
-    $ref: './paths/transactions.yaml#/authToken'
-  '/transactions/capture':
-    $ref: './paths/transactions.yaml#/capture'
-  '/transactions/refund':
-    $ref: './paths/transactions.yaml#/refund'
-  '/transactions/unreferenced-physical-refund':
-    $ref: './paths/transactions.yaml#/unreferencedRefundCardPresent'
-  '/transactions/unreferenced-virtual-refund':
-    $ref: './paths/transactions.yaml#/unreferencedRefundCardNotPresent'
+  /payment-methods:
+    get:
+      operationId: getPaymentMethods
+      summary: List Payment Methods
+      description: |
+        Returns a list of valid payment methods that have been configured in the system for the authenticated merchant.
+
+        IDs of both "physical" payment terminals that can be used to process Card Present transactions and IDs of "virtual" terminals (hosted payment pages or iframes) that can be used to process Card Not Present transactions will be returned.
+      tags:
+        - Payment Methods
+      responses:
+        '200':
+          description: A successful response containing available payment methods
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    paymentMethod:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: |
+                            The payment method ID. Physical terminals will be prefixed with `pmt_trm_` and virtual terminals will be prefixed with `pmt_vrt_`.
+
+                            Example physical format: `pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF`
+                            Example virtual format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
+                        type:
+                          type: string
+                          enum: [physical, virtual]
+                        currency:
+                          type: string
+                          enum: [USD, CAD]
+                        description:
+                          type: string
+                          maxLength: 1000
+                          description: A human-readable name for the payment method
+              examples:
+                successfulResponse:
+                  description: A successful response for retrieving the available payment methods.
+                  value:
+                    - paymentMethodId:
+                        id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                        type: physical
+                        currency: USD
+                        description: Main Store Terminal
+                    - paymentMethodId:
+                        id: pmt_trm_01JRZQW7FXMG62D8HJTPK3Y5VB
+                        type: physical
+                        currency: USD
+                        description: Secondary Store Terminal
+                    - paymentMethodId:
+                        id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                        type: virtual
+                        currency: USD
+                        description: Online Checkout Iframe
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /payment-methods/physical:
+    post:
+      operationId: createCardPresentToken
+      summary: Create Token (Card Present)
+      description: |
+        Tokenize a card using a physical terminal. A verification transaction or $0 authorization will occur to validate the card. If valid, the card and expiration date will be tokenized and stored and a paymentMethodId will be returned for future Card On File transactions.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the tokenization process:
+        - `token.created` - when a card is tokenized and stored as a payment method.
+      tags:
+        - Tokens
+      requestBody:
+        description: The request to tokenize a card using a physical terminal.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardOnFileAddRequest'
+            examples:
+              cofAddRequest:
+                summary: Card On File Add request example
+                value:
+                  paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                  referenceId: 'ref_add_card_12345'
+      responses:
+        '200':
+          description: A successful card tokenization response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardOnFileAddResponse'
+              examples:
+                successfulResponse:
+                  $ref: '#/components/examples/CreateTokenCardPresentResponse'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Error'
+                  - type: object
+                    properties:
+                      errorDetails:
+                        allOf:
+                          - $ref: '#/components/schemas/ValidationError'
+                          - type: object
+                            properties:
+                              field:
+                                example: 'paymentMethodId'
+                              details:
+                                example: "'PaymentMethodId' must not be empty."
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /payment-methods/virtual:
+    post:
+      operationId: createCardNotPresentToken
+      summary: Create Token (Card Not Present)
+      description: |
+        Tokenize a card using a hosted payment page/iframe. A verification transaction or $0 authorization will occur to validate the card. If valid, a tokenized card ID will be stored and a paymentMethodId will be returned for future Card On File transactions.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the tokenization process:
+        - `token.created` - when a card is tokenized and stored as a payment method.
+      tags:
+        - Tokens
+      requestBody:
+        description: The request to tokenize a card using a hosted payment page or iframe.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardOnFileVirtualAddRequest'
+            examples:
+              cofVirtualAddRequest:
+                summary: Card Not Present Token Creation request example
+                value:
+                  paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                  referenceId: 'ref_add_card_12345'
+                  returnUrl: 'https://merchant.example.com/payment-complete'
+      responses:
+        '200':
+          description: A successful Card Not Present tokenization response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardOnFileVirtualAddResponse'
+              examples:
+                successfulResponse:
+                  summary: A successful response for a Card Not Present tokenization transaction.
+                  value:
+                    id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+                    paymentMethod:
+                      id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                      type: 'virtual'
+                      currency: 'USD'
+                      description: 'Online Checkout Iframe'
+                    referenceId: 'ref_add_card_12345'
+                    requestedAmount: 0
+                    sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
+                    iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                    expirationTimestamp: '2025-04-17T14:19:03Z'
+                    status: 'pending'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Error'
+                  - type: object
+                    properties:
+                      errorDetails:
+                        allOf:
+                          - $ref: '#/components/schemas/ValidationError'
+                          - type: object
+                            properties:
+                              field:
+                                example: 'paymentMethodId'
+                              details:
+                                example: "'PaymentMethodId' must not be empty."
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /payment-methods/token/{id}:
+    put:
+      operationId: updateToken
+      summary: Update Token
+      description: |
+        Update the expiration date for a previously tokenized card.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the tokenized card update process:
+        - `token.updated` - when an expiration date for a previously tokenized card is updated.
+      tags:
+        - Tokens
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the tokenized card to update.
+          schema:
+            type: string
+          example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+      requestBody:
+        description: The request to update a previously tokenized card.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardOnFileUpdateRequest'
+            examples:
+              cofUpdateRequest:
+                summary: Card On File Update request example
+                value:
+                  referenceId: 'ref_update_card_12345'
+                  cardExpDate: '1225'
+      responses:
+        '200':
+          description: A successful card update response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardOnFileUpdateResponse'
+              examples:
+                successfulResponse:
+                  $ref: '#/components/examples/UpdateTokenResponse'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Error'
+                  - type: object
+                    properties:
+                      errorDetails:
+                        allOf:
+                          - $ref: '#/components/schemas/ValidationError'
+                          - type: object
+                            properties:
+                              field:
+                                example: 'cardExpDate'
+                              details:
+                                example: "The length of 'CardExpDate' must be 4 characters or fewer."
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    delete:
+      operationId: removeToken
+      summary: Remove Token
+      description: |
+        Remove a previously tokenized card from the system.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the tokenized card removal process:
+        - `token.removed` - when a previously tokenized card is removed from the system.
+      tags:
+        - Tokens
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the tokenized card to remove.
+          schema:
+            type: string
+          example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+        - name: referenceId
+          in: query
+          required: false
+          description: A reference ID to tag and track this transaction for reconciliation.
+          schema:
+            type: string
+          example: ref_remove_card_12345
+      responses:
+        '200':
+          description: A successful card removal response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardOnFileRemoveResponse'
+              examples:
+                successfulResponse:
+                  $ref: '#/components/examples/RemoveTokenResponse'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Error'
+                  - type: object
+                    properties:
+                      errorDetails:
+                        allOf:
+                          - $ref: '#/components/schemas/ValidationError'
+                          - type: object
+                            properties:
+                              field:
+                                example: 'id'
+                              details:
+                                example: "'Id' must not be empty."
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions/physical-sale:
+    post:
+      operationId: saleCardPresent
+      summary: Sale (Card Present)
+      description: |
+        Process a financial transaction using a physical payment terminal where the card is present. The card will be tokenized for future use.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the transaction process:
+        - `sale.completed` - when a financial transaction is processed and completed.
+        - `token.created` - when a card is tokenized and stored as a payment method.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to process a Card Present transaction using a physical payment terminal.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardPresentRequest'
+            examples:
+              cpSaleRequest:
+                summary: Card Present Sale request example
+                value:
+                  amount: 1000
+                  amountBreakdown:
+                    amountGoodsAndServices: 1000
+                    tax: 0
+                    cashBack: 0
+                    tip: 0
+                  paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
+      responses:
+        '200':
+          description: A successful Card Present sale response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/TransactionResponseObject'
+                  - type: object
+                    properties:
+                      paymentMethod:
+                        allOf:
+                          - $ref: '#/components/schemas/PaymentMethodDetails'
+                          - type: object
+                            description: |
+                              The payment method used for this Card Present transaction.
+
+                              If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
+                            properties:
+                              id:
+                                example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+              examples:
+                successfulResponse:
+                  $ref: '#/components/examples/SaleCardPresentResponse'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions/virtual-sale:
+    post:
+      operationId: saleCardNotPresent
+      summary: Sale (Card Not Present)
+      description: |
+        Process a financial transaction using a hosted payment page or iframe where the card is not physically present. The card will be tokenized for future use.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the transaction process:
+        - `sale.completed` - when a financial transaction is processed and completed.
+        - `token.created` - when a card is tokenized and stored as a payment method.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to process a Card Not Present transaction using a hosted payment page or iframe.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardNotPresentRequest'
+            examples:
+              cnpSaleRequest:
+                summary: Card Not Present Sale request example
+                value:
+                  amount: 1000
+                  amountBreakdown:
+                    amountGoodsAndServices: 1000
+                    tax: 0
+                    cashBack: 0
+                    tip: 0
+                  paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
+                  returnUrl: 'https://merchant.example.com/payment-complete'
+      responses:
+        '200':
+          description: A successful Card Not Present sale response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CNPVirtualResponse'
+              examples:
+                successfulResponse:
+                  summary: A successful response for a Card Not Present sale transaction.
+                  value:
+                    id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    paymentMethod:
+                      id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                      type: 'virtual'
+                      currency: 'USD'
+                      description: 'Online Checkout Iframe'
+                    invoiceNumber: 'inv_12345678'
+                    orderNumber: 'order_number_1234'
+                    referenceId: 'ref_s192i49i'
+                    requestedAmount: 1000
+                    sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
+                    iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                    expirationTimestamp: '2025-04-17T14:19:03Z'
+                    status: 'pending'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions/token-sale:
+    post:
+      operationId: saleToken
+      summary: Sale (Token)
+      description: |
+        Process a financial transaction using a previously tokenized card.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the transaction process:
+        - `sale.completed` - when a financial transaction is processed and completed.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to process a Card On File transaction using a tokenized card.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardOnFileRequest'
+            examples:
+              cofSaleRequest:
+                summary: Card On File Sale request example
+                value:
+                  amount: 1000
+                  amountBreakdown:
+                    amountGoodsAndServices: 1000
+                    tax: 0
+                    cashBack: 0
+                    tip: 0
+                  paymentMethodId: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
+      responses:
+        '200':
+          description: A successful Card On File sale response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CNPTransactionResponse'
+              examples:
+                successfulResponse:
+                  summary: A successful response for a Card On File sale transaction.
+                  value:
+                    id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    paymentMethod:
+                      id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                      type: 'token'
+                      currency: 'USD'
+                      description: "Token for John Doe's Visa"
+                      maskedCardNumber: '************0011'
+                      cardExpDate: '1225'
+                    invoiceNumber: 'inv_12345678'
+                    orderNumber: 'order_number_1234'
+                    referenceId: 'ref_s192i49i'
+                    resultCode: 0
+                    resultText: 'Successful transaction request'
+                    requestedAmount: 1000
+                    approvedAmount: 1000
+                    balanceAmount: 0
+                    transactionResponses:
+                      [
+                        {
+                          responseCode: 1,
+                          authCode: '000AAA',
+                          amountApproved: 1000,
+                          approvedAmountBreakdown:
+                            { amountGoodsAndServices: 1000, tax: 0, cashBack: 0, tip: 0 },
+                          paymentMethod:
+                            {
+                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
+                              type: 'token',
+                              currency: 'USD',
+                              description: "Token for John Doe's Visa",
+                              maskedCardNumber: '************0011',
+                              cardExpDate: '1225',
+                            },
+                          cardType: 'VISA',
+                          avsResult: 'A',
+                          cvvResult: 'M',
+                          accountType: 'Credit',
+                          hostResponseText: 'APPROVED 00',
+                        },
+                      ]
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions/physical-auth:
+    post:
+      operationId: authCardPresent
+      summary: Auth (Card Present)
+      description: |
+        Create an authorization using a physical payment terminal where the card is present. This will not result in a financial transaction and the card will be tokenized. A capture must be performed to complete the financial transaction.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the authorization process:
+        - `auth.completed` - when an authorization is processed and completed.
+        - `token.created` - when a card is tokenized and stored as a payment method.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to create a Card Present authorization using a physical payment terminal.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardPresentRequest'
+            examples:
+              cpAuthRequest:
+                summary: Card Present Authorization request example
+                value:
+                  amount: 1000
+                  amountBreakdown:
+                    amountGoodsAndServices: 1000
+                    tax: 0
+                    cashBack: 0
+                    tip: 0
+                  paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
+      responses:
+        '200':
+          description: A successful Card Present authorization response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/TransactionResponseObject'
+                  - type: object
+                    properties:
+                      paymentMethod:
+                        allOf:
+                          - $ref: '#/components/schemas/PaymentMethodDetails'
+                          - type: object
+                            # TODO:rafal@fiska.com: this is the same override as transactions/physical-sale
+                            description: |
+                              The payment method used for this Card Present transaction.
+
+                              If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
+                            properties:
+                              id:
+                                example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+              examples:
+                successfulResponse:
+                  $ref: '#/components/examples/AuthCardPresentResponse'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions/virtual-auth:
+    post:
+      operationId: authCardNotPresent
+      summary: Auth (Card Not Present)
+      description: |
+        Create an authorization using a hosted payment page or iframe where the card is not physically present. This will not result in a financial transaction and the card will be tokenized. A capture must be performed to complete the financial transaction.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the authorization process:
+        - `auth.completed` - when an authorization is processed and completed.
+        - `token.created` - when a card is tokenized and stored as a payment method.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to create a Card Not Present authorization using a hosted payment page or iframe.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardNotPresentRequest'
+            examples:
+              cnpAuthRequest:
+                summary: Card Not Present Authorization request example
+                value:
+                  amount: 1000
+                  amountBreakdown:
+                    amountGoodsAndServices: 1000
+                    tax: 0
+                    cashBack: 0
+                    tip: 0
+                  paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
+                  returnUrl: 'https://merchant.example.com/payment-complete'
+      responses:
+        '200':
+          description: A successful Card Not Present authorization response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CNPVirtualResponse'
+              examples:
+                successfulResponse:
+                  summary: A successful response for a Card Not Present authorization transaction.
+                  value:
+                    id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    paymentMethod:
+                      id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                      type: 'virtual'
+                      currency: 'USD'
+                      description: 'Online Checkout Iframe'
+                    invoiceNumber: 'inv_12345678'
+                    orderNumber: 'order_number_1234'
+                    referenceId: 'ref_s192i49i'
+                    requestedAmount: 1000
+                    sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
+                    iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                    expirationTimestamp: '2025-04-17T14:19:03Z'
+                    status: 'pending'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions/token-auth:
+    post:
+      operationId: authToken
+      summary: Auth (Token)
+      description: |
+        Create an authorization using a previously tokenized card. This will not result in a financial transaction. A capture must be performed to complete the financial transaction.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the authorization process:
+        - `auth.completed` - when an authorization is processed and completed.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to create a Card On File authorization using a tokenized card.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardOnFileRequest'
+            examples:
+              cofAuthRequest:
+                summary: Card On File Authorization request example
+                value:
+                  amount: 1000
+                  amountBreakdown:
+                    amountGoodsAndServices: 1000
+                    tax: 0
+                    cashBack: 0
+                    tip: 0
+                  paymentMethodId: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
+      responses:
+        '200':
+          description: A successful Card On File authorization response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CNPTransactionResponse'
+              examples:
+                successfulResponse:
+                  summary: A successful response for a Card On File authorization transaction.
+                  value:
+                    id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    paymentMethod:
+                      id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                      type: 'token'
+                      currency: 'USD'
+                      description: "Token for John Doe's Visa"
+                      maskedCardNumber: '************0011'
+                      cardExpDate: '1225'
+                    invoiceNumber: 'inv_12345678'
+                    orderNumber: 'order_number_1234'
+                    referenceId: 'ref_s192i49i'
+                    resultCode: 0
+                    resultText: 'Successful transaction request'
+                    requestedAmount: 1000
+                    approvedAmount: 1000
+                    balanceAmount: 0
+                    transactionResponses:
+                      [
+                        {
+                          responseCode: 1,
+                          authCode: '000AAA',
+                          amountApproved: 1000,
+                          approvedAmountBreakdown:
+                            { amountGoodsAndServices: 1000, tax: 0, cashBack: 0, tip: 0 },
+                          paymentMethod:
+                            {
+                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
+                              type: 'token',
+                              currency: 'USD',
+                              description: "Token for John Doe's Visa",
+                              maskedCardNumber: '************0011',
+                              cardExpDate: '1225',
+                            },
+                          cardType: 'VISA',
+                          avsResult: 'A',
+                          cvvResult: 'M',
+                          accountType: 'Credit',
+                          hostResponseText: 'APPROVED 00',
+                        },
+                      ]
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions/capture:
+    post:
+      operationId: capture
+      summary: Capture
+      description: |
+        Complete a previously authorized transaction, resulting in a financial transaction. The amount can be equal to or less than the original authorization amount.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the capture process:
+        - `capture.completed` - when a transaction capture for a previously authorized transaction is completed.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to capture a previously authorized transaction.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaptureRequest'
+            examples:
+              captureRequest:
+                summary: Capture request example
+                value:
+                  referenceId: 'ref_s192i49i'
+                  amount: 1000
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+      responses:
+        '200':
+          description: A successful capture response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptureResponse'
+              examples:
+                successfulResponse:
+                  $ref: '#/components/examples/CaptureResponse'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions/refund:
+    post:
+      operationId: refund
+      summary: Refund
+      description: |
+        Process a referenced refund or void for a previously completed sale or capture transaction. If the transaction is in the current batch, the system will attempt to void it, otherwise it will be refunded resulting in a financial transaction.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the refund process:
+        - `refund.completed` - when a transaction void or refund for a previously completed transaction is completed.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to refund or void a previously completed transaction.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+            examples:
+              refundRequest:
+                summary: Refund request example
+                value:
+                  referenceId: 'ref_s192i49i'
+                  amount: 1000
+                  invoiceNumber: 'ref_inv_12345678'
+                  orderNumber: 'ref_order_1234'
+      responses:
+        '200':
+          description: A successful refund response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+              examples:
+                successfulResponse:
+                  $ref: '#/components/examples/RefundResponse'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions/unreferenced-physical-refund:
+    post:
+      operationId: unreferencedRefundCardPresent
+      summary: Unreferenced Refund (Card Present)
+      description: |
+        Process an unreferenced refund without a matching completed sale or capture transaction using a physical payment terminal where the card is present.
+
+        Note regarding Unreferenced Refunds - Unreferenced refunds are refunds that do not require a previously completed payment transaction to be referenced. They are only available on certain accounts by request to [support@integratedcommerce.io](mailto:support@integratedcommerce.io).
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the refund process:
+        - `refund.completed` - when an unreferenced refund is completed.
+        - `token.created` - when a card is tokenized and stored as a payment method.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to process an unreferenced refund using a physical payment terminal.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnreferencedPhysicalRefundRequest'
+            examples:
+              unreferencedPhysicalRefundRequest:
+                summary: Unreferenced Card Present refund request example
+                value:
+                  amount: 1000
+                  paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
+      responses:
+        '200':
+          description: A successful Card Present unreferenced refund response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/TransactionResponseObject'
+                  - type: object
+                    properties:
+                      paymentMethod:
+                        allOf:
+                          - $ref: '#/components/schemas/PaymentMethodDetails'
+                          - type: object
+                            description: |
+                              The payment method used for this Card Present unreferenced refund.
+
+                              If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
+                            properties:
+                              id:
+                                example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+              examples:
+                successfulResponse:
+                  $ref: '#/components/examples/UnreferencedRefundCardPresentResponse'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions/unreferenced-virtual-refund:
+    post:
+      operationId: unreferencedRefundCardNotPresent
+      summary: Unreferenced Refund (Card Not Present)
+      description: |
+        Process an unreferenced refund without a matching completed sale or capture transaction using a hosted payment page or iframe where the card is not physically present.
+
+        Note regarding Unreferenced Refunds - Unreferenced refunds are refunds that do not require a previously completed payment transaction to be referenced. They are only available on certain accounts by request to [support@integratedcommerce.io](mailto:support@integratedcommerce.io).
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the refund process:
+        - `refund.completed` - when a transaction void or refund for a previously completed transaction is completed.
+        - `token.created` - when a card is tokenized and stored as a payment method.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to process an unreferenced refund using a hosted payment page or iframe.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnreferencedVirtualRefundRequest'
+            examples:
+              unreferencedVirtualRefundRequest:
+                summary: Unreferenced Card Not Present refund request example
+                value:
+                  amount: 1000
+                  paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_s192i49i'
+                  returnUrl: 'https://merchant.example.com/payment-complete'
+      responses:
+        '200':
+          description: A successful Card Not Present unreferenced refund response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CNPVirtualResponse'
+              examples:
+                successfulResponse:
+                  summary: A successful response for a Card Not Present unreferenced refund transaction.
+                  value:
+                    id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    paymentMethod:
+                      id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                      type: 'virtual'
+                      currency: 'USD'
+                      description: 'Online Checkout Iframe'
+                    invoiceNumber: 'inv_12345678'
+                    orderNumber: 'order_number_1234'
+                    referenceId: 'ref_s192i49i'
+                    requestedAmount: 1000
+                    sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
+                    iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                    expirationTimestamp: '2025-04-17T14:19:03Z'
+                    status: 'pending'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
 webhooks:
   SaleCompleted:
-    $ref: './paths/webhooks.yaml#/SaleCompleted'
+    post:
+      operationId: webhookSaleCompleted
+      tags:
+        - Transaction Notifications
+      summary: Sale completed
+      description: This webhook event is triggered when a financial transaction is processed and completed.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/WebhookSignatureHeader'
+      requestBody:
+        $ref: '#/components/requestBodies/SaleCompletedWebhook'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
+
   AuthCompleted:
-    $ref: './paths/webhooks.yaml#/AuthCompleted'
+    post:
+      operationId: webhookAuthCompleted
+      tags:
+        - Transaction Notifications
+      summary: Auth completed
+      description: This webhook event is triggered when a transaction authorization is completed.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/WebhookSignatureHeader'
+      requestBody:
+        $ref: '#/components/requestBodies/AuthCompletedWebhook'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
+
   CaptureCompleted:
-    $ref: './paths/webhooks.yaml#/CaptureCompleted'
+    post:
+      operationId: webhookCaptureCompleted
+      tags:
+        - Transaction Notifications
+      summary: Capture completed
+      description: This webhook event is triggered when a transaction capture for a previously authorized transaction is completed.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/WebhookSignatureHeader'
+      requestBody:
+        $ref: '#/components/requestBodies/CaptureCompletedWebhook'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
+
   RefundCompleted:
-    $ref: './paths/webhooks.yaml#/RefundCompleted'
+    post:
+      operationId: webhookRefundCompleted
+      tags:
+        - Transaction Notifications
+      summary: Refund completed
+      description: This webook event is triggered when a transaction void or refund for a previously completed transaction is completed.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/WebhookSignatureHeader'
+      requestBody:
+        $ref: '#/components/requestBodies/RefundCompletedWebhook'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
+
   TokenCreated:
-    $ref: './paths/webhooks.yaml#/TokenCreated'
+    post:
+      operationId: webhookTokenCreated
+      tags:
+        - Token Notifications
+      summary: Token created
+      description: This webhook event is triggered when a card is tokenized and stored as a payment method.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/WebhookSignatureHeader'
+      requestBody:
+        $ref: '#/components/requestBodies/TokenCreatedWebhook'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
+
   TokenUpdated:
-    $ref: './paths/webhooks.yaml#/TokenUpdated'
+    post:
+      operationId: webhookTokenUpdated
+      tags:
+        - Token Notifications
+      summary: Token updated
+      description: This webhook event is triggered when an expiration date for a previously tokenized card is updated.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/WebhookSignatureHeader'
+      requestBody:
+        $ref: '#/components/requestBodies/TokenUpdatedWebhook'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
+
   TokenRemoved:
-    $ref: './paths/webhooks.yaml#/TokenRemoved'
+    post:
+      operationId: webhookTokenRemoved
+      tags:
+        - Token Notifications
+      summary: Token removed
+      description: This webhook event is triggered when a previously tokenized card is removed from the system.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/WebhookSignatureHeader'
+      requestBody:
+        $ref: '#/components/requestBodies/TokenRemovedWebhook'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
