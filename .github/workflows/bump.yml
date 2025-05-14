@@ -14,24 +14,38 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Prepare directory structure
+      - name: Debug info and fix servers.yaml
         run: |
-          # Create the exact directory the action is looking in
-          mkdir -p /home/runner/work/APITest/APITest
+          echo "Current directory: $(pwd)"
+          echo "Listing all YAML files to verify they exist:"
+          find . -name "*.yaml" -type f | sort
 
-          # Copy all files to that directory
-          cp -R ./* /home/runner/work/APITest/APITest/
+          echo "Does servers.yaml exist? $(test -f servers.yaml && echo Yes || echo No)"
 
-          # Show contents to verify
-          echo "Files copied to expected location:"
-          ls -la /home/runner/work/APITest/APITest/
+          # Check the actual content of servers.yaml
+          echo "Content of servers.yaml (if it exists):"
+          cat servers.yaml || echo "File not found"
 
-          # Verify servers.yaml exists in that location
-          if [ -f /home/runner/work/APITest/APITest/servers.yaml ]; then
-            echo "servers.yaml exists in the expected location"
-          else
-            echo "servers.yaml not found in the expected location"
-          fi
+          # Create or fix servers.yaml if needed
+          echo "Creating/fixing servers.yaml:"
+          echo "- url: https://api.omni.integratedcommerce.io/v1" > servers.yaml
+
+          # Verify the file was created/fixed
+          echo "Content of servers.yaml after fix:"
+          cat servers.yaml
+
+          # Verify all referenced files exist
+          echo "Checking referenced files from openapi.yaml:"
+          grep -r "\$ref:" openapi.yaml | sed "s/.*\$ref: '\(.*\)'.*/\1/" | while read file; do
+            file="${file#./}"  # Remove leading ./ if present
+            if [[ "$file" == *"#"* ]]; then
+              # Extract just the file path before any #
+              file_path="${file%%#*}"
+              echo "Referenced file path: $file_path - Exists? $(test -f "$file_path" && echo Yes || echo No)"
+            else
+              echo "Referenced file: $file - Exists? $(test -f "$file" && echo Yes || echo No)"
+            fi
+          done
 
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
