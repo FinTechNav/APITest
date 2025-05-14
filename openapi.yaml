@@ -2249,7 +2249,11 @@ paths:
       operationId: createCardNotPresentToken
       summary: Create Token (Card Not Present)
       description: |
-        Tokenize a card using a hosted payment page/iframe. A verification transaction or $0 authorization will occur to validate the card. If valid, a tokenized card ID will be stored and a paymentMethodId will be returned for future Card On File transactions.
+        Tokenize a card using a hosted payment page/iframe. This POST request initiates a tokenization session and returns a short-lived iframe URL to embed in your page, rather than using a static iframe URL.
+
+        When the customer submits their card information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete tokenization result will be delivered via the [Token Created webhook](#operation-post-TokenCreated).
+
+        A verification transaction or $0 authorization will occur to validate the card. If valid, a tokenized card ID will be stored and a paymentMethodId will be returned for future Card On File transactions.
 
         #### Webhook Events
 
@@ -2513,7 +2517,7 @@ paths:
       description: |
         Process a financial transaction using a hosted payment page or iframe where the card is not physically present. This POST request initiates a payment session and returns a short-lived iframe URL to embed in your payment page, rather than using a static iframe URL.
 
-        When the customer submits their payment information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete transaction result will be delivered via the Sale Completed webhook.
+        When the customer submits their payment information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete transaction result will be delivered via the [Sale Completed webhook](#operation-post-SaleCompleted).
 
         The card will be tokenized for future use.
 
@@ -2748,7 +2752,11 @@ paths:
       operationId: authCardNotPresent
       summary: Auth (Card Not Present)
       description: |
-        Create an authorization using a hosted payment page or iframe where the card is not physically present. This will not result in a financial transaction and the card will be tokenized. A capture must be performed to complete the financial transaction.
+        Create an authorization using a hosted payment page or iframe where the card is not physically present. This POST request initiates an authorization session and returns a short-lived iframe URL to embed in your payment page, rather than using a static iframe URL.
+
+        When the customer submits their payment information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete authorization result will be delivered via the [Auth Completed webhook](#operation-post-AuthCompleted).
+
+        This will not result in a financial transaction and the card will be tokenized. A capture must be performed to complete the financial transaction.
 
         #### Webhook Events
 
@@ -3071,7 +3079,9 @@ paths:
       operationId: unreferencedRefundCardNotPresent
       summary: Unreferenced Refund (Card Not Present)
       description: |
-        Process an unreferenced refund without a matching completed sale or capture transaction using a hosted payment page or iframe where the card is not physically present.
+        Process an unreferenced refund without a matching completed sale or capture transaction using a hosted payment page or iframe where the card is not physically present. This POST request initiates a refund session and returns a short-lived iframe URL to embed in your refund page, rather than using a static iframe URL.
+
+        When the customer submits their card information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete refund result will be delivered via the [Refund Completed webhook](#operation-post-RefundCompleted).
 
         Note regarding Unreferenced Refunds - Unreferenced refunds are refunds that do not require a previously completed payment transaction to be referenced. They are only available on certain accounts by request to [support@integratedcommerce.io](mailto:support@integratedcommerce.io).
 
