@@ -13,36 +13,27 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # Fetch all history to ensure we have all files
 
       - name: Setup Node.js v20
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Deep inspection
+      - name: Check for problematic $ref paths
         run: |
-          echo "Current directory:"
-          pwd
-          echo "Repository contents:"
-          ls -la
-          echo "Find all YAML files:"
-          find . -name "*.yaml" -o -name "*.yml"
-          echo "Server file inspection:"
-          ls -la servers.yaml || echo "servers.yaml not visible to ls"
-          file servers.yaml || echo "servers.yaml not visible to file command"
-          test -f servers.yaml && echo "servers.yaml exists according to test" || echo "servers.yaml does not exist according to test"
-          cat servers.yaml || echo "Cannot cat servers.yaml"
+          echo "Checking for incorrect references to errors.yaml..."
+          grep -r "'../errors.yaml#" --include="*.yaml" .
+          grep -r "./components/errors.yaml" --include="*.yaml" .
 
-      - name: Try to create a copy of servers.yaml
-        run: |
-          echo "Creating a copy of servers.yaml to ensure it exists"
-          cp -v servers.yaml servers.yaml.bak || echo "Cannot copy servers.yaml"
-          echo "Creating a new servers.yaml file"
-          echo "[]" > servers.yaml.new
-          echo "Checking new file"
-          cat servers.yaml.new
+          echo "Creating symbolic links to handle incorrect paths..."
+          mkdir -p components
+          ln -s components/schemas/errors.yaml components/errors.yaml
+          ln -s components/schemas/cards.yaml components/cards.yaml
+          ln -s components/schemas/receipts.yaml components/receipts.yaml
+          ln -s components/schemas/transactions.yaml components/transactions.yaml
+
+          echo "Verifying symbolic links..."
+          ls -la components/
 
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
