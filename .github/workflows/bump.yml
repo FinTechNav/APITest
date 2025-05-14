@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - '*.yaml'
-      - 'components/**/*.yaml'
-      - 'paths/**/*.yaml'
-      - 'tags/**/*.yaml'
-      - '.github/workflows/bump.yml'
   workflow_dispatch:
 
 jobs:
@@ -20,15 +14,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Debug - List files
-        run: |
-          find . -name "*.yaml" | sort
-          echo "Does servers.yaml exist?"
-          ls -la servers.yaml || echo "servers.yaml not found"
+      - name: Install Bump.sh CLI
+        run: npm install -g @bump.sh/cli
 
-      - name: Deploy API documentation
-        uses: bump-sh/github-action@v1
-        with:
-          doc: ${{ secrets.BUMP_DOC_ID }}
-          token: ${{ secrets.BUMP_TOKEN }}
-          file: openapi.yaml
+      - name: Deploy with Bump.sh CLI
+        run: |
+          # Print debug info
+          echo "Current directory:"
+          pwd
+          echo "Files in directory:"
+          ls -la
+
+          # Deploy using Bump CLI directly
+          bump deploy openapi.yaml --doc ${{ secrets.BUMP_DOC_ID }} --token ${{ secrets.BUMP_TOKEN }}
+        shell: bash
