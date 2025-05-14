@@ -20,6 +20,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Debug - List files
+        run: |
+          find . -name "*.yaml" | sort
+          echo "Does servers.yaml exist?"
+          ls -la servers.yaml || echo "servers.yaml not found"
+
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
         with:
