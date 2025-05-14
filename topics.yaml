@@ -34,3 +34,157 @@
       }
     }
     ```
+
+- title: Test Cards
+  slug: test-cards
+  description: Test cards for integration testing
+  content: |
+    # Test Cards
+
+    Select relevant test cards for your testing.
+
+    ## Cards that Return APPROVED
+
+    ### VISA
+    - 4761344136141390
+    - 4761201381475297
+    - 4159129252458086
+    - 4123407439043051
+    - 4001888687412469
+    - 4444493318246892
+    - 4000996174334475* (Returns partial approval)
+    - 4000287447386587** (debit card)
+
+    ### MASTERCARD
+    - 5101081046006034
+    - 5101084411423750
+    - 5333304500657872
+    - 5333308664112277
+    - 5550345228382224
+    - 5550347471347813
+    - 2222755234426838
+    - 2221004483162815
+    - 5333608104136723* (Returns partial approval)
+
+    ### AMEX
+    - 375510513169537
+    - 375510288656924
+    - 375510379996452
+    - 375510082116984
+
+    ### DISCOVER
+    - 6509821665351005
+    - 6221267465440274
+    - 6500217278165735
+    - 6522231777286524
+    - 6523077546008353
+    - 6011494585241663
+
+    ### DINERS
+    - 361253433727425
+    - 386009540225286
+    - 369116638070887
+    - 386000330170758
+    - 364096288088485
+    - 365650577650527
+
+    ### CHINA UNION PAY
+    - 6221272566426206
+    - 6233050545583578
+
+    ## Cards that Return DECLINED
+
+    ### Decline Reasons for Visa, Mastercard, and Amex
+
+    #### Decline
+    - **VISA**: 4008370896662369 (UK)
+    - **MASTERCARD**: 5333418445863914 (Russian Federation), 5001638548736201 (UK)
+    - **AMEX**: 375521501910816
+
+    #### Soft Decline - Authentication is Advised
+    - **VISA**: 4021937195658141 (UK), 4217641329972469 (US)
+    - **MASTERCARD**: 5118081410264525 (UK), 5109486948867999 (US)
+
+    #### External Error in Processing
+    - **VISA**: 4000128449498204 (US)
+    - **MASTERCARD**: 5333423768173347 (US), 5100976565928800 (UK)
+    - **AMEX**: 375522679892992
+
+    #### Acquirer Validation
+    - **VISA**: 4000135814550378 (US)
+    - **MASTERCARD**: 5333435197139699 (US)
+    - **AMEX**: 375523500980436
+
+    #### Lost/Stolen
+    - **VISA**: 4000157454627969 (US)
+    - **MASTERCARD**: 5333452804487502 (US)
+    - **AMEX**: 375525991062202
+
+    #### Do Not Honor
+    - **VISA**: 4000164166749263 (India)
+    - **MASTERCARD**: 5333463046218753 (US)
+    - **AMEX**: 375526064276158 (Germany)
+
+    #### Insufficient Funds
+    - **VISA**: 4000173946194872 (India), 4008384424370890 (UK)
+    - **MASTERCARD**: 5333475572200849 (US)
+    - **AMEX**: 375527639875136 (Ireland)
+
+    #### Exceeds Withdrawal Limit
+    - **VISA**: 4000189336416410 (India)
+    - **MASTERCARD**: 5333482348715142 (US)
+    - **AMEX**: 375528929838107 (Ireland)
+
+    #### Exceeds Withdrawal Frequency
+    - **VISA**: 4000196948974975 (India)
+    - **MASTERCARD**: 5333498929343773 (South Korea)
+    - **AMEX**: 375529856696120 (Ireland)
+
+    #### Invalid Transaction
+    - **VISA**: 4000203016321921 (US)
+    - **MASTERCARD**: 5333502383316074 (Puerto Rico)
+    - **AMEX**: 375530796593260
+
+    #### Format Error
+    - **VISA**: 4000212384978055 (US)
+    - **MASTERCARD**: 5333518577223892 (US)
+    - **AMEX**: 375531494255517 (Indonesia)
+
+    #### Issuer or Switch Inoperative
+    - **VISA**: 4000229544877670 (US)
+    - **MASTERCARD**: 5333527145351713 (Costa Rica)
+    - **AMEX**: 375532604034750
+
+    #### Timeout/Retry
+    - **VISA**: 4000234977370839 (US)
+    - **MASTERCARD**: 5333532915594096 (US)
+    - **AMEX**: 375533558061005 (Greece)
+
+    #### Expired Card
+    - **VISA**: 4000247422310226 (US)
+    - **MASTERCARD**: 5333540337444022 (US)
+    - **AMEX**: 375534876707683 (Greece)
+
+    #### Transaction Not Permitted To Cardholder
+    - **VISA**: 4000254588011960 (US)
+    - **MASTERCARD**: 5333554636535091 (US)
+    - **AMEX**: 375535264614027 (Greece)
+
+    #### Transaction Not Permitted on Terminal
+    - **VISA**: 4000269084739575 (US)
+    - **MASTERCARD**: 5333562868563707 (US)
+    - **AMEX**: 375536629108788 (Greece)
+
+    #### Restricted Card
+    - **VISA**: 4000273652260030 (US)
+    - **MASTERCARD**: 5333578626428553 (US)
+    - **AMEX**: 375537795464104 (Greece)
+
+    #### Invalid CVV
+    - **MASTERCARD**: 5333583123003909 (US)
+    - **AMEX**: 375538733297606 (Greece)
+
+    ### Decline Reasons for Discover, Diners, and China Union Pay
+
+    #### Do Not Honor
+    - **DI
