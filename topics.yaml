@@ -45,58 +45,249 @@
 
     ## Cards that Return APPROVED
 
-    **VISA** | **MASTERCARD** | **AMEX**
-    ---|---|---
-    4761344136141390 | 5101081046006034 | 375510513169537
-    4761201381475297 | 5101084411423750 | 375510288656924
-    4159129252458086 | 5333304500657872 | 375510379996452
-    4123407439043051 | 5333308664112277 | 375510082116984
-    4001888687412469 | 5550345228382224 | 
-    4444493318246892 | 5550347471347813 | 
-    4000996174334475 (1) | 2222755234426838 | 
-    4000287447386587 (2) | 2221004483162815 | 
-     | 5333608104136723 (1) | 
+    <table>
+      <tr>
+        <th>VISA</th>
+        <th>MASTERCARD</th>
+        <th>AMEX</th>
+      </tr>
+      <tr>
+        <td>4761344136141390</td>
+        <td>5101081046006034</td>
+        <td>375510513169537</td>
+      </tr>
+      <tr>
+        <td>4761201381475297</td>
+        <td>5101084411423750</td>
+        <td>375510288656924</td>
+      </tr>
+      <tr>
+        <td>4159129252458086</td>
+        <td>5333304500657872</td>
+        <td>375510379996452</td>
+      </tr>
+      <tr>
+        <td>4123407439043051</td>
+        <td>5333308664112277</td>
+        <td>375510082116984</td>
+      </tr>
+      <tr>
+        <td>4001888687412469</td>
+        <td>5550345228382224</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>4444493318246892</td>
+        <td>5550347471347813</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>4000996174334475 (1)</td>
+        <td>2222755234426838</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>4000287447386587 (2)</td>
+        <td>2221004483162815</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>5333608104136723 (1)</td>
+        <td></td>
+      </tr>
+    </table>
 
-    (1) Returns partial approval  
+    (1) Returns partial approval<br>
     (2) debit card
 
-    **DISCOVER** | **DINERS** | **CHINA UNION PAY**
-    ---|---|---
-    6509821665351005 | 361253433727425 | 6221272566426206
-    6221267465440274 | 386009540225286 | 6233050545583578
-    6500217278165735 | 369116638070887 | 
-    6522231777286524 | 386000330170758 | 
-    6523077546008353 | 364096288088485 | 
-    6011494585241663 | 365650577650527 | 
+    <table>
+      <tr>
+        <th>DISCOVER</th>
+        <th>DINERS</th>
+        <th>CHINA UNION PAY</th>
+      </tr>
+      <tr>
+        <td>6509821665351005</td>
+        <td>361253433727425</td>
+        <td>6221272566426206</td>
+      </tr>
+      <tr>
+        <td>6221267465440274</td>
+        <td>386009540225286</td>
+        <td>6233050545583578</td>
+      </tr>
+      <tr>
+        <td>6500217278165735</td>
+        <td>369116638070887</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>6522231777286524</td>
+        <td>386000330170758</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>6523077546008353</td>
+        <td>364096288088485</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>6011494585241663</td>
+        <td>365650577650527</td>
+        <td></td>
+      </tr>
+    </table>
 
     ## Cards that Return DECLINED
 
     ### Visa, Mastercard, and Amex
 
-    **DECLINE REASON** | **VISA** | **MASTERCARD** | **AMEX**
-    ---|---|---|---
-    Decline | 4008370896662369 (UK) | 5333418445863914 (Russian Federation)<br>5001638548736201 (UK) | 375521501910816
-    Soft Decline - Authentication is Advised | 4021937195658141 (UK)<br>4217641329972469 (US) | 5118081410264525 (UK)<br>5109486948867999 (US) | N/A
-    External Error in Processing | 4000128449498204 (US) | 5333423768173347 (US)<br>5100976565928800 (UK) | 375522679892992
-    Acquirer Validation | 4000135814550378 (US) | 5333435197139699 (US) | 375523500980436
-    Lost/Stolen | 4000157454627969 (US) | 5333452804487502 (US) | 375525991062202
-    Do Not Honor | 4000164166749263 (India) | 5333463046218753 (US) | 375526064276158 (Germany)
-    Insufficient Funds | 4000173946194872 (India)<br>4008384424370890 (UK) | 5333475572200849 (US) | 375527639875136 (Ireland)
-    Exceeds Withdrawal Limit | 4000189336416410 (India) | 5333482348715142 (US) | 375528929838107 (Ireland)
-    Exceeds Withdrawal Frequency | 4000196948974975 (India) | 5333498929343773 (South Korea) | 375529856696120 (Ireland)
-    Invalid Transaction | 4000203016321921 (US) | 5333502383316074 (Puerto Rico) | 375530796593260
-    Format Error | 4000212384978055 (US) | 5333518577223892 (US) | 375531494255517 (Indonesia)
-    Issuer or Switch Inoperative | 4000229544877670 (US) | 5333527145351713 (Costa Rica) | 375532604034750
-    Timeout/Retry | 4000234977370839 (US) | 5333532915594096 (US) | 375533558061005 (Greece)
-    Expired Card | 4000247422310226 (US) | 5333540337444022 (US) | 375534876707683 (Greece)
-    Transaction Not Permitted To Cardholder | 4000254588011960 (US) | 5333554636535091 (US) | 375535264614027 (Greece)
-    Transaction Not Permitted on Terminal | 4000269084739575 (US) | 5333562868563707 (US) | 375536629108788 (Greece)
-    Restricted Card | 4000273652260030 (US) | 5333578626428553 (US) | 375537795464104 (Greece)
-    Invalid CVV | N/A | 5333583123003909 (US) | 375538733297606 (Greece)
+    <table>
+      <tr>
+        <th>DECLINE REASON</th>
+        <th>VISA</th>
+        <th>MASTERCARD</th>
+        <th>AMEX</th>
+      </tr>
+      <tr>
+        <td>Decline</td>
+        <td>4008370896662369 (UK)</td>
+        <td>5333418445863914 (Russian Federation)<br>5001638548736201 (UK)</td>
+        <td>375521501910816</td>
+      </tr>
+      <tr>
+        <td>Soft Decline - Authentication is Advised</td>
+        <td>4021937195658141 (UK)<br>4217641329972469 (US)</td>
+        <td>5118081410264525 (UK)<br>5109486948867999 (US)</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td>External Error in Processing</td>
+        <td>4000128449498204 (US)</td>
+        <td>5333423768173347 (US)<br>5100976565928800 (UK)</td>
+        <td>375522679892992</td>
+      </tr>
+      <tr>
+        <td>Acquirer Validation</td>
+        <td>4000135814550378 (US)</td>
+        <td>5333435197139699 (US)</td>
+        <td>375523500980436</td>
+      </tr>
+      <tr>
+        <td>Lost/Stolen</td>
+        <td>4000157454627969 (US)</td>
+        <td>5333452804487502 (US)</td>
+        <td>375525991062202</td>
+      </tr>
+      <tr>
+        <td>Do Not Honor</td>
+        <td>4000164166749263 (India)</td>
+        <td>5333463046218753 (US)</td>
+        <td>375526064276158 (Germany)</td>
+      </tr>
+      <tr>
+        <td>Insufficient Funds</td>
+        <td>4000173946194872 (India)<br>4008384424370890 (UK)</td>
+        <td>5333475572200849 (US)</td>
+        <td>375527639875136 (Ireland)</td>
+      </tr>
+      <tr>
+        <td>Exceeds Withdrawal Limit</td>
+        <td>4000189336416410 (India)</td>
+        <td>5333482348715142 (US)</td>
+        <td>375528929838107 (Ireland)</td>
+      </tr>
+      <tr>
+        <td>Exceeds Withdrawal Frequency</td>
+        <td>4000196948974975 (India)</td>
+        <td>5333498929343773 (South Korea)</td>
+        <td>375529856696120 (Ireland)</td>
+      </tr>
+      <tr>
+        <td>Invalid Transaction</td>
+        <td>4000203016321921 (US)</td>
+        <td>5333502383316074 (Puerto Rico)</td>
+        <td>375530796593260</td>
+      </tr>
+    </table>
+
+    <table>
+      <tr>
+        <th>DECLINE REASON</th>
+        <th>VISA</th>
+        <th>MASTERCARD</th>
+        <th>AMEX</th>
+      </tr>
+      <tr>
+        <td>Format Error</td>
+        <td>4000212384978055 (US)</td>
+        <td>5333518577223892 (US)</td>
+        <td>375531494255517 (Indonesia)</td>
+      </tr>
+      <tr>
+        <td>Issuer or Switch Inoperative</td>
+        <td>4000229544877670 (US)</td>
+        <td>5333527145351713 (Costa Rica)</td>
+        <td>375532604034750</td>
+      </tr>
+      <tr>
+        <td>Timeout/Retry</td>
+        <td>4000234977370839 (US)</td>
+        <td>5333532915594096 (US)</td>
+        <td>375533558061005 (Greece)</td>
+      </tr>
+      <tr>
+        <td>Expired Card</td>
+        <td>4000247422310226 (US)</td>
+        <td>5333540337444022 (US)</td>
+        <td>375534876707683 (Greece)</td>
+      </tr>
+      <tr>
+        <td>Transaction Not Permitted To Cardholder</td>
+        <td>4000254588011960 (US)</td>
+        <td>5333554636535091 (US)</td>
+        <td>375535264614027 (Greece)</td>
+      </tr>
+      <tr>
+        <td>Transaction Not Permitted on Terminal</td>
+        <td>4000269084739575 (US)</td>
+        <td>5333562868563707 (US)</td>
+        <td>375536629108788 (Greece)</td>
+      </tr>
+      <tr>
+        <td>Restricted Card</td>
+        <td>4000273652260030 (US)</td>
+        <td>5333578626428553 (US)</td>
+        <td>375537795464104 (Greece)</td>
+      </tr>
+      <tr>
+        <td>Invalid CVV</td>
+        <td>N/A</td>
+        <td>5333583123003909 (US)</td>
+        <td>375538733297606 (Greece)</td>
+      </tr>
+    </table>
 
     ### Discover, Diners, and China Union Pay
 
-    **DECLINE REASON** | **DISCOVER** | **DINERS** | **CHINA UNION PAY**
-    ---|---|---|---
-    Do Not Honor | 6011206770448741 | 364095045584513 | 6217993670836073
-    Insufficient Funds | 6504855645720348 | 361798030407730 | 6227892150665366
+    <table>
+      <tr>
+        <th>DECLINE REASON</th>
+        <th>DISCOVER</th>
+        <th>DINERS</th>
+        <th>CHINA UNION PAY</th>
+      </tr>
+      <tr>
+        <td>Do Not Honor</td>
+        <td>6011206770448741</td>
+        <td>364095045584513</td>
+        <td>6217993670836073</td>
+      </tr>
+      <tr>
+        <td>Insufficient Funds</td>
+        <td>6504855645720348</td>
+        <td>361798030407730</td>
+        <td>6227892150665366</td>
+      </tr>
+    </table>
