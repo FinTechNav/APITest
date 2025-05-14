@@ -14,9 +14,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy original API documentation
+      - name: Inspect file structure and content
+        run: |
+          echo "Repository contents:"
+          ls -la
+
+          echo "Checking for openapi.yaml:"
+          ls -la openapi.yaml || echo "openapi.yaml not found"
+
+          echo "Contents of openapi.yaml:"
+          cat openapi.yaml || echo "Cannot read openapi.yaml"
+
+          echo "Checking for references to info.yaml:"
+          grep -n "info.yaml" openapi.yaml || echo "No references to info.yaml found"
+
+      - name: Fix missing references
+        run: |
+          echo "Creating a self-contained copy of openapi.yaml..."
+
+          # Create a temporary version with no external references
+          cat openapi.yaml > openapi.temp.yaml
+
+          # Replace any $ref references to external files with inline content
+          sed -i 's/\$ref: .*info.yaml.*/title: Integrated Commerce Omni-Channel Payment API\n  version: 2025.04.28\n  description: A unified API for processing payments across multiple channels/' openapi.temp.yaml
+
+          # Check the fixed file
+          echo "Modified openapi.yaml:"
+          head -20 openapi.temp.yaml
+
+      - name: Deploy fixed API documentation
         uses: bump-sh/github-action@v1
         with:
           doc: omni-v2
           token: ${{ secrets.BUMP_TOKEN }}
-          file: openapi.yaml # Replace with your original file name if different
+          file: openapi.temp.yaml
