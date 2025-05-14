@@ -17,17 +17,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18' # Updated to Node.js 18 for compatibility
 
-      - name: Install Redocly
-        run: npm install -g @redocly/cli
+      - name: Install Bump.sh CLI
+        run: npm install -g @bump.sh/cli
 
-      - name: Bundle OpenAPI files
-        run: redocly bundle openapi.yaml -o bundled.yaml
+      - name: Debug file structure
+        run: |
+          find . -name "*.yaml" | sort
+          cat servers.yaml
 
-      - name: Deploy API documentation
-        uses: bump-sh/github-action@v1
-        with:
-          doc: omni-v2
-          token: ${{ secrets.BUMP_TOKEN }}
-          file: bundled.yaml
+      - name: Deploy to Bump.sh with resolve-refs
+        run: bump deploy openapi.yaml --doc omni-v2 --resolve-refs
+        env:
+          BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
