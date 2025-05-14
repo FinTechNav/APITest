@@ -961,7 +961,7 @@ components:
         expirationTimestamp:
           type: string
           format: date-time
-          description: When the iframe session will expire.
+          description: When the iframe session will expire (UTC).
           example: '2025-04-17T14:19:03Z'
         status:
           type: string
@@ -1228,7 +1228,7 @@ components:
         expirationTimestamp:
           type: string
           format: date-time
-          description: When the iframe session will expire.
+          description: When the iframe session will expire (UTC).
           example: '2025-04-17T14:19:03Z'
         status:
           type: string
@@ -3088,7 +3088,7 @@ paths:
         #### Webhook Events
 
         The following webhook events will be triggered during the refund process:
-        - `refund.completed` - when a transaction void or refund for a previously completed transaction is completed.
+        - `refund.completed` - when an unreferenced refund is completed.
         - `token.created` - when a card is tokenized and stored as a payment method.
       tags:
         - Transactions
