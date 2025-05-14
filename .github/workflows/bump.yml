@@ -14,20 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: List files (Debug)
-        run: |
-          pwd
-          ls -la
-          echo "Looking for openapi.yaml:"
-          find . -name "openapi.yaml" || echo "Not found"
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
 
       - name: Install Bump.sh CLI
-        run: npm install -g @bump.sh/cli@2.9.5
+        run: npm install -g @bump.sh/cli
 
       - name: Deploy to Bump.sh
         run: bump deploy ./openapi.yaml --doc omni-v2
