@@ -135,6 +135,24 @@ jobs:
                   else:
                       print("Error: Failed to load topics file")
               
+              # Handle special case for components.schemas
+              if ('components' in openapi and 'schemas' in openapi['components'] and 
+                  isinstance(openapi['components']['schemas'], dict) and '$ref' in openapi['components']['schemas']):
+                  schemas_ref = openapi['components']['schemas']['$ref']
+                  print(f"Found schemas reference: {schemas_ref}")
+                  
+                  # Clean up the reference path
+                  if schemas_ref.startswith('./'):
+                      schemas_ref = schemas_ref[2:]
+                  
+                  # Load schemas file
+                  schemas = load_yaml_safely(schemas_ref)
+                  if schemas:
+                      print(f"Loaded schemas file successfully")
+                      openapi['components']['schemas'] = schemas
+                  else:
+                      print("Error: Failed to load schemas file")
+              
               # Resolve other references
               print("Resolving references...")
               try:
