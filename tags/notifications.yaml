@@ -1,6 +1,6 @@
 - name: Transaction Notifications
   description: |
-    Our webhooks provide real-time notifications for completed transaction and token events. You can configure webhooks to receive notifications for specific events, such as when a sale transaction is completed or a token is created. Each event type is separate, so you can choose to subscribe to only the events you want to receive notifications for. See the individual endpoint documentation for more details about when each event is triggered.
+    Our little webhooks provide real-time notifications for completed transaction and token events. You can configure webhooks to receive notifications for specific events, such as when a sale transaction is completed or a token is created. Each event type is separate, so you can choose to subscribe to only the events you want to receive notifications for. See the individual endpoint documentation for more details about when each event is triggered.
 
     Each event is sent as a `POST` request to the URL you specify in your webhook configuration, and events can all be sent to the same URL or to different URLs (per event type). The request body will contain a JSON payload with the details of the event.
 
