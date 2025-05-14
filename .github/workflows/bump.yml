@@ -22,52 +22,88 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Bump.sh CLI and dependencies
+      - name: Install Bump.sh CLI
         run: |
           npm install -g bump-cli
-          pip install --user pyyaml
 
-      - name: Create reference resolution script
+      - name: Custom script for x-topics import
         run: |
-          cat > resolve.py << 'EOF'
-          import yaml
+          # Create a Python script for direct text replacement
+          cat > direct_replace.py << 'EOF'
+          import re
           import os
           import sys
-
-          def load_yaml(file_path):
-              with open(file_path, 'r') as f:
-                  return yaml.safe_load(f)
-
-          def save_yaml(data, file_path):
-              with open(file_path, 'w') as f:
-                  yaml.dump(data, f, default_flow_style=False, sort_keys=False, width=200, allow_unicode=True)
+          import yaml  # Just for initial detection, not for parsing
 
           def main():
-              # Load main file
-              print("Loading OpenAPI file...")
-              openapi = load_yaml('openapi.yaml')
+              # Read the main OpenAPI file
+              with open('openapi.yaml', 'r') as f:
+                  content = f.read()
               
-              # Handle x-topics
-              if 'x-topics' in openapi and isinstance(openapi['x-topics'], dict) and '$ref' in openapi['x-topics']:
-                  topics_ref = openapi['x-topics']['$ref']
-                  if topics_ref.startswith('./'):
-                      topics_ref = topics_ref[2:]
+              # Detect if there's an x-topics reference
+              pattern = r"x-topics:(?:\s+)?\$ref:\s+['\"]?([\./\w-]+\.ya?ml)['\"]?"
+              match = re.search(pattern, content)
+              
+              if match:
+                  topics_file = match.group(1)
+                  if topics_file.startswith('./'):
+                      topics_file = topics_file[2:]
+                      
+                  print(f"Found x-topics reference to {topics_file}")
                   
-                  print(f"Loading topics from: {topics_ref}")
-                  topics = load_yaml(topics_ref)
-                  if topics:
-                      openapi['x-topics'] = topics
-              
-              # Save the combined file
-              save_yaml(openapi, 'openapi-resolved.yaml')
-              print("Created combined OpenAPI file")
+                  # Read the topics file
+                  if not os.path.exists(topics_file):
+                      print(f"Error: Topics file {topics_file} not found!")
+                      sys.exit(1)
+                      
+                  with open(topics_file, 'r') as f:
+                      topics_content = f.read()
+                      
+                  # Extract indentation level from the x-topics line
+                  x_topics_line = match.group(0)
+                  indent = re.match(r"(\s*)x-topics", x_topics_line).group(1)
+                  
+                  # Replace the x-topics reference with the actual content
+                  # We need to adjust the indentation for all lines in the topics file
+                  adjusted_topics = []
+                  first_line = True
+                  
+                  for line in topics_content.split('\n'):
+                      if not line.strip():
+                          adjusted_topics.append(line)  # Keep empty lines as is
+                      elif first_line:
+                          # First line replaces the x-topics: $ref: line
+                          adjusted_topics.append(f"{indent}x-topics: {line.lstrip()}")
+                          first_line = False
+                      else:
+                          # Add proper indentation to subsequent lines
+                          adjusted_topics.append(f"{indent}  {line}")
+                  
+                  adjusted_topics_content = '\n'.join(adjusted_topics)
+                  
+                  # Replace the x-topics reference with the indented content
+                  replaced_content = re.sub(
+                      r"x-topics:\s+\$ref:\s+['\"]?[\./\w-]+\.ya?ml['\"]?",
+                      adjusted_topics_content.rstrip(),
+                      content
+                  )
+                  
+                  # Write the result to the output file
+                  with open('openapi-resolved.yaml', 'w') as f:
+                      f.write(replaced_content)
+                      
+                  print("Successfully created openapi-resolved.yaml with preserved formatting")
+              else:
+                  print("No x-topics reference found, copying file as is")
+                  with open('openapi-resolved.yaml', 'w') as f:
+                      f.write(content)
 
           if __name__ == "__main__":
               main()
           EOF
 
-      - name: Run reference resolution
-        run: python3 resolve.py
+          # Run the script
+          python3 direct_replace.py
 
       - name: Deploy to Bump.sh
         id: deploy
