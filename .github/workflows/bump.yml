@@ -18,31 +18,28 @@ jobs:
         run: |
           echo "Creating symbolic links for missing files..."
 
-          # Create parent directories if they don't exist
-          mkdir -p components
-
-          # Create symlinks to handle incorrect paths
+          # Create symlinks in the components directory
           ln -sf "$(pwd)/components/schemas/errors.yaml" "$(pwd)/components/errors.yaml"
           ln -sf "$(pwd)/components/schemas/cards.yaml" "$(pwd)/components/cards.yaml"
           ln -sf "$(pwd)/components/schemas/receipts.yaml" "$(pwd)/components/receipts.yaml"
           ln -sf "$(pwd)/components/schemas/transactions.yaml" "$(pwd)/components/transactions.yaml"
 
+          # Create symlinks at the root level as well
+          ln -sf "$(pwd)/components/schemas/errors.yaml" "$(pwd)/errors.yaml"
+          ln -sf "$(pwd)/components/schemas/cards.yaml" "$(pwd)/cards.yaml"
+          ln -sf "$(pwd)/components/schemas/receipts.yaml" "$(pwd)/receipts.yaml"
+          ln -sf "$(pwd)/components/schemas/transactions.yaml" "$(pwd)/transactions.yaml"
+
           echo "Verifying symlinks..."
+          ls -la
           ls -la components/
 
           # Check if the symlinks actually work
-          if [ -f components/errors.yaml ]; then
-            echo "components/errors.yaml is accessible"
-            head -n 5 components/errors.yaml
+          if [ -f errors.yaml ]; then
+            echo "errors.yaml is accessible"
+            head -n 5 errors.yaml
           else
-            echo "components/errors.yaml is not accessible"
-          fi
-
-          if [ -f components/transactions.yaml ]; then
-            echo "components/transactions.yaml is accessible"
-            head -n 5 components/transactions.yaml
-          else
-            echo "components/transactions.yaml is not accessible"
+            echo "errors.yaml is not accessible"
           fi
 
       - name: Deploy API documentation
