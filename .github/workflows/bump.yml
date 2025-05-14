@@ -18,24 +18,13 @@ jobs:
         run: |
           echo "Current directory:"
           pwd
-          echo "Repository contents:"
-          ls -la
-          echo "Full path to servers.yaml:"
-          realpath servers.yaml || echo "servers.yaml not found"
-
-      - name: Set up working directory
-        run: |
-          # Copy everything to /tmp/api
-          mkdir -p /tmp/api
-          cp -r . /tmp/api/
-          echo "Contents of /tmp/api:"
-          ls -la /tmp/api/
+          echo "Parent directory:"
+          ls -la ..
 
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
-        env:
-          GITHUB_WORKSPACE: /tmp/api
         with:
           doc: ${{ secrets.BUMP_DOC_ID }}
           token: ${{ secrets.BUMP_TOKEN }}
-          file: /tmp/api/openapi.yaml
+          file: openapi.yaml
+          working-directory: ${{ github.workspace }}
