@@ -13,21 +13,40 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch all history to ensure we have all files
 
       - name: Setup Node.js v20
         uses: actions/setup-node@v3
         with:
-          node-version: '20' # Updated to Node.js 20 as required by Bump.sh CLI
+          node-version: '20'
 
-      - name: Install Bump.sh CLI
-        run: npm install -g bump-cli # Using the correct package name
-
-      - name: Debug file structure
+      - name: Deep inspection
         run: |
-          find . -name "*.yaml" | sort
-          cat servers.yaml
+          echo "Current directory:"
+          pwd
+          echo "Repository contents:"
+          ls -la
+          echo "Find all YAML files:"
+          find . -name "*.yaml" -o -name "*.yml"
+          echo "Server file inspection:"
+          ls -la servers.yaml || echo "servers.yaml not visible to ls"
+          file servers.yaml || echo "servers.yaml not visible to file command"
+          test -f servers.yaml && echo "servers.yaml exists according to test" || echo "servers.yaml does not exist according to test"
+          cat servers.yaml || echo "Cannot cat servers.yaml"
 
-      - name: Deploy to Bump.sh
-        run: bump deploy openapi.yaml --doc omni-v2 --resolve-refs
-        env:
-          BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
+      - name: Try to create a copy of servers.yaml
+        run: |
+          echo "Creating a copy of servers.yaml to ensure it exists"
+          cp -v servers.yaml servers.yaml.bak || echo "Cannot copy servers.yaml"
+          echo "Creating a new servers.yaml file"
+          echo "[]" > servers.yaml.new
+          echo "Checking new file"
+          cat servers.yaml.new
+
+      - name: Deploy API documentation
+        uses: bump-sh/github-action@v1
+        with:
+          doc: omni-v2
+          token: ${{ secrets.BUMP_TOKEN }}
+          file: openapi.yaml
