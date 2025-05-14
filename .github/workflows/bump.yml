@@ -25,26 +25,51 @@ jobs:
       - name: Install Bump.sh CLI
         run: npm install -g bump-cli
 
-      - name: Advanced Diagnostics
+      - name: Print file paths
         run: |
-          echo "Full diagnostic check..."
+          echo "Working directory: $(pwd)"
+          echo "List of YAML files:"
+          find . -name "*.yaml" -o -name "*.yml" | sort
 
-          echo "1. Examining openapi.yaml:"
-          grep -n "x-topics" -A3 openapi.yaml
+          echo "Content of topics.yaml:"
+          cat topics.yaml | head -20
 
-          echo "2. Testing reference syntax:"
-          # Create a test file with a slightly different reference format
-          cp openapi.yaml openapi-test.yaml
-
-          # Replace the reference line with a variation to test
-          sed -i 's|x-topics:.*|x-topics: { "$ref": "./topics.yaml" }|' openapi-test.yaml
-
-          echo "Modified reference in test file:"
-          grep -n "x-topics" -A3 openapi-test.yaml
-
-      - name: Deploy test file to Bump.sh
+      - name: Check if topics.yaml is valid YAML
         run: |
-          echo "Deploying test file with modified reference..."
-          bump deploy openapi-test.yaml --doc omni-v2
+          echo "Validating topics.yaml..."
+          python3 -c 'import yaml, sys; yaml.safe_load(open("topics.yaml")); print("topics.yaml is valid YAML")'
+
+      - name: Try using absolute path for reference
+        run: |
+          echo "Creating openapi file with absolute path reference..."
+          cp openapi.yaml openapi-absolute.yaml
+
+          # Get absolute path to topics.yaml
+          TOPICS_PATH="$(pwd)/topics.yaml"
+
+          # Replace the relative path with absolute path
+          python3 -c "
+          import yaml
+          import os
+
+          # Load the OpenAPI file
+          with open('openapi-absolute.yaml', 'r') as f:
+              openapi = yaml.safe_load(f)
+
+          # Update to use absolute path
+          if 'x-topics' in openapi and '\$ref' in openapi['x-topics']:
+              openapi['x-topics'] = {'\\$ref': '$TOPICS_PATH'}
+
+          # Write the updated file
+          with open('openapi-absolute.yaml', 'w') as f:
+              yaml.dump(openapi, f, default_flow_style=False)
+
+          print('Successfully updated reference to use absolute path')
+          "
+
+      - name: Deploy using absolute path reference
+        run: |
+          echo "Deploying with absolute path reference..."
+          bump deploy openapi-absolute.yaml --doc omni-v2
         env:
           BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
