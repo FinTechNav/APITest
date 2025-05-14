@@ -1,0 +1,8 @@
+WebhookSignatureHeader:
+  name: x-fsk-wh-chksm
+  in: header
+  description: The SHA-256 hash signature of the webhook payload, encoded in base64.
+  example: "OU6bkK1/nScyy8fA+3QTZj1i3xaVMmAarTEnvogFFTA="
+  required: true
+  schema:
+    type: string

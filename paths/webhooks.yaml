@@ -1,0 +1,111 @@
+SaleCompleted:
+  post:
+    operationId: webhookSaleCompleted
+    tags:
+      - Transaction Notifications
+    summary: Sale completed
+    description: This webhook event is triggered when a financial transaction is processed and completed.
+    security: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/WebhookSignatureHeader"
+    requestBody:
+      $ref: "../components/requestBodies.yaml#/SaleCompletedWebhook"
+    responses:
+      "200":
+        $ref: "../components/responses.yaml#/SuccessfulWebhookAcknowledgement"
+
+AuthCompleted:
+  post:
+    operationId: webhookAuthCompleted
+    tags:
+      - Transaction Notifications
+    summary: Auth completed
+    description: This webhook event is triggered when a transaction authorization is completed.
+    security: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/WebhookSignatureHeader"
+    requestBody:
+      $ref: "../components/requestBodies.yaml#/AuthCompletedWebhook"
+    responses:
+      "200":
+        $ref: "../components/responses.yaml#/SuccessfulWebhookAcknowledgement"
+
+CaptureCompleted:
+  post:
+    operationId: webhookCaptureCompleted
+    tags:
+      - Transaction Notifications
+    summary: Capture completed
+    description: This webhook event is triggered when a transaction capture for a previously authorized transaction is completed.
+    security: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/WebhookSignatureHeader"
+    requestBody:
+      $ref: "../components/requestBodies.yaml#/CaptureCompletedWebhook"
+    responses:
+      "200":
+        $ref: "../components/responses.yaml#/SuccessfulWebhookAcknowledgement"
+
+RefundCompleted:
+  post:
+    operationId: webhookRefundCompleted
+    tags:
+      - Transaction Notifications
+    summary: Refund completed
+    description: This webook event is triggered when a transaction void or refund for a previously completed transaction is completed.
+    security: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/WebhookSignatureHeader"
+    requestBody:
+      $ref: "../components/requestBodies.yaml#/RefundCompletedWebhook"
+    responses:
+      "200":
+        $ref: "../components/responses.yaml#/SuccessfulWebhookAcknowledgement"
+
+TokenCreated:
+  post:
+    operationId: webhookTokenCreated
+    tags:
+      - Token Notifications
+    summary: Token created
+    description: This webhook event is triggered when a card is tokenized and stored as a payment method.
+    security: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/WebhookSignatureHeader"
+    requestBody:
+      $ref: "../components/requestBodies.yaml#/TokenCreatedWebhook"
+    responses:
+      "200":
+        $ref: "../components/responses.yaml#/SuccessfulWebhookAcknowledgement"
+
+TokenUpdated:
+  post:
+    operationId: webhookTokenUpdated
+    tags:
+      - Token Notifications
+    summary: Token updated
+    description: This webhook event is triggered when an expiration date for a previously tokenized card is updated.
+    security: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/WebhookSignatureHeader"
+    requestBody:
+      $ref: "../components/requestBodies.yaml#/TokenUpdatedWebhook"
+    responses:
+      "200":
+        $ref: "../components/responses.yaml#/SuccessfulWebhookAcknowledgement"
+
+TokenRemoved:
+  post:
+    operationId: webhookTokenRemoved
+    tags:
+      - Token Notifications
+    summary: Token removed
+    description: This webhook event is triggered when a previously tokenized card is removed from the system.
+    security: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/WebhookSignatureHeader"
+    requestBody:
+      $ref: "../components/requestBodies.yaml#/TokenRemovedWebhook"
+    responses:
+      "200":
+        $ref: "../components/responses.yaml#/SuccessfulWebhookAcknowledgement"

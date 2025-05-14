@@ -1,0 +1,66 @@
+title: Integrated Commerce Omni-Channel Payment API
+description: |
+  ### Introduction
+
+  The Integrated Commerce Omni-Channel Payment API is a RESTful API that provides a unified interface for processing payments across multiple channels. This API enables developers to integrate payment processing capabilities into their applications with a single set of endpoints, simplifying implementation and reducing development time.
+
+  The API supports integration in both the United States and Canada, using USD and CAD currencies.
+
+  ### Features
+
+  #### Card Present Transactions
+
+  The API supports the following Card Present transaction types:
+  - Authorization: Verification with the Issuer if the card is valid for payment.  The authorization amount is reserved, but not captured/settled.
+  - Capture: Complete a previously authorized transaction.  The cardholder is billed for the transaction, and the transaction is settled to the merchant.
+  - Sale: Combined authorization and capture in a single step.
+  - Refund: Process reversal of a previous sale transaction (automatically performs a void if the transaction is in the current batch, or a refund if already settled)
+
+  Card Present transactions are processed through Verifone T650c (countertop) and T650p (portable) Android-based payment terminals.
+
+  #### Card Not Present Transactions
+
+  For online payments, the API provides Hosted payment pages/iframes for payment transactions and secure card data collection for tokenization.  The API supports the following Card Not Present transaction types:
+  - Authorization: Verification with the Issuer if the card is valid for payment.  The authorization amount is reserved, but not captured/settled.
+    - Includes AVS (Address Verification Service) and CVV validation support
+  - Capture: Complete a previously authorized transaction.  The cardholder is billed for the transaction, and the transaction is settled to the merchant.
+  - Sale: Combined authorization and capture in a single step.
+    - Includes AVS (Address Verification Service) and CVV validation support
+  - Refund: Process reversal of a previous sale transaction (automatically performs a void if the transaction is in the current batch, or a refund if already settled)
+  - AVS (Address Verification Service) and CVV validation
+
+  #### Tokenization
+
+  The API implements a tokenization system that:
+  - Creates payment tokens from both Card Present and Card Not Present transactions
+  - Maintains tokens that work across all channels (in-person and online)
+  - Supports token management operations (create, update, delete)
+
+  #### Webhooks
+
+  Real-time notifications via webhooks for:
+  - Transaction events ([sales](#operation-post-SaleCompleted), [authorizations](#operation-post-AuthCompleted), [captures](#operation-post-CaptureCompleted), [refunds](#operation-post-RefundCompleted))
+  - Token operations ([creation](#operation-post-TokenCreated), [updates](#operation-post-TokenUpdated), [deletion](#operation-post-TokenRemoved))
+
+  #### Payment Methods
+
+  The API uses "Payment Methods" as the foundation for processing transactions. Each payment method has a unique paymentMethodId that represents a specific way to accept payments:
+
+  - **Physical Terminals**: For Card Present, in-person transactions
+  - **Virtual Terminals**: For Card Not Present, online transactions
+  - **Tokenized Cards**: For processing Card On File transactions where customer payment information has been securely stored for recurring or future transactions
+
+  When you call the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint, the API returns a list of all payment methods available to your account. This includes physical payment terminals for in-store transactions and virtual payment terminals for online payments.
+
+  For example, a virtual payment method might be a customized checkout iframe for your website, a dedicated payment form for your mobile app, or a hosted payment page for email invoices. Each virtual method can be tailored for different use cases – some optimized for desktop browsers, others for mobile devices, or specialized for recurring subscriptions.
+
+  Each payment method includes details such as its ID, type (physical or virtual), currency, description, and whether it's set as a default. This information helps you determine which payment method to use for different transaction scenarios.
+
+  ### Support
+
+  For technical assistance, please contact our support team at [support@integratedcommerce.io](mailto:support@integratedcommerce.io).
+version: 2025.04.28
+contact:
+  name: Integrated Commerce Support
+  url: https://docs.omni.integratedcommerce.io
+  email: support@integratedcommerce.io

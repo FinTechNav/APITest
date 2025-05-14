@@ -1,0 +1,66 @@
+openapi: 3.1.0
+info:
+  $ref: './info.yaml'
+servers:
+  $ref: './servers.yaml'
+security:
+  - ApiKeyHeader: []
+tags:
+  $ref: './tags/index.yaml'
+components:
+  securitySchemes:
+    $ref: './components/securitySchemes.yaml'
+  schemas:
+    $ref: './components/schemas/common.yaml'
+  parameters:
+    $ref: './components/parameters.yaml'
+  requestBodies:
+    $ref: './components/requestBodies.yaml'
+  responses:
+    $ref: './components/responses.yaml'
+  examples:
+    $ref: './components/examples.yaml'
+paths:
+  '/payment-methods':
+    $ref: './paths/payment-methods.yaml#/getPaymentMethods'
+  '/payment-methods/physical':
+    $ref: './paths/tokens.yaml#/createCardPresentToken'
+  '/payment-methods/virtual':
+    $ref: './paths/tokens.yaml#/createCardNotPresentToken'
+  '/payment-methods/token/{id}':
+    $ref: './paths/tokens.yaml#/tokenOperations'
+  '/transactions/physical-sale':
+    $ref: './paths/transactions.yaml#/saleCardPresent'
+  '/transactions/virtual-sale':
+    $ref: './paths/transactions.yaml#/saleCardNotPresent'
+  '/transactions/token-sale':
+    $ref: './paths/transactions.yaml#/saleToken'
+  '/transactions/physical-auth':
+    $ref: './paths/transactions.yaml#/authCardPresent'
+  '/transactions/virtual-auth':
+    $ref: './paths/transactions.yaml#/authCardNotPresent'
+  '/transactions/token-auth':
+    $ref: './paths/transactions.yaml#/authToken'
+  '/transactions/capture':
+    $ref: './paths/transactions.yaml#/capture'
+  '/transactions/refund':
+    $ref: './paths/transactions.yaml#/refund'
+  '/transactions/unreferenced-physical-refund':
+    $ref: './paths/transactions.yaml#/unreferencedRefundCardPresent'
+  '/transactions/unreferenced-virtual-refund':
+    $ref: './paths/transactions.yaml#/unreferencedRefundCardNotPresent'
+webhooks:
+  SaleCompleted:
+    $ref: './paths/webhooks.yaml#/SaleCompleted'
+  AuthCompleted:
+    $ref: './paths/webhooks.yaml#/AuthCompleted'
+  CaptureCompleted:
+    $ref: './paths/webhooks.yaml#/CaptureCompleted'
+  RefundCompleted:
+    $ref: './paths/webhooks.yaml#/RefundCompleted'
+  TokenCreated:
+    $ref: './paths/webhooks.yaml#/TokenCreated'
+  TokenUpdated:
+    $ref: './paths/webhooks.yaml#/TokenUpdated'
+  TokenRemoved:
+    $ref: './paths/webhooks.yaml#/TokenRemoved'

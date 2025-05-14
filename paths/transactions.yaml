@@ -1,0 +1,699 @@
+saleCardPresent:
+  post:
+    operationId: saleCardPresent
+    summary: Sale (Card Present)
+    description: |
+      Process a financial transaction using a physical payment terminal where the card is present. The card will be tokenized for future use.
+
+      #### Webhook Events
+
+      The following webhook events will be triggered during the transaction process:
+      - `sale.completed` - when a financial transaction is processed and completed.
+      - `token.created` - when a card is tokenized and stored as a payment method.
+    tags:
+      - Transactions
+    requestBody:
+      description: The request to process a Card Present transaction using a physical payment terminal.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/transactions.yaml#/CardPresentRequest"
+          examples:
+            cpSaleRequest:
+              summary: Card Present Sale request example
+              value:
+                amount: 1000
+                amountBreakdown:
+                  amountGoodsAndServices: 1000
+                  tax: 0
+                  cashBack: 0
+                  tip: 0
+                paymentMethodId: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+                invoiceNumber: "inv_12345678"
+                orderNumber: "order_number_1234"
+                referenceId: "ref_s192i49i"
+    responses:
+      "200":
+        description: A successful Card Present sale response
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas/transactions.yaml#/TransactionResponseObject"
+                - type: object
+                  properties:
+                    paymentMethod:
+                      allOf:
+                        - $ref: "../components/schemas/transactions.yaml#/PaymentMethodDetails"
+                        - type: object
+                          description: |
+                            The payment method used for this Card Present transaction.
+
+                            If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
+                          properties:
+                            id:
+                              example: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+            examples:
+              successfulResponse:
+                $ref: "../components/examples.yaml#/SaleCardPresentResponse"
+      "400":
+        description: Request Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/errors.yaml#/Error"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"
+
+saleCardNotPresent:
+  post:
+    operationId: saleCardNotPresent
+    summary: Sale (Card Not Present)
+    description: |
+      Process a financial transaction using a hosted payment page or iframe where the card is not physically present. The card will be tokenized for future use.
+
+      #### Webhook Events
+
+      The following webhook events will be triggered during the transaction process:
+      - `sale.completed` - when a financial transaction is processed and completed.
+      - `token.created` - when a card is tokenized and stored as a payment method.
+    tags:
+      - Transactions
+    requestBody:
+      description: The request to process a Card Not Present transaction using a hosted payment page or iframe.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/transactions.yaml#/CardNotPresentRequest"
+          examples:
+            cnpSaleRequest:
+              summary: Card Not Present Sale request example
+              value:
+                amount: 1000
+                amountBreakdown:
+                  amountGoodsAndServices: 1000
+                  tax: 0
+                  cashBack: 0
+                  tip: 0
+                paymentMethodId: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
+                invoiceNumber: "inv_12345678"
+                orderNumber: "order_number_1234"
+                referenceId: "ref_s192i49i"
+                returnUrl: "https://merchant.example.com/payment-complete"
+    responses:
+      "200":
+        description: A successful Card Not Present sale response
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/transactions.yaml#/CNPVirtualResponse"
+            examples:
+              successfulResponse:
+                summary: A successful response for a Card Not Present sale transaction.
+                value:
+                  id: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+                  paymentMethod:
+                    id: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
+                    type: "virtual"
+                    currency: "USD"
+                    description: "Online Checkout Iframe"
+                  invoiceNumber: "inv_12345678"
+                  orderNumber: "order_number_1234"
+                  referenceId: "ref_s192i49i"
+                  requestedAmount: 1000
+                  sessionId: "ses_01JSFAMY0AGW27QKP30C727512"
+                  iframeUrl: "https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512"
+                  expirationTimestamp: "2025-04-17T14:19:03Z"
+                  status: "pending"
+      "400":
+        description: Request Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/errors.yaml#/Error"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"
+
+saleToken:
+  post:
+    operationId: saleToken
+    summary: Sale (Token)
+    description: |
+      Process a financial transaction using a previously tokenized card.
+
+      #### Webhook Events
+
+      The following webhook events will be triggered during the transaction process:
+      - `sale.completed` - when a financial transaction is processed and completed.
+    tags:
+      - Transactions
+    requestBody:
+      description: The request to process a Card On File transaction using a tokenized card.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/transactions.yaml#/CardOnFileRequest"
+          examples:
+            cofSaleRequest:
+              summary: Card On File Sale request example
+              value:
+                amount: 1000
+                amountBreakdown:
+                  amountGoodsAndServices: 1000
+                  tax: 0
+                  cashBack: 0
+                  tip: 0
+                paymentMethodId: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
+                invoiceNumber: "inv_12345678"
+                orderNumber: "order_number_1234"
+                referenceId: "ref_s192i49i"
+    responses:
+      "200":
+        description: A successful Card On File sale response
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/transactions.yaml#/CNPTransactionResponse"
+            examples:
+              successfulResponse:
+                summary: A successful response for a Card On File sale transaction.
+                value:
+                  id: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+                  paymentMethod:
+                    id: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
+                    type: "token"
+                    currency: "USD"
+                    description: "Token for John Doe's Visa"
+                    maskedCardNumber: "************0011"
+                    cardExpDate: "1225"
+                  invoiceNumber: "inv_12345678"
+                  orderNumber: "order_number_1234"
+                  referenceId: "ref_s192i49i"
+                  resultCode: 0
+                  resultText: "Successful transaction request"
+                  requestedAmount: 1000
+                  approvedAmount: 1000
+                  balanceAmount: 0
+                  transactionResponses:
+                    [
+                      {
+                        responseCode: 1,
+                        authCode: "000AAA",
+                        amountApproved: 1000,
+                        approvedAmountBreakdown:
+                          {
+                            amountGoodsAndServices: 1000,
+                            tax: 0,
+                            cashBack: 0,
+                            tip: 0
+                          },
+                        paymentMethod:
+                          {
+                            id: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J",
+                            type: "token",
+                            currency: "USD",
+                            description: "Token for John Doe's Visa",
+                            maskedCardNumber: "************0011",
+                            cardExpDate: "1225"
+                          },
+                        cardType: "VISA",
+                        avsResult: "A",
+                        cvvResult: "M",
+                        accountType: "Credit",
+                        hostResponseText: "APPROVED 00"
+                      }
+                    ]
+      "400":
+        description: Request Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/errors.yaml#/Error"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"
+
+authCardPresent:
+  post:
+    operationId: authCardPresent
+    summary: Auth (Card Present)
+    description: |
+      Create an authorization using a physical payment terminal where the card is present. This will not result in a financial transaction and the card will be tokenized. A capture must be performed to complete the financial transaction.
+
+      #### Webhook Events
+
+      The following webhook events will be triggered during the authorization process:
+      - `auth.completed` - when an authorization is processed and completed.
+      - `token.created` - when a card is tokenized and stored as a payment method.
+    tags:
+      - Transactions
+    requestBody:
+      description: The request to create a Card Present authorization using a physical payment terminal.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/transactions.yaml#/CardPresentRequest"
+          examples:
+            cpAuthRequest:
+              summary: Card Present Authorization request example
+              value:
+                amount: 1000
+                amountBreakdown:
+                  amountGoodsAndServices: 1000
+                  tax: 0
+                  cashBack: 0
+                  tip: 0
+                paymentMethodId: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+                invoiceNumber: "inv_12345678"
+                orderNumber: "order_number_1234"
+                referenceId: "ref_s192i49i"
+    responses:
+      "200":
+        description: A successful Card Present authorization response
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas/transactions.yaml#/TransactionResponseObject"
+                - type: object
+                  properties:
+                    paymentMethod:
+                      allOf:
+                        - $ref: "../components/schemas/transactions.yaml#/PaymentMethodDetails"
+                        - type: object
+                          description: |
+                            The payment method used for this Card Present transaction.
+
+                            If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
+                          properties:
+                            id:
+                              example: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+            examples:
+              successfulResponse:
+                $ref: "../components/examples.yaml#/AuthCardPresentResponse"
+      "400":
+        description: Request Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/errors.yaml#/Error"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"
+
+authCardNotPresent:
+  post:
+    operationId: authCardNotPresent
+    summary: Auth (Card Not Present)
+    description: |
+      Create an authorization using a hosted payment page or iframe where the card is not physically present. This will not result in a financial transaction and the card will be tokenized. A capture must be performed to complete the financial transaction.
+
+      #### Webhook Events
+
+      The following webhook events will be triggered during the authorization process:
+      - `auth.completed` - when an authorization is processed and completed.
+      - `token.created` - when a card is tokenized and stored as a payment method.
+    tags:
+      - Transactions
+    requestBody:
+      description: The request to create a Card Not Present authorization using a hosted payment page or iframe.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/transactions.yaml#/CardNotPresentRequest"
+          examples:
+            cnpAuthRequest:
+              summary: Card Not Present Authorization request example
+              value:
+                amount: 1000
+                amountBreakdown:
+                  amountGoodsAndServices: 1000
+                  tax: 0
+                  cashBack: 0
+                  tip: 0
+                paymentMethodId: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
+                invoiceNumber: "inv_12345678"
+                orderNumber: "order_number_1234"
+                referenceId: "ref_s192i49i"
+                returnUrl: "https://merchant.example.com/payment-complete"
+    responses:
+      "200":
+        description: A successful Card Not Present authorization response
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/transactions.yaml#/CNPVirtualResponse"
+            examples:
+              successfulResponse:
+                summary: A successful response for a Card Not Present authorization transaction.
+                value:
+                  id: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+                  paymentMethod:
+                    id: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
+                    type: "virtual"
+                    currency: "USD"
+                    description: "Online Checkout Iframe"
+                  invoiceNumber: "inv_12345678"
+                  orderNumber: "order_number_1234"
+                  referenceId: "ref_s192i49i"
+                  requestedAmount: 1000
+                  sessionId: "ses_01JSFAMY0AGW27QKP30C727512"
+                  iframeUrl: "https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512"
+                  expirationTimestamp: "2025-04-17T14:19:03Z"
+                  status: "pending"
+      "400":
+        description: Request Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/errors.yaml#/Error"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"
+
+authToken:
+  post:
+    operationId: authToken
+    summary: Auth (Token)
+    description: |
+      Create an authorization using a previously tokenized card. This will not result in a financial transaction. A capture must be performed to complete the financial transaction.
+
+      #### Webhook Events
+
+      The following webhook events will be triggered during the authorization process:
+      - `auth.completed` - when an authorization is processed and completed.
+    tags:
+      - Transactions
+    requestBody:
+      description: The request to create a Card On File authorization using a tokenized card.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/transactions.yaml#/CardOnFileRequest"
+          examples:
+            cofAuthRequest:
+              summary: Card On File Authorization request example
+              value:
+                amount: 1000
+                amountBreakdown:
+                  amountGoodsAndServices: 1000
+                  tax: 0
+                  cashBack: 0
+                  tip: 0
+                paymentMethodId: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
+                invoiceNumber: "inv_12345678"
+                orderNumber: "order_number_1234"
+                referenceId: "ref_s192i49i"
+    responses:
+      "200":
+        description: A successful Card On File authorization response
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/transactions.yaml#/CNPTransactionResponse"
+            examples:
+              successfulResponse:
+                summary: A successful response for a Card On File authorization transaction.
+                value:
+                  id: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+                  paymentMethod:
+                    id: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
+                    type: "token"
+                    currency: "USD"
+                    description: "Token for John Doe's Visa"
+                    maskedCardNumber: "************0011"
+                    cardExpDate: "1225"
+                  invoiceNumber: "inv_12345678"
+                  orderNumber: "order_number_1234"
+                  referenceId: "ref_s192i49i"
+                  resultCode: 0
+                  resultText: "Successful transaction request"
+                  requestedAmount: 1000
+                  approvedAmount: 1000
+                  balanceAmount: 0
+                  transactionResponses:
+                    [
+                      {
+                        responseCode: 1,
+                        authCode: "000AAA",
+                        amountApproved: 1000,
+                        approvedAmountBreakdown:
+                          {
+                            amountGoodsAndServices: 1000,
+                            tax: 0,
+                            cashBack: 0,
+                            tip: 0
+                          },
+                        paymentMethod:
+                          {
+                            id: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J",
+                            type: "token",
+                            currency: "USD",
+                            description: "Token for John Doe's Visa",
+                            maskedCardNumber: "************0011",
+                            cardExpDate: "1225"
+                          },
+                        cardType: "VISA",
+                        avsResult: "A",
+                        cvvResult: "M",
+                        accountType: "Credit",
+                        hostResponseText: "APPROVED 00"
+                      }
+                    ]
+      "400":
+        description: Request Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/errors.yaml#/Error"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"
+
+capture:
+  post:
+    operationId: capture
+    summary: Capture
+    description: |
+      Complete a previously authorized transaction, resulting in a financial transaction. The amount can be equal to or less than the original authorization amount.
+
+      #### Webhook Events
+
+      The following webhook events will be triggered during the capture process:
+      - `capture.completed` - when a transaction capture for a previously authorized transaction is completed.
+    tags:
+      - Transactions
+    requestBody:
+      description: The request to capture a previously authorized transaction.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/transactions.yaml#/CaptureRequest"
+          examples:
+            captureRequest:
+              summary: Capture request example
+              value:
+                referenceId: "ref_s192i49i"
+                amount: 1000
+                invoiceNumber: "inv_12345678"
+                orderNumber: "order_number_1234"
+    responses:
+      "200":
+        description: A successful capture response
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/transactions.yaml#/CaptureResponse"
+            examples:
+              successfulResponse:
+                $ref: "../components/examples.yaml#/CaptureResponse"
+      "400":
+        description: Request Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/errors.yaml#/Error"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"
+
+refund:
+  post:
+    operationId: refund
+    summary: Refund
+    description: |
+      Process a referenced refund or void for a previously completed sale or capture transaction. If the transaction is in the current batch, the system will attempt to void it, otherwise it will be refunded resulting in a financial transaction.
+
+      #### Webhook Events
+
+      The following webhook events will be triggered during the refund process:
+      - `refund.completed` - when a transaction void or refund for a previously completed transaction is completed.
+    tags:
+      - Transactions
+    requestBody:
+      description: The request to refund or void a previously completed transaction.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/transactions.yaml#/RefundRequest"
+          examples:
+            refundRequest:
+              summary: Refund request example
+              value:
+                referenceId: "ref_s192i49i"
+                amount: 1000
+                invoiceNumber: "ref_inv_12345678"
+                orderNumber: "ref_order_1234"
+    responses:
+      "200":
+        description: A successful refund response
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/transactions.yaml#/RefundResponse"
+            examples:
+              successfulResponse:
+                $ref: "../components/examples.yaml#/RefundResponse"
+      "400":
+        description: Request Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/errors.yaml#/Error"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"
+
+unreferencedRefundCardPresent:
+  post:
+    operationId: unreferencedRefundCardPresent
+    summary: Unreferenced Refund (Card Present)
+    description: |
+      Process an unreferenced refund without a matching completed sale or capture transaction using a physical payment terminal where the card is present.
+
+      Note regarding Unreferenced Refunds - Unreferenced refunds are refunds that do not require a previously completed payment transaction to be referenced. They are only available on certain accounts by request to [support@integratedcommerce.io](mailto:support@integratedcommerce.io).
+
+      #### Webhook Events
+
+      The following webhook events will be triggered during the refund process:
+      - `refund.completed` - when an unreferenced refund is completed.
+      - `token.created` - when a card is tokenized and stored as a payment method.
+    tags:
+      - Transactions
+    requestBody:
+      description: The request to process an unreferenced refund using a physical payment terminal.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/transactions.yaml#/UnreferencedPhysicalRefundRequest"
+          examples:
+            unreferencedPhysicalRefundRequest:
+              summary: Unreferenced Card Present refund request example
+              value:
+                amount: 1000
+                paymentMethodId: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+                invoiceNumber: "inv_12345678"
+                orderNumber: "order_number_1234"
+                referenceId: "ref_s192i49i"
+    responses:
+      "200":
+        description: A successful Card Present unreferenced refund response
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas/transactions.yaml#/TransactionResponseObject"
+                - type: object
+                  properties:
+                    paymentMethod:
+                      allOf:
+                        - $ref: "../components/schemas/transactions.yaml#/PaymentMethodDetails"
+                        - type: object
+                          description: |
+                            The payment method used for this Card Present unreferenced refund.
+
+                            If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
+                          properties:
+                            id:
+                              example: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+            examples:
+              successfulResponse:
+                $ref: "../components/examples.yaml#/UnreferencedRefundCardPresentResponse"
+      "400":
+        description: Request Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/errors.yaml#/Error"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"
+
+unreferencedRefundCardNotPresent:
+  post:
+    operationId: unreferencedRefundCardNotPresent
+    summary: Unreferenced Refund (Card Not Present)
+    description: |
+      Process an unreferenced refund without a matching completed sale or capture transaction using a hosted payment page or iframe where the card is not physically present.
+
+      Note regarding Unreferenced Refunds - Unreferenced refunds are refunds that do not require a previously completed payment transaction to be referenced. They are only available on certain accounts by request to [support@integratedcommerce.io](mailto:support@integratedcommerce.io).
+
+      #### Webhook Events
+
+      The following webhook events will be triggered during the refund process:
+      - `refund.completed` - when a transaction void or refund for a previously completed transaction is completed.
+      - `token.created` - when a card is tokenized and stored as a payment method.
+    tags:
+      - Transactions
+    requestBody:
+      description: The request to process an unreferenced refund using a hosted payment page or iframe.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/transactions.yaml#/UnreferencedVirtualRefundRequest"
+          examples:
+            unreferencedVirtualRefundRequest:
+              summary: Unreferenced Card Not Present refund request example
+              value:
+                amount: 1000
+                paymentMethodId: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
+                invoiceNumber: "inv_12345678"
+                orderNumber: "order_number_1234"
+                referenceId: "ref_s192i49i"
+                returnUrl: "https://merchant.example.com/payment-complete"
+    responses:
+      "200":
+        description: A successful Card Not Present unreferenced refund response
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/transactions.yaml#/CNPVirtualResponse"
+            examples:
+              successfulResponse:
+                summary: A successful response for a Card Not Present unreferenced refund transaction.
+                value:
+                  id: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+                  paymentMethod:
+                    id: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
+                    type: "virtual"
+                    currency: "USD"
+                    description: "Online Checkout Iframe"
+                  invoiceNumber: "inv_12345678"
+                  orderNumber: "order_number_1234"
+                  referenceId: "ref_s192i49i"
+                  requestedAmount: 1000
+                  sessionId: "ses_01JSFAMY0AGW27QKP30C727512"
+                  iframeUrl: "https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512"
+                  expirationTimestamp: "2025-04-17T14:19:03Z"
+                  status: "pending"
+      "400":
+        description: Request Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/errors.yaml#/Error"
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"

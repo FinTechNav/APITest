@@ -1,0 +1,140 @@
+WebhookEvent:
+  type: object
+  description: Webhook event details.
+  properties:
+    id:
+      type: string
+      description: Unique ID for this webhook event.
+      example: "evt_01JS21X856RR8R69GV5F17XK9C"
+    type:
+      type: string
+      description: The type of event that occurred.
+      example: "event.completed"
+    timestamp:
+      type: string
+      format: date-time
+      description: The time when the event was triggered.
+      example: "2025-04-16T14:30:00Z"
+  required:
+    - id
+    - type
+    - timestamp
+
+SaleCompletedWebhook:
+  type: object
+  description: Represents the webhook triggered when a financial transaction is processed and completed.
+  properties:
+    event:
+      allOf:
+        - $ref: "#/WebhookEvent"
+        - type: object
+          properties:
+            type:
+              example: "sale.completed"
+    originalResponse:
+      $ref: "../transactions.yaml#/TransactionResponseObject"
+  required:
+    - event
+    - originalResponse
+
+AuthCompletedWebhook:
+  type: object
+  description: Represents the webhook triggered when a transaction authorization is completed.
+  properties:
+    event:
+      allOf:
+        - $ref: "#/WebhookEvent"
+        - type: object
+          properties:
+            type:
+              example: "auth.completed"
+    originalResponse:
+      $ref: "../transactions.yaml#/TransactionResponseObject"
+  required:
+    - event
+    - originalResponse
+
+CaptureCompletedWebhook:
+  type: object
+  description: Represents the webhook triggered when a transaction capture for a previously authorized transaction is completed.
+  properties:
+    event:
+      allOf:
+        - $ref: "#/WebhookEvent"
+        - type: object
+          properties:
+            type:
+              example: "capture.completed"
+    originalResponse:
+      $ref: "../transactions.yaml#/CaptureResponse"
+  required:
+    - event
+    - originalResponse
+
+RefundCompletedWebhook:
+  type: object
+  description: Represents the webhook triggered when a transaction void or refund for a previously completed transaction is completed.
+  properties:
+    event:
+      allOf:
+        - $ref: "#/WebhookEvent"
+        - type: object
+          properties:
+            type:
+              example: "refund.completed"
+    originalResponse:
+      $ref: "../transactions.yaml#/RefundResponse"
+  required:
+    - event
+    - originalResponse
+
+TokenCreatedWebhook:
+  type: object
+  description: Represents the webhook triggered when a card is tokenized and stored as a payment method.
+  properties:
+    event:
+      allOf:
+        - $ref: "#/WebhookEvent"
+        - type: object
+          properties:
+            type:
+              example: "token.created"
+    originalResponse:
+      $ref: "../transactions.yaml#/CardOnFileAddResponse"
+  required:
+    - event
+    - originalResponse
+
+TokenUpdatedWebhook:
+  type: object
+  description: Represents the webhook triggered when an expiration date for a previously tokenized card is updated.
+  properties:
+    event:
+      allOf:
+        - $ref: "#/WebhookEvent"
+        - type: object
+          properties:
+            type:
+              example: "token.updated"
+    originalResponse:
+      $ref: "../transactions.yaml#/CardOnFileUpdateResponse"
+  required:
+    - event
+    - originalResponse
+
+TokenRemovedWebhook:
+  type: object
+  description: Represents the webhook triggered when a previously tokenized card is removed from the system.
+  properties:
+    event:
+      allOf:
+        - $ref: "#/WebhookEvent"
+        - type: object
+          properties:
+            type:
+              example: "token.removed"
+    originalResponse:
+      $ref: "../transactions.yaml#/CardOnFileRemoveResponse"
+  required:
+    - event
+    - originalResponse

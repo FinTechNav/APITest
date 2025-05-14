@@ -1,0 +1,111 @@
+ResponseCode:
+  type: number
+  enum: [0,1,2,10,11,14,15,16,17,18,19,20,21,50,51,52,53,54,55,56]
+  description: >
+    Response codes:
+     * `0` - UNKNOWN
+     * `1` - APPROVED - Transaction was approved
+     * `2` - PARTIAL_APPROVED - Transaction was partially approved, but not for the full requested amount.
+     * `10` - DECLINED - Declined by the issuer or bank.
+     * `11` - INSUFFICIENT_FUNDS - Rejected due to insufficient funds in the account.
+     * `12` - CARD_EXPIRED - The card used for the transaction has expired.
+     * `13` - FRAUD_SUSPECTED - The transaction was flagged for potential fraud.
+     * `14` - INVALID_PAYMENT_INFO - The provided information is invalid (e.g.: card number).
+     * `15` - LIMIT_EXCEEDED - Rejected due to reaching a limit (e.g.: credit limit).
+     * `16` - VERIFICATION_REQUIRED - Additional customer verification is required for the transaction to proceed (e.g.: 3D Secure).
+     * `17` - AUTHENTICATION_FAILED - Rejected due to incorrect PIN or authentication failure.
+     * `18` - POLICY_VIOLATION - Rejected due to a violation of the payment gateway's terms of service or policies.
+     * `19` - BATCH_EMPTY - Indicates that the batch for processing is empty.
+     * `20` - RECORD_NOT_FOUND - Indicates that the requested record for a transaction was not found (e.g.: to VOID a reference).
+     * `21` - ALREADY_VOIDED - Indicates that the transaction has already been voided and cannot be processed again.
+     * `50` - NETWORK_ERROR - Rejected due to network or communication issues with the payment gateway.
+     * `51` - INVALID_ECR_PARAMETER - Terminal or system-specific errors.
+     * `52` - NOT_SUPPORTED - Rejected because the requested operation is not supported.
+     * `53` - BUSY_OR_UNAVAILABLE - Terminal or system is busy or unavailable.
+     * `54` - CANCELLED - Cancelled by the user or merchant.
+     * `55` - USER_CANCELLED - Specific to scenarios where the user cancels the transaction.
+     * `56` - TIMED_OUT_ON_USER_INPUT - Failed to complete the transaction in time.
+
+ValidationError:
+  type: object
+  description: Represents a validation error that occurred during the request.
+  properties:
+    code:
+      type: number
+      description: Error code
+      example: 2000
+    field:
+      type: string
+      description: The field with the error
+      example: amount
+    message:
+      type: string
+      description: Error message
+      example: Request validation failed
+    details:
+      type: string
+      description: Additional details about the error
+      example: "'Amount' must be between 1 and 999999999."
+
+ResultCode:
+  type: number
+  enum: [0, 1003, 1005, 3000, 3002, 3005, 3006, 3009, 3010, 3011, 3012, 3013, 3014, 3020, 9998, 9999]
+  description: |
+    Result codes:
+    * `0` - Successful transaction request. (Check each transactionResponse's responseCode to determine if a transaction was approved or declined)
+    * `1003` - No payment terminal available.
+    * `1005` - The specified terminal could not be found.
+    * `3000` - An unexpected error occurred. Please try again.
+    * `3002` - The transaction could not be completed because the payment terminal could not find the related transaction.
+    * `3005` - To resolve this error, power off your payment terminal, wait one minute and retry the transaction. If the error persists, please contact support.
+    * `3006` - The transaction could not be completed because the payment terminal is low on battery.
+    * `3009` - The transaction could not be completed because of network connectivity issues with the payment terminal. Please restore connectivity and try again.
+    * `3010` - The transaction took too long and was cancelled by the application.
+    * `3011` - Invalid transaction request. Please consult the documentation for valid transaction requests.
+    * `3012` - Invalid transaction request. paymentMethodId is invalid.
+    * `3013` - Invalid transaction request. The specified amount appears to be incorrect. Please retry with a smaller amount.
+    * `3014` - Invalid amount. Please try your transaction again with an amount greater than $0.
+    * `3020` - An unsupported transaction result was received.
+    * `9998` - The system is not ready to process a transaction.
+    * `9999` - An unknown error has occurred. If available, an auxiliary error code will be provided in the message.
+
+ResultText:
+  type: string
+  description: A message describing the result code in more detail.
+  example: "Successful transaction request"
+
+Error:
+  type: object
+  description: Represents an error that occurred during the request.
+  properties:
+    message:
+      type: string
+      description: Developer-facing error message.
+      example: Request failed validation
+    code:
+      type: number
+      enum: [1000, 2000, 3000, 9000]
+      description: >
+        Numeric error code. These are grouped into ranges for easier identification and troubleshooting.
+        Error codes:
+         * `1000` - AuthenticationGenericError
+         * `2000` - RequestValidationGenericError
+         * `3000` - UnknownServerGenericError
+         * `9000` - UnhandledGenericError
+      example: 2000
+    status:
+      type: number
+      enum: [0, 1, 2, 3]
+      description: >
+        Execution status of the request sent to the payment gateway.
+
+        Status codes:
+         * `0` - UNKNOWN
+         * `1` - COMPLETED - The request completed successfully.
+         * `2` - REJECTED - The request was rejected by the payment gateway.
+         * `3` - INTERRUPTED - The request was interrupted, and the final status is unknown.
+      example: 1
+    errorDetails:
+      type: array
+      items:
+        $ref: "#/ValidationError"

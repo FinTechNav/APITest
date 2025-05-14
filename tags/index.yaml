@@ -1,0 +1,4 @@
+- $ref: './transactions.yaml'
+- $ref: './tokens.yaml'
+- $ref: './payment-methods.yaml'
+- $ref: './notifications.yaml'

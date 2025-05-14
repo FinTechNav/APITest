@@ -1,0 +1,61 @@
+getPaymentMethods:
+  get:
+    operationId: getPaymentMethods
+    summary: List Payment Methods
+    description: |
+      Returns a list of valid payment methods that have been configured in the system for the authenticated merchant.
+
+      IDs of both "physical" payment terminals that can be used to process Card Present transactions and IDs of "virtual" terminals (hosted payment pages or iframes) that can be used to process Card Not Present transactions will be returned.
+    tags:
+      - Payment Methods
+    responses:
+      "200":
+        description: A successful response containing available payment methods
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  paymentMethod:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: |
+                          The payment method ID. Physical terminals will be prefixed with `pmt_trm_` and virtual terminals will be prefixed with `pmt_vrt_`.
+
+                          Example physical format: `pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF`
+                          Example virtual format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
+                      type:
+                        type: string
+                        enum: [physical, virtual]
+                      currency:
+                        type: string
+                        enum: [USD, CAD]
+                      description:
+                        type: string
+                        maxLength: 1000
+                        description: A human-readable name for the payment method
+            examples:
+              successfulResponse:
+                description: A successful response for retrieving the available payment methods.
+                value:
+                  - paymentMethodId:
+                      id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                      type: physical
+                      currency: USD
+                      description: Main Store Terminal
+                  - paymentMethodId:
+                      id: pmt_trm_01JRZQW7FXMG62D8HJTPK3Y5VB
+                      type: physical
+                      currency: USD
+                      description: Secondary Store Terminal
+                  - paymentMethodId:
+                      id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                      type: virtual
+                      currency: USD
+                      description: Online Checkout Iframe
+      "401":
+        $ref: "../components/responses.yaml#/UnauthorizedError"

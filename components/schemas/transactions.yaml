@@ -1,0 +1,777 @@
+ApprovedAmountBreakdown:
+  type: object
+  description: A breakdown of approvedAmount, where each amounts approved on the payment terminal are returned separately.
+  properties:
+    amountGoodsAndServices:
+      type: number
+      description: The approved amount for goods and services.
+      example: 1000
+    tax:
+      type: number
+      description: The approved tax amount.
+      example: 0
+    cashBack:
+      type: number
+      description: The approved cashback amount.
+      example: 0
+    tip:
+      type: number
+      description: The approved tip amount.
+      example: 0
+
+ReferenceId:
+  type: string
+  maxLength: 100
+  description: >
+    A reference ID to tag and track this transaction for reconciliation. The reference ID
+    is also used for processing referenced refunds. This value can be set by the merchant,
+    or a unique reference ID will be generated automatically if not set by the merchant.
+  example: ref_s192i49i
+
+ReferenceIdForResponse:
+  type: string
+  maxLength: 100
+  description: >
+    The value returned will either be the reference ID set in the transaction request or if
+    no value was set, it will be a value that is generated automatically by the system.
+    The reference ID is needed for processing referenced transactions like captures and refunds.
+  example: ref_s192i49i
+
+ReferenceIdForCapture:
+  type: string
+  maxLength: 100
+  description: >
+    The reference ID that identifies the original authorization transaction being captured.
+  example: ref_s192i49i
+
+ReferenceIdForRefund:
+  type: string
+  maxLength: 100
+  description: >
+    The reference ID that identifies the original transaction being refunded.
+  example: ref_s192i49i
+
+InvoiceNumber:
+  type: string
+  maxLength: 100
+  description: >
+    An optional alphanumeric invoice number for this transaction.
+    If provided, the same value will be populated in the response.
+  example: inv_12345678
+
+OrderNumber:
+  type: string
+  maxLength: 100
+  description: >
+    An optional alphanumeric order number for this transaction.
+    If provided, the same value will be populated in the response.
+  example: order_number_1234
+
+Amount:
+  type: number
+  format: uint32
+  minimum: 1
+  maximum: 999999999
+  description: >
+    The total transaction amount. This is the full amount that will be processed in the transaction. Transaction amounts are positive integers representing the amount in its smallest denomination of the configured currency (e.g. cents for USD or CAD).
+  example: 1000
+
+AmountBreakdown:
+  type: object
+  description: Optional fields to specify the portion of the total transaction amount that represents goods/services, tax, cashback and/or tip. These values are for reporting purposes only and will not be added to the Amount field. These amount are represented as a positive integer in the smallest denomination of the configured currency (e.g. cents for USD or CAD).
+  properties:
+    amountGoodsAndServices:
+      type: number
+      description: The amount for goods and services.
+      example: 1000
+    tax:
+      type: number
+      description: The tax amount.
+      example: 0
+    cashBack:
+      type: number
+      description: The cashback amount.
+      example: 0
+    tip:
+      type: number
+      description: The tip amount.
+      example: 0
+
+AmountToCapture:
+  type: number
+  format: uint32
+  minimum: 1
+  maximum: 999999999
+  description: >
+    The amount to capture. Must be less than or equal to the original authorization amount. If not specified, the full authorized amount will be captured.
+  example: 1000
+
+AmountToRefund:
+  type: number
+  format: uint32
+  minimum: 1
+  maximum: 999999999
+  description: >
+    The requested amount to refund or void. If not specified, the full transaction amount will be refunded or voided. For partial refunds, must be less than the original transaction amount.
+  example: 1000
+
+AmountToRefundUnreferenced:
+  type: number
+  format: uint32
+  minimum: 1
+  maximum: 999999999
+  description: The requested amount to refund.
+  example: 1000
+
+PaymentMethodDetails:
+  type: object
+  description: The payment method used for this transaction.
+  properties:
+    id:
+      type: string
+      description: The unique identifier of the payment method. This ID has a prefix that makes it human-readable (pmt_trm_* for physical terminals, pmt_vrt_* for virtual terminals, pmt_tkn_* for tokenized cards), but applications should always use the `type` field to determine the payment method type rather than parsing this ID.
+      example: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
+    type:
+      type: string
+      enum: [physical, virtual, token]
+      description: |
+        The type of payment method:
+        - `physical` - A physical payment terminal for Card Present transactions
+        - `virtual` - A hosted payment page/iframe for Card Not Present transactions
+        - `token` - A tokenized card for card-on-file transactions
+      example: "token"
+    currency:
+      type: string
+      enum: [USD, CAD]
+      description: The currency of the payment method.
+      example: "USD"
+    description:
+      type: string
+      description: A human-readable name for the payment method.
+      example: "Token for John Doe's Visa"
+    maskedCardNumber:
+      type: string
+      description: The masked card number.
+      example: "************0011"
+    cardExpDate:
+      type: string
+      description: The expiration date of the card in MMYY format.
+      example: "1225"
+  required:
+    - id
+    - type
+    - currency
+
+TransactionResponse:
+  type: object
+  description: A single Sale Transaction may result in multiple Responses.
+  properties:
+    responseCode:
+      $ref: '../errors.yaml#/ResponseCode'
+    authCode:
+      type: string
+      description: The authorization code provided by the card issuer, confirming transaction approval.
+      example: 000AAA
+    amountApproved:
+      type: number
+      description: The amount approved for this transaction response.
+      example: 1000
+    approvedAmountBreakdown:
+      $ref: '#/ApprovedAmountBreakdown'
+    paymentMethod:
+      allOf:
+        - $ref: '#/PaymentMethodDetails'
+        - type: object
+          description: The payment method used for this transaction response.
+    cardType:
+      $ref: '../cards.yaml#/CardType'
+    avsResult:
+      $ref: '../cards.yaml#/AVSResult'
+    cvvResult:
+      $ref: '../cards.yaml#/CVVResult'
+    accountType:
+      type: string
+      description: The account type of the card (e.g. Credit or Debit)
+      example: Credit
+    hostResponseText:
+      type: string
+      description: A meaningful text explaining the response code from the host.
+      example: "APPROVED 00"
+    receipt:
+      $ref: '../receipts.yaml#/Receipt'
+
+CardPresentRequest:
+  type: object
+  description: Represents the request to process a Card Present transaction using a physical payment terminal.
+  properties:
+    amount:
+      $ref: '#/Amount'
+    amountBreakdown:
+      $ref: '#/AmountBreakdown'
+    paymentMethodId:
+      type: string
+      description: |
+        The ID of the physical payment terminal that will process this Card Present transaction.
+
+        - Example format: `pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF`
+        - OPTIONAL ONLY if you have a single terminal configured
+        - REQUIRED if you have multiple virtual and/or physical terminals configured
+
+        You can retrieve all available physical payment terminal IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+      example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+    referenceId:
+      $ref: '#/ReferenceId'
+  required:
+    - amount
+
+CardNotPresentRequest:
+  type: object
+  description: Represents the request to process a Card Not Present transaction using a hosted payment page or iframe.
+  properties:
+    amount:
+      $ref: '#/Amount'
+    amountBreakdown:
+      $ref: '#/AmountBreakdown'
+    paymentMethodId:
+      type: string
+      description: |
+        The ID of the hosted payment page or iframe that will collect card information for this Card Not Present transaction.
+
+        - Example format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
+        - OPTIONAL ONLY if you have a single hosted payment page configured
+        - REQUIRED if you have multiple virtual and/or physical terminals configured
+
+        You can retrieve all available hosted payment page or iframe IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+      example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+    referenceId:
+      $ref: '#/ReferenceId'
+    returnUrl:
+      type: string
+      description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided.
+      example: https://merchant.example.com/payment-complete
+  required:
+    - amount
+
+CardOnFileRequest:
+  type: object
+  description: Represents the request to process a Card On File transaction using a tokenized card.
+  properties:
+    amount:
+      $ref: '#/Amount'
+    amountBreakdown:
+      $ref: '#/AmountBreakdown'
+    paymentMethodId:
+      type: string
+      description: |
+        The ID of the tokenized card that will be used for this Card On File transaction.
+
+        - Example format: `pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J`
+        - ALWAYS REQUIRED when using a tokenized card
+      example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+    referenceId:
+      $ref: '#/ReferenceId'
+  required:
+    - amount
+    - paymentMethodId
+
+CaptureRequest:
+  type: object
+  description: Represents the request to capture a previously authorized transaction.
+  properties:
+    referenceId:
+      $ref: '#/ReferenceIdForCapture'
+    amount:
+      $ref: '#/AmountToCapture'
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+  required:
+    - referenceId
+
+RefundRequest:
+  type: object
+  description: Represents the request to refund or void a previously completed transaction.
+  properties:
+    referenceId:
+      $ref: '#/ReferenceIdForRefund'
+    amount:
+      $ref: '#/AmountToRefund'
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+  required:
+    - referenceId
+
+UnreferencedPhysicalRefundRequest:
+  type: object
+  description: Represents the request to process a Card Present unreferenced refund without a matching completed sale or capture transaction.
+  properties:
+    amount:
+      $ref: '#/AmountToRefundUnreferenced'
+    paymentMethodId:
+      type: string
+      description: |
+        The ID of the physical payment terminal that will process this Card Present unreferenced refund.
+
+        - Example format: `pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF`
+        - OPTIONAL ONLY if you have a single terminal configured
+        - REQUIRED if you have multiple virtual and/or physical terminals configured
+
+        You can retrieve all available physical payment terminal IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+      example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+    referenceId:
+      $ref: '#/ReferenceId'
+  required:
+    - amount
+
+UnreferencedVirtualRefundRequest:
+  type: object
+  description: Represents the request to process a Card Not Present unreferenced refund without a matching completed sale or capture transaction.
+  properties:
+    amount:
+      $ref: '#/AmountToRefundUnreferenced'
+    paymentMethodId:
+      type: string
+      description: |
+        The ID of the hosted payment page or iframe that will collect card information for this Card Not Present unreferenced refund.
+
+        - Example format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
+        - OPTIONAL ONLY if you have a single hosted payment page configured
+        - REQUIRED if you have multiple virtual and/or physical terminals configured
+
+        You can retrieve all available hosted payment page or iframe IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+    referenceId:
+      $ref: '#/ReferenceId'
+    returnUrl:
+      type: string
+      description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided.
+      example: https://merchant.example.com/refund-complete
+  required:
+    - amount
+
+CardOnFileAddRequest:
+  type: object
+  description: Represents the request to tokenize a card using a physical terminal.
+  properties:
+    paymentMethodId:
+      type: string
+      description: |
+        The ID of the payment method (physical terminal) to use for adding a card.
+        You can retrieve all available payment method IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+      example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+    referenceId:
+      $ref: '#/ReferenceId'
+  required:
+    - paymentMethodId
+
+CardOnFileVirtualAddRequest:
+  type: object
+  description: Represents the request to tokenize a card using a hosted payment page or iframe.
+  properties:
+    paymentMethodId:
+      type: string
+      description: |
+        The ID of the payment method (hosted payment page/iframe) to use for adding a card.
+        You can retrieve all available payment method IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+      example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+    referenceId:
+      $ref: '#/ReferenceId'
+    returnUrl:
+      type: string
+      description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided.
+      example: https://merchant.example.com/payment-complete
+  required:
+    - paymentMethodId
+
+CardOnFileUpdateRequest:
+  type: object
+  description: Represents the request to update a previously tokenized card.
+  properties:
+    referenceId:
+      $ref: '#/ReferenceId'
+    cardExpDate:
+      type: string
+      description: The new expiration date of the card in MMYY format.
+      example: "1225"
+  required:
+    - cardExpDate
+
+CNPVirtualResponse:
+  type: object
+  description: Represents the response to a Card Not Present sale or authorization using a hosted payment page or iframe.
+  properties:
+    id:
+      type: string
+      description: Unique ID for this transaction.
+      example: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+    paymentMethod:
+      allOf:
+        - $ref: '#/PaymentMethodDetails'
+        - type: object
+          description: The payment method used for this Card Not Present transaction.
+          properties:
+            id:
+              example: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+    referenceId:
+      $ref: '#/ReferenceIdForResponse'
+    requestedAmount:
+      type: number
+      description: The amount sent in the transaction request. The amount is always a non-null positive integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+      example: 1000
+    sessionId:
+      type: string
+      description: Session ID for the iframe transaction.
+      example: "ses_01JSFAMY0AGW27QKP30C727512"
+    iframeUrl:
+      type: string
+      description: URL for the iframe to collect payment information, or null if iframe could not be created due to invalid credentials, etc.
+      example: "https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512"
+    expirationTimestamp:
+      type: string
+      format: date-time
+      description: When the iframe session will expire.
+      example: "2025-04-17T14:19:03Z"
+    status:
+      type: string
+      enum: [pending, completed, expired, error]
+      description: Status of the iframe session. When created, this will always be pending. The status values will be updated as the customer goes through the iframe process.
+      example: "pending"
+
+TransactionResponseObject:
+  type: object
+  description: Represents the response to a sale or authorization transaction.
+  properties:
+    id:
+      type: string
+      description: Unique ID for this transaction.
+      example: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+    paymentMethod:
+      allOf:
+        - $ref: '#/PaymentMethodDetails'
+        - type: object
+          description: |
+            The payment method used for this transaction. This could be:
+
+            - The payment method used for this Card Present transaction.
+            - The payment method used for this Card Not Present transaction.
+            - The payment method used for this tokenized card transaction.
+
+            If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
+          properties:
+            id:
+              example: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+    referenceId:
+      $ref: '#/ReferenceIdForResponse'
+    resultCode:
+      $ref: '../errors.yaml#/ResultCode'
+    resultText:
+      $ref: '../errors.yaml#/ResultText'
+    requestedAmount:
+      type: number
+      description: The amount sent in the transaction request. The amount is always a non-null positive integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+      example: 1000
+    approvedAmount:
+      type: number
+      description: The amount approved. The approved amount is always a non-null positive integer in the smallest denomination of the currency (e.g. cents for USD or CAD). If approvedAmount is different from amount, it implies that an amount was adjusted by the merchant or customer (for example, a tip or surcharge added directly on a payment terminal).
+      example: 1000
+    balanceAmount:
+      type: number
+      description: The balance that remains to be paid on the transaction. This amount is always an integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+      example: 0
+    transactionResponses:
+      type: array
+      description: A list of all transaction responses received during the transaction. In most cases, there will be only one response. However, when performing Card Present transactions, some Payment Terminals can return more than one transaction response.
+      items:
+        allOf:
+          - $ref: '#/TransactionResponse'
+          - type: object
+            properties:
+              paymentMethod:
+                allOf:
+                  - $ref: '#/PaymentMethodDetails'
+                  - type: object
+                    description: |
+                      If a new card was tokenized during the transaction, the tokenized card ID and details will be returned (`pmt_tkn_*`). This value should be stored in your system if you wish to use it for subsequent Card On File transactions.
+                    properties:
+                      id:
+                        example: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
+
+CNPTransactionResponse:
+  type: object
+  description: Represents the response to a Card Not Present sale or authorization using a previously tokenized card.
+  properties:
+    id:
+      type: string
+      description: Unique ID for this transaction.
+      example: "trx_01J2F0EKHC7HY2R93C8ENBD1FG"
+    paymentMethod:
+      allOf:
+        - $ref: '#/PaymentMethodDetails'
+        - type: object
+          description: The payment method used for this transaction.
+          properties:
+            id:
+              example: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+    referenceId:
+      $ref: '#/ReferenceIdForResponse'
+    resultCode:
+      $ref: '../errors.yaml#/ResultCode'
+    resultText:
+      $ref: '../errors.yaml#/ResultText'
+    requestedAmount:
+      type: number
+      description: The amount sent in the transaction request. The amount is always a non-null positive integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+      example: 1000
+    approvedAmount:
+      type: number
+      description: The amount approved. The approved amount is always a non-null positive integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+      example: 1000
+    balanceAmount:
+      type: number
+      description: The balance that remains to be paid on the transaction. This amount is always an integer in the smallest denomination of the currency (e.g. cents for USD or CAD).
+      example: 0
+    transactionResponses:
+      type: array
+      description: A list of all transaction responses received during the transaction. In most cases, there will be only one response.
+      items:
+        $ref: '#/TransactionResponse'
+
+CaptureResponse:
+  type: object
+  description: Represents the response to a capture request.
+  properties:
+    id:
+      type: string
+      description: Unique ID for this capture transaction.
+      example: "trx_01J2F0ZJ2JW5B63CJFPXRGAB1S"
+    paymentMethod:
+      allOf:
+        - $ref: '#/PaymentMethodDetails'
+        - type: object
+          description: The payment method used for this transaction.
+          properties:
+            id:
+              example: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+    referenceId:
+      $ref: '#/ReferenceIdForCapture'
+    resultCode:
+      $ref: '../errors.yaml#/ResultCode'
+    resultText:
+      $ref: '../errors.yaml#/ResultText'
+    requestedAmount:
+      type: number
+      description: The amount requested for capture. If not specified in the request, this will be the full authorized amount.
+      example: 1000
+    approvedAmount:
+      type: number
+      description: The amount that was successfully captured.
+      example: 1000
+    receipt:
+      allOf:
+        - $ref: '../receipts.yaml#/Receipt'
+        - type: object
+          description: |
+            The receipt for the capture transaction, if available. If the original transaction was a Card Present transaction, the receipt will be included. For Card Not Present transactions, the receipt will be empty.
+          properties:
+            lines:
+              description: The receipt lines.
+
+RefundResponse:
+  type: object
+  description: Represents the response to a refund request.
+  properties:
+    id:
+      type: string
+      description: Unique ID for this refund transaction.
+      example: "trx_01J2F0ZJ2JW5B63CJFPXRGAB1S"
+    paymentMethod:
+      allOf:
+        - $ref: '#/PaymentMethodDetails'
+        - type: object
+          description: The payment method used for this transaction.
+          properties:
+            id:
+              example: "pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF"
+    invoiceNumber:
+      $ref: '#/InvoiceNumber'
+    orderNumber:
+      $ref: '#/OrderNumber'
+    referenceId:
+      $ref: '#/ReferenceIdForRefund'
+    resultCode:
+      $ref: '../errors.yaml#/ResultCode'
+    resultText:
+      $ref: '../errors.yaml#/ResultText'
+    requestedAmount:
+      type: number
+      description: The amount requested for refund. If not specified in the request, this will be the full transaction amount.
+      example: 1000
+    approvedAmount:
+      type: number
+      description: The amount that was successfully refunded or voided.
+      example: 1000
+    receipt:
+      allOf:
+        - $ref: '../receipts.yaml#/Receipt'
+        - type: object
+          description: |
+            The receipt for the refund transaction, if available. If the original transaction was a Card Present transaction, the receipt will be included. For Card Not Present transactions, the receipt will be empty.
+          properties:
+            lines:
+              description: The receipt lines.
+
+CardOnFileAddResponse:
+  type: object
+  description: Represents the response to a physical card tokenization request.
+  properties:
+    id:
+      type: string
+      description: Unique ID for this card tokenization transaction.
+      example: "trx_01J2F0ZJ2JW5B63CJFPXRGAB1S"
+    paymentMethod:
+      allOf:
+        - $ref: '#/PaymentMethodDetails'
+        - type: object
+          description: |
+            The tokenized card that was created.
+
+            Example format: `pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J`
+          properties:
+            id:
+              example: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
+    referenceId:
+      $ref: '#/ReferenceIdForResponse'
+    resultCode:
+      $ref: '../errors.yaml#/ResultCode'
+    resultText:
+      $ref: '../errors.yaml#/ResultText'
+    transactionResponses:
+      type: array
+      description: A list of all transaction responses received during the $0 authorization verification of the card.
+      items:
+        $ref: '#/TransactionResponse'
+
+CardOnFileVirtualAddResponse:
+  type: object
+  description: Represents the response to a hosted payment page or iframe card tokenization request.
+  properties:
+    id:
+      type: string
+      description: Unique ID for this card tokenization transaction.
+      example: "trx_01J2F0ZJ2JW5B63CJFPXRGAB1S"
+    paymentMethod:
+      allOf:
+        - $ref: '#/PaymentMethodDetails'
+        - type: object
+          description: The payment method used for this transaction.
+          properties:
+            id:
+              example: "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS"
+    referenceId:
+      $ref: '#/ReferenceIdForResponse'
+    requestedAmount:
+      type: number
+      description: Will be null or 0 for token creation.
+      example: 0
+    sessionId:
+      type: string
+      description: Session ID for the iframe transaction.
+      example: "ses_01JSFAMY0AGW27QKP30C727512"
+    iframeUrl:
+      type: string
+      description: URL for the iframe to collect payment information, or null if iframe could not be created due to invalid credentials, etc.
+      example: "https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512"
+    expirationTimestamp:
+      type: string
+      format: date-time
+      description: When the iframe session will expire.
+      example: "2025-04-17T14:19:03Z"
+    status:
+      type: string
+      enum: [pending, completed, expired, error]
+      description: Status of the iframe session. When created, this will always be pending. The status values will be updated as the customer goes through the iframe process.
+      example: "pending"
+
+CardOnFileUpdateResponse:
+  type: object
+  description: Represents the response to a tokenized card update request.
+  properties:
+    id:
+      type: string
+      description: Unique ID for this card update transaction.
+      example: "trx_01J2F0ZJ2JW5B63CJFPXRGAB1S"
+    paymentMethod:
+      allOf:
+        - $ref: '#/PaymentMethodDetails'
+        - type: object
+          description: The tokenized card that was updated.
+          properties:
+            id:
+              example: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
+    referenceId:
+      $ref: '#/ReferenceIdForResponse'
+    resultCode:
+      $ref: '../errors.yaml#/ResultCode'
+    resultText:
+      $ref: '../errors.yaml#/ResultText'
+
+CardOnFileRemoveResponse:
+  type: object
+  description: Represents the response to a tokenized card removal request.
+  properties:
+    id:
+      type: string
+      description: Unique ID for this card removal transaction.
+      example: "trx_01J2F0ZJ2JW5B63CJFPXRGAB1S"
+    paymentMethod:
+      allOf:
+        - $ref: '#/PaymentMethodDetails'
+        - type: object
+          description: The tokenized card that was removed.
+          properties:
+            id:
+              example: "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J"
+    referenceId:
+      $ref: '#/ReferenceIdForResponse'
+    resultCode:
+      $ref: '../errors.yaml#/ResultCode'
+    resultText:
+      $ref: '../errors.yaml#/ResultText'
