@@ -22,26 +22,30 @@ jobs:
       - name: Install Bump.sh CLI
         run: npm install -g bump-cli
 
-      - name: Inline x-topics in openapi.yaml
+      - name: Fix x-topics with Python
         run: |
-          echo "Fixing x-topics format..."
+          echo "Creating fixed OpenAPI file with Python..."
+          python3 -c '
+          import yaml, sys
 
-          # Get content from topics.yaml
-          TOPICS_CONTENT=$(cat topics.yaml)
+          # Load the files
+          with open("openapi.yaml", "r") as f:
+              openapi = yaml.safe_load(f)
+              
+          with open("topics.yaml", "r") as f:
+              topics = yaml.safe_load(f)
 
-          # Make a backup
-          cp openapi.yaml openapi.yaml.bak
+          # Replace the x-topics reference with the actual content
+          openapi["x-topics"] = topics
 
-          # Replace the $ref line with direct content
-          sed -i '/x-topics:/,+1d' openapi.yaml
+          # Write the updated file
+          with open("openapi-fixed.yaml", "w") as f:
+              yaml.dump(openapi, f, default_flow_style=False)
 
-          # Add x-topics as inline content
-          sed -i '/^openapi:/a x-topics:\n'"$TOPICS_CONTENT"'' openapi.yaml
-
-          # Verify
-          grep -A5 "x-topics:" openapi.yaml || echo "x-topics not found"
+          print("Successfully created openapi-fixed.yaml")
+          '
 
       - name: Deploy using Bump.sh CLI
-        run: bump deploy openapi.yaml --doc omni-v2
+        run: bump deploy openapi-fixed.yaml --doc omni-v2
         env:
           BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
