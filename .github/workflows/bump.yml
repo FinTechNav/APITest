@@ -21,9 +21,15 @@ jobs:
           echo "Looking for openapi.yaml:"
           find . -name "openapi.yaml" || echo "Not found"
 
-      - name: Deploy API documentation
-        uses: bump-sh/github-action@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          doc: omni-v2
-          token: ${{ secrets.BUMP_TOKEN }}
-          file: ./openapi.yaml # Explicitly use relative path
+          node-version: '16'
+
+      - name: Install Bump.sh CLI
+        run: npm install -g @bump.sh/cli@2.9.5
+
+      - name: Deploy to Bump.sh
+        run: bump deploy ./openapi.yaml --doc omni-v2
+        env:
+          BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
