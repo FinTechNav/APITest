@@ -2251,7 +2251,7 @@ paths:
       description: |
         Tokenize a card using a hosted payment page/iframe. This POST request initiates a tokenization session and returns a short-lived iframe URL to embed in your page, rather than using a static iframe URL.
 
-        When the customer submits their card information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete tokenization result will be delivered via the [Token Created webhook](#webhook-TokenCreated).
+        When the customer submits their card information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete tokenization result will be delivered via the [Token Created webhook](#operation-webhookTokenCreated).
 
         A verification transaction or $0 authorization will occur to validate the card. If valid, a tokenized card ID will be stored and a paymentMethodId will be returned for future Card On File transactions.
 
@@ -2517,7 +2517,7 @@ paths:
       description: |
         Process a financial transaction using a hosted payment page or iframe where the card is not physically present. This POST request initiates a payment session and returns a short-lived iframe URL to embed in your payment page, rather than using a static iframe URL.
 
-        When the customer submits their payment information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete transaction result will be delivered via the [Sale Completed webhook](#webhook-SaleCompleted).
+        When the customer submits their payment information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete transaction result will be delivered via the [Sale Completed webhook](#operation-webhookSaleCompleted).
 
         The card will be tokenized for future use.
 
@@ -2754,7 +2754,7 @@ paths:
       description: |
         Create an authorization using a hosted payment page or iframe where the card is not physically present. This POST request initiates an authorization session and returns a short-lived iframe URL to embed in your payment page, rather than using a static iframe URL.
 
-        When the customer submits their payment information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete authorization result will be delivered via the [Auth Completed webhook](#webhook-AuthCompleted).
+        When the customer submits their payment information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete authorization result will be delivered via the [Auth Completed webhook](#operation-webhookAuthCompleted).
 
         This will not result in a financial transaction and the card will be tokenized. A capture must be performed to complete the financial transaction.
 
@@ -3081,7 +3081,7 @@ paths:
       description: |
         Process an unreferenced refund without a matching completed sale or capture transaction using a hosted payment page or iframe where the card is not physically present. This POST request initiates a refund session and returns a short-lived iframe URL to embed in your refund page, rather than using a static iframe URL.
 
-        When the customer submits their card information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete refund result will be delivered via the [Refund Completed webhook](#webhook-RefundCompleted).
+        When the customer submits their card information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete refund result will be delivered via the [Refund Completed webhook](#operation-webhookRefundCompleted).
 
         Note regarding Unreferenced Refunds - Unreferenced refunds are refunds that do not require a previously completed payment transaction to be referenced. They are only available on certain accounts by request to [support@integratedcommerce.io](mailto:support@integratedcommerce.io).
 
