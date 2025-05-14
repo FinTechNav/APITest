@@ -14,28 +14,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Debug information
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Repository files:"
-          ls -la
-
-      - name: Create symlink to fix double directory issue
-        run: |
-          echo "Creating symlink to fix path resolution"
-          # First, determine our directory structure
-          WORKSPACE_DIR=$(pwd)
-          PARENT_DIR=$(dirname $WORKSPACE_DIR)
-
-          # Create a symlink from the expected location to current location
-          ln -sf $WORKSPACE_DIR $PARENT_DIR/APITest
-
-          echo "Symlink created:"
-          ls -la $PARENT_DIR/APITest
-
-      - name: Deploy API documentation
-        uses: bump-sh/github-action@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          doc: ${{ secrets.BUMP_DOC_ID }}
-          token: ${{ secrets.BUMP_TOKEN }}
-          file: openapi.yaml
+          node-version: '16'
+
+      - name: Install Bump.sh CLI
+        run: npm install -g @bump.sh/cli
+
+      - name: Deploy with Bump.sh CLI
+        run: |
+          echo "Deploying with Bump.sh CLI directly"
+          bump deploy openapi.yaml --doc ${{ secrets.BUMP_DOC_ID }} --token ${{ secrets.BUMP_TOKEN }}
