@@ -15,230 +15,65 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # Get full history for better context
+          fetch-depth: 0
 
       - name: Setup Node.js v20
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Install Bump.sh CLI
+      - name: Install Bump.sh CLI and dependencies
         run: |
           npm install -g bump-cli
           pip install --user pyyaml
 
-      - name: Consolidate OpenAPI files
-        id: consolidate
+      - name: Create reference resolution script
         run: |
-          echo "Creating consolidated OpenAPI file..."
-          cat > resolve_refs.py << 'EOF'
+          cat > resolve.py << 'EOF'
           import yaml
           import os
           import sys
-          import json
-          from pathlib import Path
 
-          def load_yaml_safely(file_path):
-              """Load a YAML file with error handling"""
-              try:
-                  with open(file_path, 'r') as f:
-                      return yaml.safe_load(f)
-              except Exception as e:
-                  print(f"Error loading {file_path}: {str(e)}")
-                  return None
+          def load_yaml(file_path):
+              with open(file_path, 'r') as f:
+                  return yaml.safe_load(f)
 
-          def find_and_resolve_refs(data, base_dir='.'):
-              """Find and resolve all $ref references in the object"""
-              # Find all external references first
-              ref_locations = []
-              
-              def _find_refs(obj, path=""):
-                  if isinstance(obj, dict):
-                      if '$ref' in obj and isinstance(obj['$ref'], str) and not obj['$ref'].startswith('#'):
-                          ref_locations.append((path, obj['$ref']))
-                      
-                      for k, v in obj.items():
-                          new_path = f"{path}/{k}" if path else k
-                          _find_refs(v, new_path)
-                  elif isinstance(obj, list):
-                      for i, item in enumerate(obj):
-                          _find_refs(item, f"{path}[{i}]")
-              
-              _find_refs(data)
-              
-              # Now resolve each reference
-              resolved_count = 0
-              for path, ref_value in ref_locations:
-                  try:
-                      # Parse the path to navigate to the object
-                      parts = path.split('/')
-                      target = data
-                      parent = None
-                      last_key = None
-                      
-                      for part in parts:
-                          if not part:  # Skip empty parts
-                              continue
-                          
-                          # Handle array indices
-                          if part.startswith('[') and part.endswith(']'):
-                              idx = int(part[1:-1])
-                              parent = target
-                              target = target[idx]
-                              last_key = idx
-                          else:
-                              parent = target
-                              target = target[part]
-                              last_key = part
-                      
-                      # Now resolve the reference
-                      file_path, fragment = ref_value.split('#', 1) if '#' in ref_value else (ref_value, None)
-                      
-                      # Handle relative paths
-                      if file_path.startswith('./'):
-                          file_path = file_path[2:]
-                      
-                      # Combine with base directory
-                      full_path = os.path.join(base_dir, file_path)
-                      
-                      print(f"Resolving reference: {ref_value}")
-                      
-                      # Load the referenced file
-                      ref_content = load_yaml_safely(full_path)
-                      if ref_content is None:
-                          print(f"Warning: Failed to load referenced file {file_path}")
-                          continue
-                      
-                      # Navigate to the specific fragment if present
-                      if fragment:
-                          fragment = fragment.lstrip('/')
-                          fragment_parts = fragment.split('/')
-                          current = ref_content
-                          
-                          for part in fragment_parts:
-                              if part in current:
-                                  current = current[part]
-                              else:
-                                  print(f"Warning: Could not resolve fragment path {fragment} in {file_path}")
-                                  continue
-                          
-                          # Replace the reference
-                          if isinstance(parent, dict):
-                              # Replace the entire reference object
-                              parent[last_key] = current
-                          elif isinstance(parent, list):
-                              parent[last_key] = current
-                      else:
-                          # Replace with the entire file content
-                          if isinstance(parent, dict):
-                              parent[last_key] = ref_content
-                          elif isinstance(parent, list):
-                              parent[last_key] = ref_content
-                      
-                      resolved_count += 1
-                  except Exception as e:
-                      print(f"Error resolving reference at {path}: {e}")
-                      import traceback
-                      traceback.print_exc()
-              
-              return resolved_count
-                  
+          def save_yaml(data, file_path):
+              with open(file_path, 'w') as f:
+                  yaml.dump(data, f, default_flow_style=False, sort_keys=False, width=200, allow_unicode=True)
+
           def main():
-              # Load main OpenAPI file
-              print("Loading main OpenAPI file...")
-              openapi = load_yaml_safely('openapi.yaml')
-              if not openapi:
-                  sys.exit(1)
+              # Load main file
+              print("Loading OpenAPI file...")
+              openapi = load_yaml('openapi.yaml')
               
-              # Handle special case for x-topics separately
+              # Handle x-topics
               if 'x-topics' in openapi and isinstance(openapi['x-topics'], dict) and '$ref' in openapi['x-topics']:
                   topics_ref = openapi['x-topics']['$ref']
-                  print(f"Found x-topics reference: {topics_ref}")
-                  
-                  # Clean up the reference path
                   if topics_ref.startswith('./'):
                       topics_ref = topics_ref[2:]
                   
-                  # Load topics file
-                  topics = load_yaml_safely(topics_ref)
+                  print(f"Loading topics from: {topics_ref}")
+                  topics = load_yaml(topics_ref)
                   if topics:
-                      print(f"Loaded topics file successfully")
                       openapi['x-topics'] = topics
-                  else:
-                      print("Error: Failed to load topics file")
               
-              # Resolve other references
-              max_iterations = 10  # Prevent infinite loops
-              for i in range(max_iterations):
-                  resolved_count = find_and_resolve_refs(openapi)
-                  if resolved_count == 0:
-                      print(f"No more external references found after {i+1} iterations")
-                      break
-                  print(f"Resolved {resolved_count} references in iteration {i+1}")
-              
-              # Write the resolved content to a new file in a safer way
-              try:
-                  with open('openapi-resolved.yaml', 'w') as f:
-                      yaml.dump(openapi, f, default_flow_style=False, sort_keys=False, width=200, allow_unicode=True)
-                  print("Successfully created openapi-resolved.yaml")
-              except Exception as e:
-                  print(f"Error writing resolved OpenAPI file: {str(e)}")
-                  sys.exit(1)
+              # Save the combined file
+              save_yaml(openapi, 'openapi-resolved.yaml')
+              print("Created combined OpenAPI file")
 
           if __name__ == "__main__":
               main()
           EOF
 
-          # Run the reference resolution script
-          python3 resolve_refs.py || true
-
-          # Check if the resolved file was created
-          if [ ! -f openapi-resolved.yaml ]; then
-            echo "Failed to create openapi-resolved.yaml, falling back to simple consolidation method"
-            
-            # Fallback to a simpler approach
-            cat > simple_resolve.py << 'EOF'
-            import yaml
-            import json
-            import os
-            import sys
-
-            def main():
-                # Load main OpenAPI file
-                print("Loading OpenAPI file with simple method...")
-                with open('openapi.yaml', 'r') as f:
-                    file_content = f.read()
-                
-                # Load as JSON since it's more forgiving
-                try:
-                    # First convert YAML to JSON
-                    openapi = yaml.safe_load(file_content)
-                    
-                    # Then dump as YAML again
-                    with open('openapi-resolved.yaml', 'w') as f:
-                        yaml.dump(openapi, f, default_flow_style=False, sort_keys=False)
-                    
-                    print("Successfully created a simplified version of openapi-resolved.yaml")
-                except Exception as e:
-                    print(f"Error in simple resolver: {e}")
-                    sys.exit(1)
-
-            if __name__ == "__main__":
-                main()
-            EOF
-            
-            python3 simple_resolve.py
-          fi
-
-          # Print file size for verification
-          echo "Original OpenAPI file size: $(wc -c openapi.yaml | awk '{print $1}') bytes"
-          echo "Resolved OpenAPI file size: $(wc -c openapi-resolved.yaml | awk '{print $1}') bytes"
+      - name: Run reference resolution
+        run: python3 resolve.py
 
       - name: Deploy to Bump.sh
         id: deploy
         run: |
           echo "Deploying to Bump.sh..."
-          bump deploy openapi-resolved.yaml --doc omni-v2 || bump deploy openapi.yaml --doc omni-v2
+          bump deploy openapi-resolved.yaml --doc omni-v2
         env:
           BUMP_TOKEN: ${{ secrets.BUMP_TOKEN }}
 
@@ -247,12 +82,7 @@ jobs:
         run: |
           echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "* Source file: openapi.yaml ($(wc -c openapi.yaml | awk '{print $1}') bytes)" >> $GITHUB_STEP_SUMMARY
-          if [ -f openapi-resolved.yaml ]; then
-            echo "* Resolved file: openapi-resolved.yaml ($(wc -c openapi-resolved.yaml | awk '{print $1}') bytes)" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "* Resolved file: Failed to create" >> $GITHUB_STEP_SUMMARY
-          fi
+          echo "* Original file: $(wc -c openapi.yaml | awk '{print $1}') bytes" >> $GITHUB_STEP_SUMMARY
+          echo "* Resolved file: $(wc -c openapi-resolved.yaml | awk '{print $1}') bytes" >> $GITHUB_STEP_SUMMARY
           echo "* Status: ${{ steps.deploy.outcome }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "View documentation at: https://bump.sh/doc/omni-v2" >> $GITHUB_STEP_SUMMARY
+          echo "* Documentation URL: https://bump.sh/doc/omni-v2" >> $GITHUB_STEP_SUMMARY
