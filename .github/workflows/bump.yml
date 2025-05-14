@@ -35,22 +35,45 @@ jobs:
           import yaml
           import os
           import sys
+          from collections import OrderedDict
           from pathlib import Path
+
+          # Make PyYAML use OrderedDict for mappings
+          def ordered_load(stream, Loader=yaml.SafeLoader):
+              class OrderedLoader(Loader):
+                  pass
+              def construct_mapping(loader, node):
+                  loader.flatten_mapping(node)
+                  return OrderedDict(loader.construct_pairs(node))
+              OrderedLoader.add_constructor(
+                  yaml.resolver.Resolver.DEFAULT_MAPPING_TAG,
+                  construct_mapping)
+              return yaml.load(stream, OrderedLoader)
+
+          def ordered_dump(data, stream=None, Dumper=yaml.SafeDumper, **kwds):
+              class OrderedDumper(Dumper):
+                  pass
+              def _dict_representer(dumper, data):
+                  return dumper.represent_mapping(
+                      yaml.resolver.Resolver.DEFAULT_MAPPING_TAG,
+                      data.items())
+              OrderedDumper.add_representer(OrderedDict, _dict_representer)
+              return yaml.dump(data, stream, OrderedDumper, **kwds)
 
           def load_yaml_safely(file_path):
               """Load a YAML file with error handling"""
               try:
                   with open(file_path, 'r') as f:
-                      return yaml.safe_load(f)
+                      return ordered_load(f)
               except Exception as e:
                   print(f"Error loading {file_path}: {str(e)}")
                   return None
 
           def resolve_refs(openapi_content, base_dir='.'):
               """Recursively resolve all $ref references"""
-              if isinstance(openapi_content, dict):
-                  # Create a new dict to avoid modifying while iterating
-                  resolved_dict = {}
+              if isinstance(openapi_content, OrderedDict):
+                  # Create a new OrderedDict to avoid modifying while iterating
+                  resolved_dict = OrderedDict()
                   for key, value in openapi_content.items():
                       if key == '$ref' and isinstance(value, str):
                           if value.startswith('#'):
@@ -119,21 +142,22 @@ jobs:
                   sys.exit(1)
               
               # Handle special case for x-topics separately
-              if 'x-topics' in openapi and isinstance(openapi['x-topics'], dict) and '$ref' in openapi['x-topics']:
-                  topics_ref = openapi['x-topics']['$ref']
-                  print(f"Found x-topics reference: {topics_ref}")
-                  
-                  # Clean up the reference path
-                  if topics_ref.startswith('./'):
-                      topics_ref = topics_ref[2:]
-                  
-                  # Load topics file
-                  topics = load_yaml_safely(topics_ref)
-                  if topics:
-                      print(f"Loaded topics file with {len(topics)} topics")
-                      openapi['x-topics'] = topics
-                  else:
-                      print("Error: Failed to load topics file")
+              if 'x-topics' in openapi:
+                  if isinstance(openapi['x-topics'], OrderedDict) and '$ref' in openapi['x-topics']:
+                      topics_ref = openapi['x-topics']['$ref']
+                      print(f"Found x-topics reference: {topics_ref}")
+                      
+                      # Clean up the reference path
+                      if topics_ref.startswith('./'):
+                          topics_ref = topics_ref[2:]
+                      
+                      # Load topics file
+                      topics = load_yaml_safely(topics_ref)
+                      if topics:
+                          print(f"Loaded topics file successfully")
+                          openapi['x-topics'] = topics
+                      else:
+                          print("Error: Failed to load topics file")
               
               # Resolve other references
               print("Resolving references...")
@@ -142,9 +166,9 @@ jobs:
                   
                   # Write the resolved content to a new file
                   with open('openapi-resolved.yaml', 'w') as f:
-                      yaml.dump(resolved_openapi, f, default_flow_style=False)
+                      ordered_dump(resolved_openapi, f, default_flow_style=False, sort_keys=False)
                   
-                  print("Successfully created openapi-resolved.yaml")
+                  print("Successfully created openapi-resolved.yaml with preserved ordering")
                   
                   # Validate the resolved file is valid YAML
                   try:
@@ -176,11 +200,15 @@ jobs:
         id: deploy
         run: |
           echo "Deploying to Bump.sh..."
-          if bump deploy openapi-resolved.yaml --doc omni-v2; then
+          output=$(bump deploy openapi-resolved.yaml --doc omni-v2)
+          EXIT_CODE=$?
+
+          echo "$output"
+
+          if [ $EXIT_CODE -eq 0 ]; then
             echo "Deployment successful!"
           else
-            EXIT_CODE=$?
-            if grep -q "Your omni-v2 documentation has not changed" <<< "$output"; then
+            if echo "$output" | grep -q "Your omni-v2 documentation has not changed"; then
               echo "No changes detected in documentation. Skipping deployment."
               exit 0
             else
