@@ -31,7 +31,7 @@ jobs:
         id: consolidate
         run: |
           echo "Creating consolidated OpenAPI file..."
-          cat > resolve_refs.py << 'EOL'
+          cat > resolve_refs.py << 'EOF'
           import yaml
           import os
           import sys
@@ -187,7 +187,7 @@ jobs:
 
           if __name__ == "__main__":
               main()
-          EOL
+          EOF
 
           # Run the reference resolution script
           python3 resolve_refs.py || true
@@ -197,7 +197,7 @@ jobs:
             echo "Failed to create openapi-resolved.yaml, falling back to simple consolidation method"
             
             # Fallback to a simpler approach
-            cat > simple_resolve.py << 'EOL'
+            cat > simple_resolve.py << 'EOF'
             import yaml
             import json
             import os
@@ -225,7 +225,7 @@ jobs:
 
             if __name__ == "__main__":
                 main()
-            EOL
+            EOF
             
             python3 simple_resolve.py
           fi
