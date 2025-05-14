@@ -715,7 +715,7 @@ components:
 
             - Example format: `pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF`
             - OPTIONAL ONLY if you have a single terminal configured
-            - REQUIRED if you have multiple virtual and/or physical terminals configured
+            - REQUIRED if you have multiple physical terminals configured
 
             You can retrieve all available physical payment terminal IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
           example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
@@ -743,7 +743,7 @@ components:
 
             - Example format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
             - OPTIONAL ONLY if you have a single hosted payment page configured
-            - REQUIRED if you have multiple virtual and/or physical terminals configured
+            - REQUIRED if you have multiple hosted payment pages configured
 
             You can retrieve all available hosted payment page or iframe IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
           example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
@@ -829,7 +829,7 @@ components:
 
             - Example format: `pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF`
             - OPTIONAL ONLY if you have a single terminal configured
-            - REQUIRED if you have multiple virtual and/or physical terminals configured
+            - REQUIRED if you have multiple physical terminals configured
 
             You can retrieve all available physical payment terminal IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
           example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
@@ -855,7 +855,7 @@ components:
 
             - Example format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
             - OPTIONAL ONLY if you have a single hosted payment page configured
-            - REQUIRED if you have multiple virtual and/or physical terminals configured
+            - REQUIRED if you have multiple hosted payment pages configured
 
             You can retrieve all available hosted payment page or iframe IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
         invoiceNumber:
@@ -879,12 +879,15 @@ components:
           type: string
           description: |
             The ID of the payment method (physical terminal) to use for adding a card.
-            You can retrieve all available payment method IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+
+            - Example format: `pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF`
+            - OPTIONAL ONLY if you have a single terminal configured
+            - REQUIRED if you have multiple physical terminals configured
+
+            You can retrieve all available physical payment terminal IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
           example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
         referenceId:
           $ref: '#/components/schemas/ReferenceId'
-      required:
-        - paymentMethodId
 
     CardOnFileVirtualAddRequest:
       type: object
@@ -894,7 +897,12 @@ components:
           type: string
           description: |
             The ID of the payment method (hosted payment page/iframe) to use for adding a card.
-            You can retrieve all available payment method IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+
+            - Example format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
+            - OPTIONAL ONLY if you have a single hosted payment page configured
+            - REQUIRED if you have multiple hosted payment pages configured
+
+            You can retrieve all available payment method IDs for your account using the `GET /payment-methods` endpoint.
           example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
         referenceId:
           $ref: '#/components/schemas/ReferenceId'
@@ -902,8 +910,6 @@ components:
           type: string
           description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided.
           example: https://merchant.example.com/payment-complete
-      required:
-        - paymentMethodId
 
     CardOnFileUpdateRequest:
       type: object
