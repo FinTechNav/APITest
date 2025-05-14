@@ -13,92 +13,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
-      - name: Fix all referenced files
+
+      - name: Debug information
         run: |
           echo "Current directory: $(pwd)"
-          
-          # List all directories to understand the structure
-          echo "Directory structure:"
-          find . -type d | sort
-          
-          # List all YAML files
-          echo "All YAML files:"
+          echo "All files in repository:"
+          ls -la
+          echo "YAML files:"
           find . -name "*.yaml" -type f | sort
-          
-          # The error is about missing paths/payment-methods.yaml
-          echo "Checking for paths/payment-methods.yaml:"
-          if [ -f "paths/payment-methods.yaml" ]; then
-            echo "File exists"
-          else
-            echo "File does not exist"
-            # Ensure directory exists
-            mkdir -p paths
-            
-            # Create minimal payment-methods.yaml file
-            echo "Creating minimal payment-methods.yaml:"
-            cat > paths/payment-methods.yaml << 'EOL'
-getPaymentMethods:
-  get:
-    operationId: getPaymentMethods
-    summary: List Payment Methods
-    description: |
-      Returns a list of valid payment methods that have been configured in the system.
-    tags:
-      - Payment Methods
-    responses:
-      "200":
-        description: A successful response containing available payment methods
-EOL
-            echo "Created paths/payment-methods.yaml"
-          fi
-          
-          # Check all referenced files in openapi.yaml
-          echo "Checking all referenced files in openapi.yaml:"
-          grep -r "\$ref:" openapi.yaml | sed "s/.*\$ref: '\(.*\)'.*/\1/" | while read file; do
-            if [[ "$file" == *"#"* ]]; then
-              # Extract just the file path before any #
-              file_path="${file%%#*}"
-              if [[ "$file_path" == "./"* ]]; then
-                file_path="${file_path:2}"  # Remove leading ./
-              fi
-              echo "Checking referenced file: $file_path"
-              if [ -f "$file_path" ]; then
-                echo "  - Exists"
-              else
-                echo "  - Missing, creating directory"
-                mkdir -p $(dirname "$file_path")
-                echo "  - Creating minimal file"
-                echo "{}" > "$file_path"
-              fi
-            else
-              if [[ "$file" == "./"* ]]; then
-                file="${file:2}"  # Remove leading ./
-              fi
-              echo "Checking referenced file: $file"
-              if [ -f "$file" ]; then
-                echo "  - Exists"
-              else
-                echo "  - Missing, creating directory"
-                mkdir -p $(dirname "$file")
-                echo "  - Creating minimal file"
-                echo "{}" > "$file"
-              fi
-            fi
-          done
-          
-          # Fix servers.yaml specifically
-          echo "- url: https://api.omni.integratedcommerce.io/v1" > servers.yaml
-          
-          # Show final structure
-          echo "Final directory structure:"
-          find . -type d | sort
-          echo "Final YAML files:"
-          find . -name "*.yaml" -type f | sort
-      
+
+      - name: Install swagger-cli for bundling
+        run: npm install -g @apidevtools/swagger-cli
+
+      - name: Bundle OpenAPI files
+        run: |
+          # Create a bundled file to avoid reference issues
+          swagger-cli bundle openapi.yaml -o bundled.yaml
+          echo "Created bundled.yaml file"
+
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
         with:
           doc: ${{ secrets.BUMP_DOC_ID }}
           token: ${{ secrets.BUMP_TOKEN }}
-          file: openapi.yaml
+          file: bundled.yaml
