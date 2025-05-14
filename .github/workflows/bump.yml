@@ -3,14 +3,34 @@ name: Bump.sh API Documentation
 on:
   push:
     branches:
-      - main # or master, depending on your default branch
+      - main
     paths:
-      - 'openapi/**' # Only trigger when files in the openapi directory change
+      - 'openapi/**'
+  pull_request:
+    paths:
+      - 'openapi/**'
 
 jobs:
+  validate-doc:
+    name: Validate API documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Validate OpenAPI definition
+        uses: bump-sh/github-action@v1
+        with:
+          doc: ${{ secrets.BUMP_DOC_ID }}
+          token: ${{ secrets.BUMP_TOKEN }}
+          file: openapi/openapi.yaml
+          command: validate
+
   deploy-doc:
     name: Deploy API documentation to Bump.sh
     runs-on: ubuntu-latest
+    needs: validate-doc
+    if: github.event_name == 'push'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
