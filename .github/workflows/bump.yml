@@ -14,10 +14,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: List files (Debug)
+        run: |
+          pwd
+          ls -la
+          echo "Looking for openapi.yaml:"
+          find . -name "openapi.yaml" || echo "Not found"
+
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
         with:
           doc: omni-v2
           token: ${{ secrets.BUMP_TOKEN }}
-          # Use your main OpenAPI file instead of servers.yaml
-          file: openapi.yaml
+          file: ./openapi.yaml # Explicitly use relative path
