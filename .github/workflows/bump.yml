@@ -14,33 +14,142 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Fix YAML references and create symlinks
+      - name: Analyze OpenAPI structure
         run: |
-          echo "Creating symbolic links for missing files..."
+          echo "Analyzing OpenAPI structure..."
 
-          # Create symlinks in the components directory
+          echo "Content of openapi.yaml:"
+          cat openapi.yaml
+
+          echo "Content of info.yaml:"
+          cat info.yaml
+
+          echo "Content of servers.yaml:"
+          cat servers.yaml
+
+          echo "Content of tags/index.yaml:"
+          cat tags/index.yaml
+
+          echo "Content of components/securitySchemes.yaml:"
+          cat components/securitySchemes.yaml
+
+      - name: Fix OpenAPI structure
+        run: |
+          echo "Fixing OpenAPI structure..."
+
+          # Backup original files
+          cp openapi.yaml openapi.yaml.bak
+
+          # Fix info.yaml if needed
+          if ! grep -q "title:" info.yaml || ! grep -q "version:" info.yaml; then
+            echo "Fixing info.yaml..."
+            cp info.yaml info.yaml.bak
+            cat > info.yaml << 'EOL'
+          title: Omni v2 API
+          version: 1.0.0
+          description: API documentation for Omni v2
+          EOL
+          fi
+
+          # Fix servers.yaml to ensure it's an array
+          echo "Fixing servers.yaml..."
+          cp servers.yaml servers.yaml.bak
+          cat > servers.yaml << 'EOL'
+          - url: https://api.omni.integratedcommerce.io/v1
+            description: Production API
+          EOL
+
+          # Create a new openapi.yaml with a proper structure
+          echo "Creating a new openapi.yaml..."
+          cat > openapi.yaml << 'EOL'
+          openapi: 3.1.0
+          info:
+            $ref: './info.yaml'
+          servers:
+            $ref: './servers.yaml'
+          security:
+            - ApiKeyHeader: []
+          tags:
+            $ref: './tags/index.yaml'
+          components:
+            securitySchemes:
+              ApiKeyHeader:
+                type: apiKey
+                in: header
+                name: X-API-Key
+            schemas:
+              $ref: './components/schemas/common.yaml'
+            parameters:
+              $ref: './components/parameters.yaml'
+            requestBodies:
+              $ref: './components/requestBodies.yaml'
+            responses:
+              $ref: './components/responses.yaml'
+            examples:
+              $ref: './components/examples.yaml'
+          paths:
+            '/payment-methods':
+              $ref: './paths/payment-methods.yaml#/getPaymentMethods'
+            '/payment-methods/physical':
+              $ref: './paths/tokens.yaml#/createCardPresentToken'
+            '/payment-methods/virtual':
+              $ref: './paths/tokens.yaml#/createCardNotPresentToken'
+            '/payment-methods/token/{id}':
+              $ref: './paths/tokens.yaml#/tokenOperations'
+            '/transactions/physical-sale':
+              $ref: './paths/transactions.yaml#/saleCardPresent'
+            '/transactions/virtual-sale':
+              $ref: './paths/transactions.yaml#/saleCardNotPresent'
+            '/transactions/token-sale':
+              $ref: './paths/transactions.yaml#/saleToken'
+            '/transactions/physical-auth':
+              $ref: './paths/transactions.yaml#/authCardPresent'
+            '/transactions/virtual-auth':
+              $ref: './paths/transactions.yaml#/authCardNotPresent'
+            '/transactions/token-auth':
+              $ref: './paths/transactions.yaml#/authToken'
+            '/transactions/capture':
+              $ref: './paths/transactions.yaml#/capture'
+            '/transactions/refund':
+              $ref: './paths/transactions.yaml#/refund'
+            '/transactions/unreferenced-physical-refund':
+              $ref: './paths/transactions.yaml#/unreferencedRefundCardPresent'
+            '/transactions/unreferenced-virtual-refund':
+              $ref: './paths/transactions.yaml#/unreferencedRefundCardNotPresent'
+          webhooks:
+            SaleCompleted:
+              $ref: './paths/webhooks.yaml#/SaleCompleted'
+            AuthCompleted:
+              $ref: './paths/webhooks.yaml#/AuthCompleted'
+            CaptureCompleted:
+              $ref: './paths/webhooks.yaml#/CaptureCompleted'
+            RefundCompleted:
+              $ref: './paths/webhooks.yaml#/RefundCompleted'
+            TokenCreated:
+              $ref: './paths/webhooks.yaml#/TokenCreated'
+            TokenUpdated:
+              $ref: './paths/webhooks.yaml#/TokenUpdated'
+            TokenRemoved:
+              $ref: './paths/webhooks.yaml#/TokenRemoved'
+          EOL
+
+          echo "Verifying updated files..."
+          cat openapi.yaml
+          cat servers.yaml
+          cat info.yaml
+
+      # Create symlinks for fallback
+      - name: Create symlinks as fallback
+        run: |
+          echo "Creating symlinks as fallback..."
           ln -sf "$(pwd)/components/schemas/errors.yaml" "$(pwd)/components/errors.yaml"
           ln -sf "$(pwd)/components/schemas/cards.yaml" "$(pwd)/components/cards.yaml"
           ln -sf "$(pwd)/components/schemas/receipts.yaml" "$(pwd)/components/receipts.yaml"
           ln -sf "$(pwd)/components/schemas/transactions.yaml" "$(pwd)/components/transactions.yaml"
-
-          # Create symlinks at the root level as well
           ln -sf "$(pwd)/components/schemas/errors.yaml" "$(pwd)/errors.yaml"
           ln -sf "$(pwd)/components/schemas/cards.yaml" "$(pwd)/cards.yaml"
           ln -sf "$(pwd)/components/schemas/receipts.yaml" "$(pwd)/receipts.yaml"
           ln -sf "$(pwd)/components/schemas/transactions.yaml" "$(pwd)/transactions.yaml"
-
-          echo "Verifying symlinks..."
-          ls -la
-          ls -la components/
-
-          # Check if the symlinks actually work
-          if [ -f errors.yaml ]; then
-            echo "errors.yaml is accessible"
-            head -n 5 errors.yaml
-          else
-            echo "errors.yaml is not accessible"
-          fi
 
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
