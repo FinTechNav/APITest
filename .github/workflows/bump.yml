@@ -14,26 +14,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js v20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Check for problematic $ref paths
+      - name: Fix incorrect references in transactions.yaml
         run: |
-          echo "Checking for incorrect references to errors.yaml..."
-          grep -r "'../errors.yaml#" --include="*.yaml" .
-          grep -r "./components/errors.yaml" --include="*.yaml" .
+          echo "Fixing references in transactions.yaml..."
+          # Backup the original file
+          cp components/schemas/transactions.yaml components/schemas/transactions.yaml.bak
 
-          echo "Creating symbolic links to handle incorrect paths..."
-          mkdir -p components
-          ln -s components/schemas/errors.yaml components/errors.yaml
-          ln -s components/schemas/cards.yaml components/cards.yaml
-          ln -s components/schemas/receipts.yaml components/receipts.yaml
-          ln -s components/schemas/transactions.yaml components/transactions.yaml
+          # Replace '../errors.yaml' with './errors.yaml'
+          sed -i "s/'..\/errors.yaml/'.\\/errors.yaml/g" components/schemas/transactions.yaml
 
-          echo "Verifying symbolic links..."
-          ls -la components/
+          # Check if references to cards.yaml and receipts.yaml need fixing
+          if grep -q "'../cards.yaml" components/schemas/transactions.yaml; then
+            echo "Fixing references to cards.yaml..."
+            sed -i "s/'..\/cards.yaml/'.\\/cards.yaml/g" components/schemas/transactions.yaml
+          fi
+
+          if grep -q "'../receipts.yaml" components/schemas/transactions.yaml; then
+            echo "Fixing references to receipts.yaml..."
+            sed -i "s/'..\/receipts.yaml/'.\\/receipts.yaml/g" components/schemas/transactions.yaml
+          fi
+
+          # Check if references to transactions.yaml in webhooks.yaml need fixing
+          if [ -f components/schemas/webhooks.yaml ]; then
+            if grep -q "'../transactions.yaml" components/schemas/webhooks.yaml; then
+              echo "Fixing references to transactions.yaml in webhooks.yaml..."
+              cp components/schemas/webhooks.yaml components/schemas/webhooks.yaml.bak
+              sed -i "s/'..\/transactions.yaml/'.\\/transactions.yaml/g" components/schemas/webhooks.yaml
+            fi
+          fi
+
+          echo "Verifying changes..."
+          grep -r "./errors.yaml" --include="*.yaml" components/schemas/
 
       - name: Deploy API documentation
         uses: bump-sh/github-action@v1
