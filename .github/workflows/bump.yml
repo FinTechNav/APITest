@@ -37,13 +37,25 @@ jobs:
           import re
           from ruamel.yaml import YAML
           from pathlib import Path
+          from copy import deepcopy
 
-          # Use ruamel.yaml to preserve formatting
+          # Configure ruamel.yaml for best preservation of formatting
           yaml = YAML()
           yaml.preserve_quotes = True
-          yaml.indent(mapping=2, sequence=4, offset=2)
-          yaml.width = 80
+          yaml.width = 4096  # Set a very large width to avoid line wrapping
+          yaml.explicit_start = False  # Don't add '---' at the start of the file
+          yaml.explicit_end = False    # Don't add '...' at the end of the file
+          yaml.dump_all = False        # Don't use document separators
+
+          # Preserve original formatting for scalar values, especially important for multi-line descriptions
+          yaml.default_flow_style = False
+
+          # Set very permissive white space handling
           yaml.allow_unicode = True
+
+          # Keep literal and folding style in multiline strings
+          yaml.emitter.best_width = -1
+          yaml.indent(mapping=2, sequence=4, offset=2)
 
           def load_yaml_safely(file_path):
               """Load a YAML file with error handling"""
@@ -54,116 +66,180 @@ jobs:
                   print(f"Error loading {file_path}: {str(e)}")
                   return None
 
-          def resolve_refs(openapi_content, base_dir='.'):
-              """Recursively resolve all $ref references"""
-              if isinstance(openapi_content, dict):
-                  # Process $ref specially 
-                  if '$ref' in openapi_content and isinstance(openapi_content['$ref'], str):
-                      ref_value = openapi_content['$ref']
-                      if not ref_value.startswith('#'):
-                          # External reference
-                          try:
-                              # Split the reference into file path and internal reference
-                              parts = ref_value.split('#', 1)
-                              file_path = parts[0]
-                              
-                              # Handle relative paths
-                              if file_path.startswith('./'):
-                                  file_path = file_path[2:]
-                              
-                              # Combine with base directory
-                              full_path = os.path.join(base_dir, file_path)
-                              
-                              print(f"Resolving: {ref_value}")
-                              
-                              # Load the referenced file
-                              ref_content = load_yaml_safely(full_path)
-                              if ref_content is None:
-                                  print(f"Warning: Failed to resolve reference {ref_value}")
-                                  return openapi_content  # Keep original reference
-                              else:
-                                  # If there's an internal reference, extract it
-                                  if len(parts) > 1 and parts[1]:
-                                      ref_path = parts[1].lstrip('/')
-                                      try:
-                                          # Navigate through the referenced content
-                                          ref_parts = ref_path.split('/')
-                                          current = ref_content
-                                          for part in ref_parts:
-                                              if part in current:
-                                                  current = current[part]
-                                              else:
-                                                  print(f"Warning: Could not find {part} in {ref_path}")
-                                                  return openapi_content  # Keep original
-                                          
-                                          # Replace with resolved content
-                                          return resolve_refs(current, os.path.dirname(full_path))
-                                      except Exception as e:
-                                          print(f"Warning: Failed to resolve path {ref_path} in {full_path}: {e}")
-                                          return openapi_content  # Keep original reference
-                                  else:
-                                      # Replace with entire file content
-                                      return resolve_refs(ref_content, os.path.dirname(full_path))
-                          except Exception as e:
-                              print(f"Warning: Error resolving reference {ref_value}: {str(e)}")
-                              return openapi_content  # Keep original reference
+          def find_external_refs(obj):
+              """Find all external $ref pointers in the object"""
+              refs = []
+              
+              def _traverse(current, path=""):
+                  if isinstance(current, dict):
+                      for k, v in current.items():
+                          if k == '$ref' and isinstance(v, str) and not v.startswith('#'):
+                              refs.append((path + "/" + k, v))
+                          else:
+                              _traverse(v, path + "/" + k if path else k)
+                  elif isinstance(current, list):
+                      for i, item in enumerate(current):
+                          _traverse(item, f"{path}/{i}")
+              
+              _traverse(obj)
+              return refs
+
+          def resolve_ref(openapi, ref_path, ref_value, base_dir='.'):
+              """Resolve a single reference and update the OpenAPI object"""
+              try:
+                  # Split the reference into file path and internal reference
+                  parts = ref_value.split('#', 1)
+                  file_path = parts[0]
+                  
+                  # Handle relative paths
+                  if file_path.startswith('./'):
+                      file_path = file_path[2:]
+                  
+                  # Combine with base directory
+                  full_path = os.path.join(base_dir, file_path)
+                  
+                  print(f"Resolving reference: {ref_value}")
+                  
+                  # Load the referenced file
+                  ref_content = load_yaml_safely(full_path)
+                  if ref_content is None:
+                      print(f"Warning: Failed to load referenced file {file_path}")
+                      return False
+                  
+                  # If there's an internal reference, extract it
+                  if len(parts) > 1 and parts[1]:
+                      internal_path = parts[1].lstrip('/')
+                      ref_parts = internal_path.split('/')
+                      current = ref_content
+                      
+                      for part in ref_parts:
+                          if part in current:
+                              current = current[part]
+                          else:
+                              print(f"Warning: Could not resolve internal path {internal_path} in {file_path}")
+                              return False
+                      
+                      # Find the target location to update
+                      path_parts = ref_path.lstrip('/').split('/')
+                      
+                      # Remove the last part ('$ref')
+                      path_parts = path_parts[:-1]
+                      
+                      # Navigate to the parent of the $ref
+                      target = openapi
+                      for part in path_parts:
+                          if part.isdigit():  # Handle array indices
+                              part = int(part)
+                          target = target[part]
+                      
+                      # Replace the parent object with the resolved content
+                      # but keep the $ref key for debugging
+                      for k in list(target.keys()):
+                          if k != '$ref':
+                              del target[k]
+                      
+                      if isinstance(current, dict):
+                          for k, v in current.items():
+                              target[k] = deepcopy(v)
                       else:
-                          # Internal reference, keep as is
-                          return openapi_content
+                          # Special case for non-dict references
+                          parent = openapi
+                          for i, part in enumerate(path_parts[:-1]):
+                              if part.isdigit():
+                                  part = int(part)
+                              parent = parent[part]
+                          
+                          last_part = path_parts[-1]
+                          if last_part.isdigit():
+                              last_part = int(last_part)
+                          
+                          parent[last_part] = deepcopy(current)
+                  else:
+                      # The reference is to the entire file
+                      # Find the target location to update
+                      path_parts = ref_path.lstrip('/').split('/')
+                      
+                      # Remove the last part ('$ref')
+                      path_parts = path_parts[:-1]
+                      
+                      # Navigate to the parent of the $ref
+                      parent = openapi
+                      for i, part in enumerate(path_parts[:-1]):
+                          if part.isdigit():
+                              part = int(part)
+                          parent = parent[part]
+                      
+                      last_part = path_parts[-1]
+                      if last_part.isdigit():
+                          last_part = int(last_part)
+                      
+                      # Replace the parent object with the resolved content
+                      parent[last_part] = deepcopy(ref_content)
                   
-                  # Create a new dict to avoid modifying while iterating
-                  resolved_dict = type(openapi_content)()  # This preserves OrderedDict or dict type
-                  for key, value in openapi_content.items():
-                      resolved_dict[key] = resolve_refs(value, base_dir)
-                  return resolved_dict
-                  
-              elif isinstance(openapi_content, list):
-                  # Process lists recursively
-                  return [resolve_refs(item, base_dir) for item in openapi_content]
-              else:
-                  # Return primitive values as is
-                  return openapi_content
+                  return True
+              except Exception as e:
+                  print(f"Error resolving reference {ref_value}: {str(e)}")
+                  import traceback
+                  traceback.print_exc()
+                  return False
 
           def main():
-              # Load main OpenAPI file
               print("Loading main OpenAPI file...")
               openapi = load_yaml_safely('openapi.yaml')
               if not openapi:
                   sys.exit(1)
               
-              # Handle special case for x-topics separately
-              if 'x-topics' in openapi:
-                  if isinstance(openapi['x-topics'], dict) and '$ref' in openapi['x-topics']:
-                      topics_ref = openapi['x-topics']['$ref']
-                      print(f"Found x-topics reference: {topics_ref}")
-                      
-                      # Clean up the reference path
-                      if topics_ref.startswith('./'):
-                          topics_ref = topics_ref[2:]
-                      
-                      # Load topics file
-                      topics = load_yaml_safely(topics_ref)
-                      if topics:
-                          print(f"Loaded topics file successfully")
-                          openapi['x-topics'] = topics
-                      else:
-                          print("Error: Failed to load topics file")
+              # Handle special case for x-topics separately since it's often at the root level
+              if 'x-topics' in openapi and isinstance(openapi['x-topics'], dict) and '$ref' in openapi['x-topics']:
+                  topics_ref = openapi['x-topics']['$ref']
+                  print(f"Found x-topics reference: {topics_ref}")
+                  
+                  # Clean up the reference path
+                  if topics_ref.startswith('./'):
+                      topics_ref = topics_ref[2:]
+                  
+                  # Load topics file
+                  topics = load_yaml_safely(topics_ref)
+                  if topics:
+                      print(f"Loaded topics file successfully")
+                      openapi['x-topics'] = topics
+                  else:
+                      print("Error: Failed to load topics file")
               
-              # Resolve other references
-              print("Resolving references...")
+              # Find all other external references
+              max_iterations = 10  # Prevent infinite loops
+              iteration = 0
+              
+              while iteration < max_iterations:
+                  iteration += 1
+                  external_refs = find_external_refs(openapi)
+                  
+                  if not external_refs:
+                      print(f"No more external references found after {iteration} iterations")
+                      break
+                  
+                  print(f"Iteration {iteration}: Found {len(external_refs)} external references")
+                  
+                  # Resolve each reference
+                  resolved_count = 0
+                  for ref_path, ref_value in external_refs:
+                      if resolve_ref(openapi, ref_path, ref_value):
+                          resolved_count += 1
+                  
+                  print(f"Resolved {resolved_count}/{len(external_refs)} references")
+                  
+                  if resolved_count == 0:
+                      print("No references were resolved in this iteration, stopping")
+                      break
+              
+              # Write the resolved content to a new file
               try:
-                  resolved_openapi = resolve_refs(openapi)
-                  
-                  # Write the resolved content to a new file
                   with open('openapi-resolved.yaml', 'w') as f:
-                      yaml.dump(resolved_openapi, f)
+                      yaml.dump(openapi, f)
                   
-                  print("Successfully created openapi-resolved.yaml with preserved formatting")
-                  
+                  print("Successfully created openapi-resolved.yaml")
               except Exception as e:
-                  print(f"Error: Failed to resolve references: {str(e)}")
-                  import traceback
-                  traceback.print_exc()
+                  print(f"Error writing resolved OpenAPI file: {str(e)}")
                   sys.exit(1)
 
           if __name__ == "__main__":
