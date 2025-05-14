@@ -27,9 +27,10 @@ jobs:
           npm install -g bump-cli
           pip install --user pyyaml
 
-      - name: Process only x-topics
+      - name: Custom script for x-topics import
         run: |
-          cat > process_topics.py << 'EOF'
+          # Create a Python script for proper handling of YAML arrays
+          cat > direct_replace.py << 'EOF'
           import re
           import os
           import sys
@@ -40,60 +41,47 @@ jobs:
               with open('openapi.yaml', 'r') as f:
                   content = f.read()
               
-              # Read the topics file as text first
+              # Load the topics file properly
               with open('topics.yaml', 'r') as f:
-                  topics_content = f.read()
-                  
-              # Load the topics file to validate it's proper YAML
-              try:
-                  topics = yaml.safe_load(topics_content)
-              except Exception as e:
-                  print(f"Error loading topics.yaml: {e}")
-                  sys.exit(1)
-                  
-              # Find the indentation level of the x-topics line
-              match = re.search(r'(\s*)x-topics:', content)
-              if not match:
-                  print("x-topics not found in openapi.yaml")
-                  with open('openapi-resolved.yaml', 'w') as f:
-                      f.write(content)
-                  return
-                  
-              indent = match.group(1)
+                  topics = yaml.safe_load(f)
               
-              # Process the topics content with proper indentation
-              processed_topics = []
-              first_line = True
+              # Convert topics to proper YAML format
+              topics_yaml = yaml.dump(topics, default_flow_style=False, indent=2).strip()
               
-              for line in topics_content.split('\n'):
-                  if not line.strip():
-                      processed_topics.append('')
-                  elif first_line:
-                      # Skip the first line (we'll add our own x-topics:)
-                      first_line = False
+              # Create the proper replacement - first line needs special handling
+              replacement = "x-topics:"
+              
+              # Add the topics content with proper indentation
+              indented_content = ""
+              for i, line in enumerate(topics_yaml.split('\n')):
+                  if i == 0:  # First line needs special handling for array
+                      if line.startswith('-'):
+                          indented_content += f"\n  {line}"  # Add proper indentation for array
+                      else:
+                          indented_content += f" {line}"  # For non-array, add a space
                   else:
-                      # Add proper indentation to all lines
-                      processed_topics.append(f"{indent}{line}")
+                      indented_content += f"\n  {line}"  # Indent all other lines with 2 spaces
               
-              # Create the replacement
-              replacement = f"{indent}x-topics:\n" + '\n'.join(processed_topics)
+              replacement += indented_content
               
-              # Replace the x-topics reference with our properly formatted content
-              pattern = r'(\s*)x-topics:\s+\$ref:\s+[\'"]?[\./\w-]+\.ya?ml[\'"]?'
+              # Find the x-topics reference pattern
+              pattern = r"x-topics:\s+\$ref:\s+['\"]?[\./\w-]+\.ya?ml['\"]?"
+              
+              # Replace the reference with our properly formatted content
               updated_content = re.sub(pattern, replacement, content)
               
               # Write the result to the output file
               with open('openapi-resolved.yaml', 'w') as f:
                   f.write(updated_content)
                   
-              print("Successfully created openapi-resolved.yaml with preserved formatting")
+              print("Successfully created openapi-resolved.yaml with proper YAML formatting")
 
           if __name__ == "__main__":
               main()
           EOF
 
           # Run the script
-          python3 process_topics.py
+          python3 direct_replace.py
 
       - name: Validate YAML
         run: |
