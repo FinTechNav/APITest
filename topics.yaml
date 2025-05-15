@@ -4,9 +4,7 @@
   content: |
     # Hosted Payment Form
 
-    <div style="padding: 15px; background-color: rgba(240, 244, 248, 0.08); border: 1px solid rgba(225, 228, 232, 0.2); border-radius: 6px; margin-bottom: 20px; color: inherit;">
     The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Form (HPF) solution that simplifies payment collection while maintaining strong security and compliance standards.
-    </div>
 
     ## How It Works
 
@@ -33,7 +31,7 @@
 
     ## Security Benefits
 
-    <div style="background-color: rgba(240, 244, 248, 0.08); padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     <h3 style="margin-top: 0;">Enhanced Security</h3>
     <ul>
       <li>Each session is unique and tied to a specific transaction</li>
@@ -87,7 +85,7 @@
 
     ## Error Handling
 
-    <div style="padding: 15px; background-color: rgba(240, 244, 248, 0.08); border-radius: 6px; margin-bottom: 20px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     If a payment session experiences an error or expires, the customer will see an appropriate error message. Your implementation should handle various response statuses, including:
     <ul>
       <li>Successful payments (resultCode = 0)</li>
@@ -99,27 +97,21 @@
 
     ## Implementation Best Practices
 
-    <div style="background-color: rgba(240, 244, 248, 0.08); border-radius: 6px; margin-bottom: 20px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">
-      <div style="padding: 15px; border-bottom: 1px solid rgba(225, 228, 232, 0.2);">
-        <h4 style="margin: 0; font-size: 16px;">Keep Session IDs Private</h4>
-        <p style="margin: 8px 0 0 0;">Never expose the full session ID in client-side code outside the iframe src.</p>
-      </div>
-      <div style="padding: 15px; border-bottom: 1px solid rgba(225, 228, 232, 0.2);">
-        <h4 style="margin: 0; font-size: 16px;">Implement Proper Origin Validation</h4>
-        <p style="margin: 8px 0 0 0;">Always verify the origin of postMessage events.</p>
-      </div>
-      <div style="padding: 15px; border-bottom: 1px solid rgba(225, 228, 232, 0.2);">
-        <h4 style="margin: 0; font-size: 16px;">Handle Timeouts Gracefully</h4>
-        <p style="margin: 8px 0 0 0;">Sessions expire after a short period, so provide clear messaging to users if this happens.</p>
-      </div>
-      <div style="padding: 15px; border-bottom: 1px solid rgba(225, 228, 232, 0.2);">
-        <h4 style="margin: 0; font-size: 16px;">Test with Our Test Cards</h4>
-        <p style="margin: 8px 0 0 0;">Use our <a href="#test-cards">test cards</a> during your integration development.</p>
-      </div>
-      <div style="padding: 15px;">
-        <h4 style="margin: 0; font-size: 16px;">Responsive Design</h4>
-        <p style="margin: 8px 0 0 0;">Ensure your payment page layout accommodates the iframe appropriately on all devices.</p>
-      </div>
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+      <h4 style="margin-top: 0; font-size: 16px;">Keep Session IDs Private</h4>
+      <p>Never expose the full session ID in client-side code outside the iframe src.</p>
+      
+      <h4 style="margin-top: 15px; font-size: 16px;">Implement Proper Origin Validation</h4>
+      <p>Always verify the origin of postMessage events.</p>
+      
+      <h4 style="margin-top: 15px; font-size: 16px;">Handle Timeouts Gracefully</h4>
+      <p>Sessions expire after a short period, so provide clear messaging to users if this happens.</p>
+      
+      <h4 style="margin-top: 15px; font-size: 16px;">Test with Our Test Cards</h4>
+      <p>Use our <a href="#test-cards">test cards</a> during your integration development.</p>
+      
+      <h4 style="margin-top: 15px; font-size: 16px;">Responsive Design</h4>
+      <p>Ensure your payment page layout accommodates the iframe appropriately on all devices.</p>
     </div>
 
 - title: Test Cards
@@ -128,13 +120,11 @@
   content: |
     # Test Cards
 
-    <div style="padding: 15px; background-color: rgba(240, 244, 248, 0.08); border-radius: 6px; margin-bottom: 20px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">
     Select relevant test cards for your testing.
-    </div>
 
     ## Physical Test Cards for Card Present Transactions
 
-    <div style="padding: 15px; background-color: rgba(240, 244, 248, 0.08); border-radius: 6px; margin-bottom: 20px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     <p>For in-person payment terminal testing, physical EMV and contactless test cards are required to properly validate your Card Present integration. These specialized test cards contain real chips, magnetic stripes, and contactless antennas with test payment applications that simulate actual card behavior.</p>
 
     <p>Physical test cards are essential for ensuring your payment terminals properly handle chip insertions, contactless taps, and various payment scenarios in a controlled test environment. They allow merchants, developers, and processors to thoroughly test transaction workflows, terminal software, and integration with your payment system before going live.</p>
@@ -144,9 +134,7 @@
 
     ## Virtual Test Cards for Card Not Present Transactions
 
-    <div style="padding: 15px; background-color: rgba(240, 244, 248, 0.08); border-radius: 6px; margin-bottom: 20px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">
     The following test cards can be used for online payment testing (Card Not Present transactions) in your development environment.
-    </div>
 
     <div style="overflow-x: auto; margin-bottom: 20px;">
       <table style="width: 100%; border-collapse: collapse;">
@@ -199,7 +187,7 @@
       </table>
     </div>
 
-    <div style="padding: 15px; background-color: rgba(240, 244, 248, 0.08); border-radius: 6px; margin-bottom: 20px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     <strong>Note:</strong> For testing AVS (Address Verification Service) responses, use any of the above card numbers with the following test addresses:
     </div>
 
