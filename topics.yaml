@@ -14,25 +14,142 @@
 
     Once you have your API key, you can make your first API request.
 
-- title: Error Handling
-  slug: error-handling
-  description: How the API handles errors
+- title: Hosted Payment Page
+  slug: hosted-payment-page
+  description: Understand how our Hosted Payment Page (HPP) works
   content: |
-    # Error Handling
+    # Hosted Payment Page
 
-    The API uses standard HTTP status codes to indicate the success or failure of requests.
+    The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Page (HPP) solution that simplifies payment collection while maintaining strong security and compliance standards.
 
-    ## Error Response Format
+    ## How It Works
 
-    All error responses follow this format:
+    Our Hosted Payment Page system uses a session-based approach rather than static iframes. Here's how the flow works:
 
-    ```json
-    {
-      "error": {
-        "code": "ERROR_CODE",
-        "message": "A human-readable error message"
+    1. **Initiate Session**: Your backend server makes a POST request to our API (e.g., `/payment-methods/virtual`, `/transactions/virtual-sale`, etc.) with your transaction details.
+
+    2. **Receive Session URL**: Our API returns a short-lived, unique iframe URL specific to this transaction, along with a session ID and expiration timestamp.
+
+    3. **Embed HPP**: You embed this iframe URL in your payment page. The iframe contains a fully-styled, responsive payment form.
+
+    4. **Customer Enters Payment Info**: The customer enters their payment information (card details, billing address) directly into our secure form, which is isolated from your website's environment.
+
+    5. **Payment Processing**: When the customer submits the form, we process the payment in our secure environment.
+
+    6. **Result Communication**: Results are communicated back to your system in two ways:
+       - Redirect: If you provided a `returnUrl` parameter, the customer will be redirected there with status information
+       - postMessage: A JavaScript event is sent to your parent window with transaction details
+       - Webhook: The complete transaction result is delivered via the appropriate webhook
+
+    ## Security Benefits
+
+    This session-based approach offers several security advantages:
+
+    - Each session is unique and tied to a specific transaction
+    - Payment details never touch your servers
+    - Session URLs are short-lived and expire automatically
+    - PCI compliance scope is significantly reduced for your organization
+
+    ## Example Implementation Flow
+
+    ### 1. Backend: Initiate the Payment Session
+
+    ```javascript
+    // Server-side code (Node.js example)
+    const response = await fetch('https://api.omni.integratedcommerce.io/v1/transactions/virtual-sale', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': 'your_api_key_here'
+      },
+      body: JSON.stringify({
+        amount: 1000, // $10.00
+        returnUrl: 'https://your-site.com/payment-complete',
+        referenceId: 'order_123456' // Optional: your reference ID
+      })
+    });
+
+    const data = await response.json();
+    const { iframeUrl, sessionId } = data;
+
+    // Send iframeUrl to your frontend
+    ```
+
+    ### 2. Frontend: Display the Payment Form
+
+    ```html
+    <div class="payment-container">
+      <iframe 
+        src="https://iframe.integratedcommerce.io/session/UNIQUE_SESSION_ID" 
+        id="payment-iframe"
+        style="width: 100%; height: 600px; border: none;"
+        allowtransparency="true">
+      </iframe>
+    </div>
+
+    <script>
+    // Listen for messages from the iframe
+    window.addEventListener('message', (event) => {
+      // Verify origin for security
+      if (event.origin.includes('integratedcommerce.io')) {
+        const data = typeof event.data === 'string' 
+          ? JSON.parse(event.data) 
+          : event.data;
+        
+        if (data.status === 'completed') {
+          // Payment successful - handle accordingly
+          console.log('Payment successful:', data);
+        } else if (data.status === 'error') {
+          // Payment failed - handle error
+          console.log('Payment error:', data.message);
+        }
       }
-    }
+    });
+    </script>
+    ```
+
+    ### 3. Handling the Result
+
+    When the payment is completed, the customer will be redirected to your `returnUrl` with query parameters indicating the transaction status and details:
+
+    ```
+    https://your-site.com/payment-complete?paymentMethodId=pmt_tkn_01JV9ZJHS5GKEBAJTXPF2TR6&resultCode=0&cardType=Visa&transactionId=trx_123456&referenceId=order_123456
+    ```
+
+    Your page can then parse these parameters to display appropriate confirmation or error messages.
+
+    ## Hosted Payment Page Appearance
+
+    Our Hosted Payment Page provides a clean, professional payment form that collects:
+
+    - Cardholder name
+    - Card number, expiration date, and security code
+    - Billing address details
+
+    ![Hosted Payment Page Example](https://fintechnav.com/images/HPP.png)
+
+    The form is responsive and works on mobile, tablet, and desktop devices.
+
+    ## Error Handling
+
+    If a payment session experiences an error or expires, the customer will see an appropriate error message. Your implementation should handle various response statuses, including:
+
+    - Successful payments (resultCode = 0)
+    - Declined transactions
+    - Expired sessions
+    - Processing errors
+
+    ## Implementation Best Practices
+
+    1. **Keep Session IDs Private**: Never expose the full session ID in client-side code outside the iframe src.
+
+    2. **Implement Proper Origin Validation**: Always verify the origin of postMessage events.
+
+    3. **Handle Timeouts Gracefully**: Sessions expire after a short period, so provide clear messaging to users if this happens.
+
+    4. **Test with Our Test Cards**: Use our [test cards](#test-cards) during your integration development.
+
+    5. **Responsive Design**: Ensure your payment page layout accommodates the iframe appropriately on all devices.
     ```
 
 - title: Test Cards
