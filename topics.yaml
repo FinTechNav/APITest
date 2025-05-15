@@ -23,47 +23,12 @@
 
     6. <strong>Result Communication</strong>: Results are communicated back to your system in three ways:
        <ul>
-         <li>Redirect: If you provided a <code>returnUrl</code> parameter, the customer will be redirected there with status information</li>
+         <li>Redirect: If you provided a <code>returnUrl</code> parameter, the customer will be redirected there with status information. The URL will include parameters like <code>paymentMethodId</code>, <code>resultCode</code>, <code>cardType</code>, <code>transactionId</code>, and your <code>referenceId</code>.</li>
          <li>postMessage: A JavaScript event is sent to your parent window with transaction details</li>
          <li>Webhook: The complete transaction result is delivered via the appropriate webhook</li>
        </ul>
+       <br>Your page can then parse these parameters to display appropriate confirmation or error messages. Additionally, you'll receive a webhook notification with the complete transaction details that you can use for order fulfillment and record-keeping.
     </div>
-
-    ## Security Benefits
-
-    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-    <h3 style="margin-top: 0;">Enhanced Security</h3>
-    <ul>
-      <li>Each session is unique and tied to a specific transaction</li>
-      <li>Payment details never touch your servers</li>
-      <li>Session URLs are short-lived and expire automatically</li>
-      <li>PCI compliance scope is significantly reduced for your organization</li>
-    </ul>
-    </div>
-
-    ## Implementation Flow
-
-    ### 1. Backend: Initiate the Payment Session
-
-    Your backend server initiates the payment session by making a POST request to our payment API endpoint. This request includes your API key, the transaction amount, a return URL for redirecting customers after payment, and an optional reference ID for tracking.
-
-    The API responds with a unique session identifier and a secure iframe URL. This session is temporary and designed specifically for this payment transaction.
-
-    ### 2. Frontend: Display the Payment Form
-
-    On your payment page, you'll embed the secure iframe URL received from our API. This iframe creates a boundary that isolates the payment form from your website, enhancing security.
-
-    You'll also implement a message listener that waits for communication from the iframe. This listener should verify the origin of any messages for security and process the payment results accordingly.
-
-    ### 3. Handling the Result
-
-    When the payment is completed, the customer will be redirected to your `returnUrl` with query parameters indicating the transaction status and details:
-
-    <div style="padding: 10px; background-color: rgba(240, 244, 248, 0.08); border-radius: 6px; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; overflow-x: auto; margin-bottom: 20px; border: 1px solid rgba(225, 228, 232, 0.2); font-size: 85%; color: inherit;">
-    https://your-site.com/payment-complete?paymentMethodId=pmt_tkn_01JV9ZJHS5GKEBAJTXPF2TR6&resultCode=0&cardType=Visa&transactionId=trx_123456&referenceId=order_123456
-    </div>
-
-    Your page can then parse these parameters to display appropriate confirmation or error messages. Additionally, you'll receive a webhook notification with the complete transaction details that you can use for order fulfillment and record-keeping.
 
     ## Hosted Payment Form Appearance
 
@@ -75,6 +40,7 @@
           <li>Card number, expiration date, and security code</li>
           <li>Billing address details</li>
         </ul>
+        <br>
         <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
       </div>
       <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center;">
@@ -108,7 +74,7 @@
       <p>Sessions expire after a short period, so provide clear messaging to users if this happens.</p>
       
       <h4 style="margin-top: 15px; font-size: 16px;">Test with Our Test Cards</h4>
-      <p>Use our <a href="#test-cards">test cards</a> during your integration development.</p>
+      <p>Use our test cards during your integration development.</p>
       
       <h4 style="margin-top: 15px; font-size: 16px;">Responsive Design</h4>
       <p>Ensure your payment page layout accommodates the iframe appropriately on all devices.</p>
