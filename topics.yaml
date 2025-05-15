@@ -47,7 +47,7 @@
 
     ### 1. Backend: Initiate the Payment Session
 
-    ```javascript
+    javascript
     // Server-side code (Node.js example)
     const response = await fetch('https://api.omni.integratedcommerce.io/v1/transactions/virtual-sale', { 
       method: 'POST',
@@ -66,11 +66,10 @@
     const { iframeUrl, sessionId } = data;
 
     // Send iframeUrl to your frontend
-    ```
 
     ### 2. Frontend: Display the Payment Form
 
-    ```html
+    html
     <div class="payment-container">
       <iframe 
         src="https://iframe.integratedcommerce.io/session/UNIQUE_SESSION_ID" 
@@ -99,7 +98,6 @@
       }
     });
     </script>
-    ```
 
     ### 3. Handling the Result
 
@@ -145,23 +143,23 @@
 
     <div style="background-color: rgba(240, 244, 248, 0.08); border-radius: 6px; margin-bottom: 20px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">
       <div style="padding: 15px; border-bottom: 1px solid rgba(225, 228, 232, 0.2);">
-        <h4 style="margin-top: 0; font-size: 16px;">Keep Session IDs Private</h4>
+        <h4 style="margin: 0; font-size: 16px;">Keep Session IDs Private</h4>
         <p style="margin: 8px 0 0 0;">Never expose the full session ID in client-side code outside the iframe src.</p>
       </div>
       <div style="padding: 15px; border-bottom: 1px solid rgba(225, 228, 232, 0.2);">
-        <h4 style="margin-top: 0; font-size: 16px;">Implement Proper Origin Validation</h4>
+        <h4 style="margin: 0; font-size: 16px;">Implement Proper Origin Validation</h4>
         <p style="margin: 8px 0 0 0;">Always verify the origin of postMessage events.</p>
       </div>
       <div style="padding: 15px; border-bottom: 1px solid rgba(225, 228, 232, 0.2);">
-        <h4 style="margin-top: 0; font-size: 16px;">Handle Timeouts Gracefully</h4>
+        <h4 style="margin: 0; font-size: 16px;">Handle Timeouts Gracefully</h4>
         <p style="margin: 8px 0 0 0;">Sessions expire after a short period, so provide clear messaging to users if this happens.</p>
       </div>
       <div style="padding: 15px; border-bottom: 1px solid rgba(225, 228, 232, 0.2);">
-        <h4 style="margin-top: 0; font-size: 16px;">Test with Our Test Cards</h4>
+        <h4 style="margin: 0; font-size: 16px;">Test with Our Test Cards</h4>
         <p style="margin: 8px 0 0 0;">Use our <a href="#test-cards">test cards</a> during your integration development.</p>
       </div>
       <div style="padding: 15px;">
-        <h4 style="margin-top: 0; font-size: 16px;">Responsive Design</h4>
+        <h4 style="margin: 0; font-size: 16px;">Responsive Design</h4>
         <p style="margin: 8px 0 0 0;">Ensure your payment page layout accommodates the iframe appropriately on all devices.</p>
       </div>
     </div>
