@@ -2,7 +2,7 @@
   slug: hosted-payment-page
   description: Understand how our Hosted Payment Page (HPP) works
   content: |
-    # Hosted Payment Page
+    # Hosted Payment Page test
 
     <div style="padding: 15px; background-color: rgba(240, 244, 248, 0.08); border: 1px solid rgba(225, 228, 232, 0.2); border-radius: 6px; margin-bottom: 20px; color: inherit;">
     The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Page (HPP) solution that simplifies payment collection while maintaining strong security and compliance standards.
