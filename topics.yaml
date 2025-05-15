@@ -44,7 +44,7 @@
         <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
       </div>
       <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center;">
-        <img src="https://fintechnav.com/images/HPP.png" alt="Hosted Payment Form Example" style="max-width: 100%; height: auto;" />
+        <img src="https://fintechnav.com/images/HPF.png" alt="Hosted Payment Form Example" style="max-width: 100%; height: auto;" />
         <small style="display: block; margin-top: 10px; opacity: 0.7;">Example of the hosted payment form</small>
       </div>
     </div>
