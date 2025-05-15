@@ -1,23 +1,23 @@
-- title: Hosted Payment Page
-  slug: hosted-payment-page
-  description: Understand how our Hosted Payment Page (HPP) works
+- title: Hosted Payment Form
+  slug: hosted-payment-form
+  description: Understand how our Hosted Payment Form (HPF) works
   content: |
-    # Hosted Payment Page
+    # Hosted Payment Form
 
     <div style="padding: 15px; background-color: rgba(240, 244, 248, 0.08); border: 1px solid rgba(225, 228, 232, 0.2); border-radius: 6px; margin-bottom: 20px; color: inherit;">
-    The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Page (HPP) solution that simplifies payment collection while maintaining strong security and compliance standards.
+    The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Form (HPF) solution that simplifies payment collection while maintaining strong security and compliance standards.
     </div>
 
     ## How It Works
 
-    Our Hosted Payment Page system uses a session-based approach rather than static iframes. Here's how the flow works:
+    Our Hosted Payment Form system uses a session-based approach rather than static iframes. Here's how the flow works:
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     1. <strong>Initiate Session</strong>: Your backend server makes a POST request to our API (e.g., <code>/payment-methods/virtual</code>, <code>/transactions/virtual-sale</code>, etc.) with your transaction details.
 
     2. <strong>Receive Session URL</strong>: Our API returns a short-lived, unique iframe URL specific to this transaction, along with a session ID and expiration timestamp.
 
-    3. <strong>Embed HPP</strong>: You embed this iframe URL in your payment page. The iframe contains a fully-styled, responsive payment form.
+    3. <strong>Embed HPF</strong>: You embed this iframe URL in your payment page. The iframe contains a fully-styled, responsive payment form.
 
     4. <strong>Customer Enters Payment Info</strong>: The customer enters their payment information (card details, billing address) directly into our secure form, which is isolated from your website's environment.
 
@@ -67,11 +67,11 @@
 
     Your page can then parse these parameters to display appropriate confirmation or error messages. Additionally, you'll receive a webhook notification with the complete transaction details that you can use for order fulfillment and record-keeping.
 
-    ## Hosted Payment Page Appearance
+    ## Hosted Payment Form Appearance
 
     <div style="display: flex; margin-bottom: 20px;">
       <div style="flex: 1; padding-right: 20px;">
-        <p>Our Hosted Payment Page provides a clean, professional payment form that collects:</p>
+        <p>Our Hosted Payment Form provides a clean, professional payment interface that collects:</p>
         <ul>
           <li>Cardholder name</li>
           <li>Card number, expiration date, and security code</li>
@@ -80,7 +80,7 @@
         <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
       </div>
       <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center;">
-        <img src="https://fintechnav.com/images/HPP.png" alt="Hosted Payment Page Example" style="max-width: 100%; height: auto;" />
+        <img src="https://fintechnav.com/images/HPP.png" alt="Hosted Payment Form Example" style="max-width: 100%; height: auto;" />
         <small style="display: block; margin-top: 10px; opacity: 0.7;">Example of the hosted payment form</small>
       </div>
     </div>
