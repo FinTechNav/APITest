@@ -4,15 +4,7 @@
   content: |
     # Getting Started
 
-    This section covers the basics of getting started with our API.
-
-    ## Authentication
-
-    First, you'll need to obtain an API key for authentication.
-
-    ## Making Your First Request
-
-    Once you have your API key, you can make your first API request.
+    This section is a placeholder
 
 - title: Hosted Payment Page
   slug: hosted-payment-page
@@ -160,7 +152,19 @@
 
     Select relevant test cards for your testing.
 
-    ## Cards that Return APPROVED
+    ## Physical Test Cards for Card Present Transactions
+
+    For in-person payment terminal testing, physical EMV and contactless test cards are required to properly validate your Card Present integration. These specialized test cards contain real chips, magnetic stripes, and contactless antennas with test payment applications that simulate actual card behavior.
+
+    Physical test cards are essential for ensuring your payment terminals properly handle chip insertions, contactless taps, and various payment scenarios in a controlled test environment. They allow merchants, developers, and processors to thoroughly test transaction workflows, terminal software, and integration with your payment system before going live.
+
+    If you already have a set of B2 test cards for EMV and contactless testing, you are all set for Card Present testing. If you don't have physical test cards, please contact [support@integratedcommerce.io](mailto:support@integratedcommerce.io) and we'll provide information on how to obtain the appropriate test card set for your needs.
+
+    ## Virtual Test Cards for Card Not Present Transactions
+
+    The following test cards can be used for online payment testing (Card Not Present transactions) in your development environment.
+
+    ### Cards that Return APPROVED
 
     <table>
       <tr>
