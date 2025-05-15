@@ -12,7 +12,7 @@
   content: |
     # Hosted Payment Page
 
-    <div style="padding: 15px; background-color: #303030; border-radius: 6px; margin-bottom: 20px;">
+    <div style="padding: 15px; background-color: rgba(58, 58, 58, 0.5); border-radius: 6px; margin-bottom: 20px; border: 1px solid #505050;">
     The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Page (HPP) solution that simplifies payment collection while maintaining strong security and compliance standards.
     </div>
 
@@ -41,7 +41,7 @@
 
     ## Security Benefits
 
-    <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+    <div style="background-color: rgba(58, 58, 58, 0.5); padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #505050;">
     <h3 style="color: #c9a15f; margin-top: 0;">Enhanced Security</h3>
     <ul>
       <li>Each session is unique and tied to a specific transaction</li>
@@ -113,7 +113,7 @@
 
     When the payment is completed, the customer will be redirected to your `returnUrl` with query parameters indicating the transaction status and details:
 
-    <div style="padding: 10px; background-color: #3a3a3a; border-radius: 4px; font-family: monospace; overflow-x: auto; margin-bottom: 20px;">
+    <div style="padding: 10px; background-color: rgba(58, 58, 58, 0.5); border-radius: 4px; font-family: monospace; overflow-x: auto; margin-bottom: 20px; border: 1px solid #505050;">
     https://your-site.com/payment-complete?paymentMethodId=pmt_tkn_01JV9ZJHS5GKEBAJTXPF2TR6&resultCode=0&cardType=Visa&transactionId=trx_123456&referenceId=order_123456
     </div>
 
@@ -131,15 +131,15 @@
         </ul>
         <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
       </div>
-      <div style="flex: 1; background-color: #3a3a3a; padding: 15px; border-radius: 6px; text-align: center;">
-        <img src="https://fintechnav/images/HPP.png" alt="Hosted Payment Page Example" style="max-width: 100%; height: auto;" />
-        <small style="display: block; margin-top: 10px; color: #a0a0a0;">Example of the hosted payment form</small>
+      <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center;">
+        <img src="https://fintechnav.com/images/HPP.png" alt="Hosted Payment Page Example" style="max-width: 100%; height: auto;" />
+        <small style="display: block; margin-top: 10px; color: #888888;">Example of the hosted payment form</small>
       </div>
     </div>
 
     ## Error Handling
 
-    <div style="padding: 15px; background-color: #3a3a3a; border-radius: 6px; margin-bottom: 20px;">
+    <div style="padding: 15px; background-color: rgba(58, 58, 58, 0.5); border-radius: 6px; margin-bottom: 20px; border: 1px solid #505050;">
     If a payment session experiences an error or expires, the customer will see an appropriate error message. Your implementation should handle various response statuses, including:
     <ul>
       <li>Successful payments (resultCode = 0)</li>
@@ -152,28 +152,27 @@
     ## Implementation Best Practices
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 20px;">
-      <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px;">
+      <div style="background-color: rgba(58, 58, 58, 0.5); padding: 15px; border-radius: 6px; border: 1px solid #505050;">
         <h4 style="color: #c9a15f; margin-top: 0;">Keep Session IDs Private</h4>
         <p>Never expose the full session ID in client-side code outside the iframe src.</p>
       </div>
-      <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px;">
+      <div style="background-color: rgba(58, 58, 58, 0.5); padding: 15px; border-radius: 6px; border: 1px solid #505050;">
         <h4 style="color: #c9a15f; margin-top: 0;">Implement Proper Origin Validation</h4>
         <p>Always verify the origin of postMessage events.</p>
       </div>
-      <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px;">
+      <div style="background-color: rgba(58, 58, 58, 0.5); padding: 15px; border-radius: 6px; border: 1px solid #505050;">
         <h4 style="color: #c9a15f; margin-top: 0;">Handle Timeouts Gracefully</h4>
         <p>Sessions expire after a short period, so provide clear messaging to users if this happens.</p>
       </div>
-      <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px;">
+      <div style="background-color: rgba(58, 58, 58, 0.5); padding: 15px; border-radius: 6px; border: 1px solid #505050;">
         <h4 style="color: #c9a15f; margin-top: 0;">Test with Our Test Cards</h4>
         <p>Use our <a href="#test-cards">test cards</a> during your integration development.</p>
       </div>
-      <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px;">
+      <div style="background-color: rgba(58, 58, 58, 0.5); padding: 15px; border-radius: 6px; border: 1px solid #505050;">
         <h4 style="color: #c9a15f; margin-top: 0;">Responsive Design</h4>
         <p>Ensure your payment page layout accommodates the iframe appropriately on all devices.</p>
       </div>
     </div>
-    ```
 
 - title: Test Cards
   slug: test-cards
@@ -181,13 +180,13 @@
   content: |
     # Test Cards
 
-    <div style="padding: 15px; background-color: #303030; border-radius: 6px; margin-bottom: 20px;">
+    <div style="padding: 15px; background-color: rgba(58, 58, 58, 0.5); border-radius: 6px; margin-bottom: 20px; border: 1px solid #505050;">
     Select relevant test cards for your testing.
     </div>
 
     ## Physical Test Cards for Card Present Transactions
 
-    <div style="padding: 15px; background-color: #3a3a3a; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #c9a15f;">
+    <div style="padding: 15px; background-color: rgba(58, 58, 58, 0.5); border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #c9a15f; border: 1px solid #505050;">
     <p>For in-person payment terminal testing, physical EMV and contactless test cards are required to properly validate your Card Present integration. These specialized test cards contain real chips, magnetic stripes, and contactless antennas with test payment applications that simulate actual card behavior.</p>
 
     <p>Physical test cards are essential for ensuring your payment terminals properly handle chip insertions, contactless taps, and various payment scenarios in a controlled test environment. They allow merchants, developers, and processors to thoroughly test transaction workflows, terminal software, and integration with your payment system before going live.</p>
@@ -197,7 +196,7 @@
 
     ## Virtual Test Cards for Card Not Present Transactions
 
-    <div style="padding: 15px; background-color: #3a3a3a; border-radius: 6px; margin-bottom: 20px;">
+    <div style="padding: 15px; background-color: rgba(58, 58, 58, 0.5); border-radius: 6px; margin-bottom: 20px; border: 1px solid #505050;">
     The following test cards can be used for online payment testing (Card Not Present transactions) in your development environment.
     </div>
 
