@@ -12,35 +12,44 @@
   content: |
     # Hosted Payment Page
 
+    <div style="padding: 15px; background-color: #303030; border-radius: 6px; margin-bottom: 20px;">
     The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Page (HPP) solution that simplifies payment collection while maintaining strong security and compliance standards.
+    </div>
 
     ## How It Works
 
     Our Hosted Payment Page system uses a session-based approach rather than static iframes. Here's how the flow works:
 
-    1. **Initiate Session**: Your backend server makes a POST request to our API (e.g., `/payment-methods/virtual`, `/transactions/virtual-sale`, etc.) with your transaction details.
+    <div style="padding-left: 20px; border-left: 3px solid #c9a15f; margin-bottom: 20px;">
+    1. <strong>Initiate Session</strong>: Your backend server makes a POST request to our API (e.g., <code>/payment-methods/virtual</code>, <code>/transactions/virtual-sale</code>, etc.) with your transaction details.
 
-    2. **Receive Session URL**: Our API returns a short-lived, unique iframe URL specific to this transaction, along with a session ID and expiration timestamp.
+    2. <strong>Receive Session URL</strong>: Our API returns a short-lived, unique iframe URL specific to this transaction, along with a session ID and expiration timestamp.
 
-    3. **Embed HPP**: You embed this iframe URL in your payment page. The iframe contains a fully-styled, responsive payment form.
+    3. <strong>Embed HPP</strong>: You embed this iframe URL in your payment page. The iframe contains a fully-styled, responsive payment form.
 
-    4. **Customer Enters Payment Info**: The customer enters their payment information (card details, billing address) directly into our secure form, which is isolated from your website's environment.
+    4. <strong>Customer Enters Payment Info</strong>: The customer enters their payment information (card details, billing address) directly into our secure form, which is isolated from your website's environment.
 
-    5. **Payment Processing**: When the customer submits the form, we process the payment in our secure environment.
+    5. <strong>Payment Processing</strong>: When the customer submits the form, we process the payment in our secure environment.
 
-    6. **Result Communication**: Results are communicated back to your system in two ways:
-       - Redirect: If you provided a `returnUrl` parameter, the customer will be redirected there with status information
-       - postMessage: A JavaScript event is sent to your parent window with transaction details
-       - Webhook: The complete transaction result is delivered via the appropriate webhook
+    6. <strong>Result Communication</strong>: Results are communicated back to your system in two ways:
+       <ul>
+         <li>Redirect: If you provided a <code>returnUrl</code> parameter, the customer will be redirected there with status information</li>
+         <li>postMessage: A JavaScript event is sent to your parent window with transaction details</li>
+         <li>Webhook: The complete transaction result is delivered via the appropriate webhook</li>
+       </ul>
+    </div>
 
     ## Security Benefits
 
-    This session-based approach offers several security advantages:
-
-    - Each session is unique and tied to a specific transaction
-    - Payment details never touch your servers
-    - Session URLs are short-lived and expire automatically
-    - PCI compliance scope is significantly reduced for your organization
+    <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+    <h3 style="color: #c9a15f; margin-top: 0;">Enhanced Security</h3>
+    <ul>
+      <li>Each session is unique and tied to a specific transaction</li>
+      <li>Payment details never touch your servers</li>
+      <li>Session URLs are short-lived and expire automatically</li>
+      <li>PCI compliance scope is significantly reduced for your organization</li>
+    </ul>
+    </div>
 
     ## Example Implementation Flow
 
@@ -104,44 +113,66 @@
 
     When the payment is completed, the customer will be redirected to your `returnUrl` with query parameters indicating the transaction status and details:
 
-    ```
+    <div style="padding: 10px; background-color: #3a3a3a; border-radius: 4px; font-family: monospace; overflow-x: auto; margin-bottom: 20px;">
     https://your-site.com/payment-complete?paymentMethodId=pmt_tkn_01JV9ZJHS5GKEBAJTXPF2TR6&resultCode=0&cardType=Visa&transactionId=trx_123456&referenceId=order_123456
-    ```
+    </div>
 
     Your page can then parse these parameters to display appropriate confirmation or error messages.
 
     ## Hosted Payment Page Appearance
 
-    Our Hosted Payment Page provides a clean, professional payment form that collects:
-
-    - Cardholder name
-    - Card number, expiration date, and security code
-    - Billing address details
-
-    ![Hosted Payment Page Example](https://fintechnav.com/images/HPP.png)
-
-    The form is responsive and works on mobile, tablet, and desktop devices.
+    <div style="display: flex; margin-bottom: 20px;">
+      <div style="flex: 1; padding-right: 20px;">
+        <p>Our Hosted Payment Page provides a clean, professional payment form that collects:</p>
+        <ul>
+          <li>Cardholder name</li>
+          <li>Card number, expiration date, and security code</li>
+          <li>Billing address details</li>
+        </ul>
+        <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
+      </div>
+      <div style="flex: 1; background-color: #3a3a3a; padding: 15px; border-radius: 6px; text-align: center;">
+        <img src="https://fintechnav/images/HPP.png" alt="Hosted Payment Page Example" style="max-width: 100%; height: auto;" />
+        <small style="display: block; margin-top: 10px; color: #a0a0a0;">Example of the hosted payment form</small>
+      </div>
+    </div>
 
     ## Error Handling
 
+    <div style="padding: 15px; background-color: #3a3a3a; border-radius: 6px; margin-bottom: 20px;">
     If a payment session experiences an error or expires, the customer will see an appropriate error message. Your implementation should handle various response statuses, including:
-
-    - Successful payments (resultCode = 0)
-    - Declined transactions
-    - Expired sessions
-    - Processing errors
+    <ul>
+      <li>Successful payments (resultCode = 0)</li>
+      <li>Declined transactions</li>
+      <li>Expired sessions</li>
+      <li>Processing errors</li>
+    </ul>
+    </div>
 
     ## Implementation Best Practices
 
-    1. **Keep Session IDs Private**: Never expose the full session ID in client-side code outside the iframe src.
-
-    2. **Implement Proper Origin Validation**: Always verify the origin of postMessage events.
-
-    3. **Handle Timeouts Gracefully**: Sessions expire after a short period, so provide clear messaging to users if this happens.
-
-    4. **Test with Our Test Cards**: Use our [test cards](#test-cards) during your integration development.
-
-    5. **Responsive Design**: Ensure your payment page layout accommodates the iframe appropriately on all devices.
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 20px;">
+      <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px;">
+        <h4 style="color: #c9a15f; margin-top: 0;">Keep Session IDs Private</h4>
+        <p>Never expose the full session ID in client-side code outside the iframe src.</p>
+      </div>
+      <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px;">
+        <h4 style="color: #c9a15f; margin-top: 0;">Implement Proper Origin Validation</h4>
+        <p>Always verify the origin of postMessage events.</p>
+      </div>
+      <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px;">
+        <h4 style="color: #c9a15f; margin-top: 0;">Handle Timeouts Gracefully</h4>
+        <p>Sessions expire after a short period, so provide clear messaging to users if this happens.</p>
+      </div>
+      <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px;">
+        <h4 style="color: #c9a15f; margin-top: 0;">Test with Our Test Cards</h4>
+        <p>Use our <a href="#test-cards">test cards</a> during your integration development.</p>
+      </div>
+      <div style="background-color: #3a3a3a; padding: 15px; border-radius: 6px;">
+        <h4 style="color: #c9a15f; margin-top: 0;">Responsive Design</h4>
+        <p>Ensure your payment page layout accommodates the iframe appropriately on all devices.</p>
+      </div>
+    </div>
     ```
 
 - title: Test Cards
@@ -150,19 +181,25 @@
   content: |
     # Test Cards
 
+    <div style="padding: 15px; background-color: #303030; border-radius: 6px; margin-bottom: 20px;">
     Select relevant test cards for your testing.
+    </div>
 
     ## Physical Test Cards for Card Present Transactions
 
-    For in-person payment terminal testing, physical EMV and contactless test cards are required to properly validate your Card Present integration. These specialized test cards contain real chips, magnetic stripes, and contactless antennas with test payment applications that simulate actual card behavior.
+    <div style="padding: 15px; background-color: #3a3a3a; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #c9a15f;">
+    <p>For in-person payment terminal testing, physical EMV and contactless test cards are required to properly validate your Card Present integration. These specialized test cards contain real chips, magnetic stripes, and contactless antennas with test payment applications that simulate actual card behavior.</p>
 
-    Physical test cards are essential for ensuring your payment terminals properly handle chip insertions, contactless taps, and various payment scenarios in a controlled test environment. They allow merchants, developers, and processors to thoroughly test transaction workflows, terminal software, and integration with your payment system before going live.
+    <p>Physical test cards are essential for ensuring your payment terminals properly handle chip insertions, contactless taps, and various payment scenarios in a controlled test environment. They allow merchants, developers, and processors to thoroughly test transaction workflows, terminal software, and integration with your payment system before going live.</p>
 
-    If you already have a set of B2 test cards for EMV and contactless testing, you are all set for Card Present testing. If you don't have physical test cards, please contact [support@integratedcommerce.io](mailto:support@integratedcommerce.io) and we'll provide information on how to obtain the appropriate test card set for your needs.
+    <p>If you already have a set of B2 test cards for EMV and contactless testing, you are all set for Card Present testing. If you don't have physical test cards, please contact <a href="mailto:support@integratedcommerce.io">support@integratedcommerce.io</a> and we'll provide information on how to obtain the appropriate test card set for your needs.</p>
+    </div>
 
     ## Virtual Test Cards for Card Not Present Transactions
 
+    <div style="padding: 15px; background-color: #3a3a3a; border-radius: 6px; margin-bottom: 20px;">
     The following test cards can be used for online payment testing (Card Not Present transactions) in your development environment.
+    </div>
 
     ### Cards that Return APPROVED
 
