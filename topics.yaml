@@ -2,7 +2,7 @@
   slug: hosted-payment-page
   description: Understand how our Hosted Payment Page (HPP) works
   content: |
-    # Hosted Payment Page test
+    # Hosted Payment Page
 
     <div style="padding: 15px; background-color: rgba(240, 244, 248, 0.08); border: 1px solid rgba(225, 228, 232, 0.2); border-radius: 6px; margin-bottom: 20px; color: inherit;">
     The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Page (HPP) solution that simplifies payment collection while maintaining strong security and compliance standards.
@@ -47,7 +47,7 @@
 
     ### 1. Backend: Initiate the Payment Session
 
-    ```javascript
+    <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 6px; overflow-x: auto; margin-bottom: 20px;">
     // Server-side code (Node.js example)
     const response = await fetch('https://api.omni.integratedcommerce.io/v1/transactions/virtual-sale', { 
       method: 'POST',
@@ -66,21 +66,21 @@
     const { iframeUrl, sessionId } = data;
 
     // Send iframeUrl to your frontend
-    ```
+    </pre>
 
     ### 2. Frontend: Display the Payment Form
 
-    ```html
-    <div class="payment-container">
-      <iframe 
+    <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 6px; overflow-x: auto; margin-bottom: 20px;">
+    &lt;div class="payment-container"&gt;
+      &lt;iframe 
         src="https://iframe.integratedcommerce.io/session/UNIQUE_SESSION_ID" 
         id="payment-iframe"
         style="width: 100%; height: 600px; border: none;"
-        allowtransparency="true">
-      </iframe>
-    </div>
+        allowtransparency="true"&gt;
+      &lt;/iframe&gt;
+    &lt;/div&gt;
 
-    <script>
+    &lt;script&gt;
     // Listen for messages from the iframe
     window.addEventListener('message', (event) => {
       // Verify origin for security
@@ -98,8 +98,8 @@
         }
       }
     });
-    </script>
-    ```
+    &lt;/script&gt;
+    </pre>
 
     ### 3. Handling the Result
 
