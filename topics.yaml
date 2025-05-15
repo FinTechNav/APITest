@@ -43,63 +43,19 @@
     </ul>
     </div>
 
-    ## Example Implementation Flow
+    ## Implementation Flow
 
     ### 1. Backend: Initiate the Payment Session
 
-    <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 6px; overflow-x: auto; margin-bottom: 20px;">
-    // Server-side code (Node.js example)
-    const response = await fetch('https://api.omni.integratedcommerce.io/v1/transactions/virtual-sale', { 
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'x-api-key': 'your_api_key_here' 
-      },
-      body: JSON.stringify({ 
-        amount: 1000, // $10.00
-        returnUrl: 'https://your-site.com/payment-complete',
-        referenceId: 'order_123456' // Optional: your reference ID 
-      })
-    });
+    Your backend server initiates the payment session by making a POST request to our payment API endpoint. This request includes your API key, the transaction amount, a return URL for redirecting customers after payment, and an optional reference ID for tracking.
 
-    const data = await response.json();
-    const { iframeUrl, sessionId } = data;
-
-    // Send iframeUrl to your frontend
-    </pre>
+    The API responds with a unique session identifier and a secure iframe URL. This session is temporary and designed specifically for this payment transaction.
 
     ### 2. Frontend: Display the Payment Form
 
-    <pre style="background-color: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 6px; overflow-x: auto; margin-bottom: 20px;">
-    &lt;div class="payment-container"&gt;
-      &lt;iframe 
-        src="https://iframe.integratedcommerce.io/session/UNIQUE_SESSION_ID" 
-        id="payment-iframe"
-        style="width: 100%; height: 600px; border: none;"
-        allowtransparency="true"&gt;
-      &lt;/iframe&gt;
-    &lt;/div&gt;
+    On your payment page, you'll embed the secure iframe URL received from our API. This iframe creates a boundary that isolates the payment form from your website, enhancing security.
 
-    &lt;script&gt;
-    // Listen for messages from the iframe
-    window.addEventListener('message', (event) => {
-      // Verify origin for security
-      if (event.origin.includes('integratedcommerce.io')) {
-        const data = typeof event.data === 'string' 
-          ? JSON.parse(event.data) 
-          : event.data;
-        
-        if (data.status === 'completed') {
-          // Payment successful - handle accordingly
-          console.log('Payment successful:', data);
-        } else if (data.status === 'error') {
-          // Payment failed - handle error
-          console.log('Payment error:', data.message);
-        }
-      }
-    });
-    &lt;/script&gt;
-    </pre>
+    You'll also implement a message listener that waits for communication from the iframe. This listener should verify the origin of any messages for security and process the payment results accordingly.
 
     ### 3. Handling the Result
 
@@ -109,7 +65,7 @@
     https://your-site.com/payment-complete?paymentMethodId=pmt_tkn_01JV9ZJHS5GKEBAJTXPF2TR6&resultCode=0&cardType=Visa&transactionId=trx_123456&referenceId=order_123456
     </div>
 
-    Your page can then parse these parameters to display appropriate confirmation or error messages.
+    Your page can then parse these parameters to display appropriate confirmation or error messages. Additionally, you'll receive a webhook notification with the complete transaction details that you can use for order fulfillment and record-keeping.
 
     ## Hosted Payment Page Appearance
 
