@@ -2192,11 +2192,12 @@ paths:
       operationId: createCardPresentToken
       summary: Create Token (Card Present)
       description: |
-        Tokenize a card using a physical terminal. A verification transaction or $0 authorization will occur to validate the card. If valid, the card and expiration date will be tokenized and stored and a paymentMethodId will be returned for future Card On File transactions.
+        Tokenize a card using a physical terminal. A $0 authorization will occur to validate the card. If valid, the card and expiration date will be tokenized and stored and a paymentMethodId will be returned for future Card On File transactions.
 
         #### Webhook Events
 
         The following webhook events will be triggered during the tokenization process:
+        - `auth.completed` - when the $0 authorization is processed and completed.
         - `token.created` - when a card is tokenized and stored as a payment method.
       tags:
         - Tokens
@@ -2253,11 +2254,12 @@ paths:
 
         When the customer submits their card information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete tokenization result will be delivered via the Token Created webhook.
 
-        A verification transaction or $0 authorization will occur to validate the card. If valid, a tokenized card ID will be stored and a paymentMethodId will be returned for future Card On File transactions.
+        A $0 authorization will occur to validate the card. If valid, a tokenized card ID will be stored and a paymentMethodId will be returned for future Card On File transactions.
 
         #### Webhook Events
 
         The following webhook events will be triggered during the tokenization process:
+        - `auth.completed` - when the $0 authorization is processed and completed.
         - `token.created` - when a card is tokenized and stored as a payment method.
       tags:
         - Tokens
