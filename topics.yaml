@@ -86,14 +86,12 @@
   content: |
     # Test Cards
 
-    Select relevant test cards for your testing.
-
     ## Physical Test Cards for Card Present Transactions
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-    <p>For in-person payment terminal testing, physical EMV and contactless test cards are essential for Card Present integration. These specialized cards contain real chips, magnetic stripes, and contactless antennas that simulate actual card behavior, allowing merchants to thoroughly test terminal workflows and payment scenarios before going live.</p>
+    <p>For in-person payment terminal testing, physical EMV and contactless test cards are essential for Card Present integration. These specialized cards contain real chips, magnetic stripes, and contactless antennas that simulate actual card behavior, allowing you to thoroughly test terminal workflows and payment scenarios before going live.</p>
 
-    <p>If you already have a set of B2 test cards for EMV and contactless testing, you are all set for Card Present testing. If you don't have physical test cards, please contact <a href="mailto:support@integratedcommerce.io">support@integratedcommerce.io</a> and we'll provide information on how to obtain the appropriate test card set for your needs.</p>
+    <p>If you already have a set of B2 test cards for EMV and contactless testing, you are all set for Card Present testing. If you don't have physical test cards, please contact <a href="mailto:support@integratedcommerce.io">support@integratedcommerce.io</a> to request a set of test cards.</p>
     </div>
 
     ## Virtual Test Cards for Card Not Present Transactions
