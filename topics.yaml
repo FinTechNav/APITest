@@ -91,9 +91,7 @@
     ## Physical Test Cards for Card Present Transactions
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-    <p>For in-person payment terminal testing, physical EMV and contactless test cards are required to properly validate your Card Present integration. These specialized test cards contain real chips, magnetic stripes, and contactless antennas with test payment applications that simulate actual card behavior.</p>
-
-    <p>Physical test cards are essential for ensuring your payment terminals properly handle chip insertions, contactless taps, and various payment scenarios in a controlled test environment. They allow merchants, developers, and processors to thoroughly test transaction workflows, terminal software, and integration with your payment system before going live.</p>
+    <p>For in-person payment terminal testing, physical EMV and contactless test cards are essential for Card Present integration. These specialized cards contain real chips, magnetic stripes, and contactless antennas that simulate actual card behavior, allowing merchants to thoroughly test terminal workflows and payment scenarios before going live.</p>
 
     <p>If you already have a set of B2 test cards for EMV and contactless testing, you are all set for Card Present testing. If you don't have physical test cards, please contact <a href="mailto:support@integratedcommerce.io">support@integratedcommerce.io</a> and we'll provide information on how to obtain the appropriate test card set for your needs.</p>
     </div>
@@ -102,8 +100,6 @@
 
     The following test cards can be used for online payment testing (Card Not Present transactions) in your development environment.
 
-    ## Cards that Return APPROVED
-
     <div style="overflow-x: auto; margin-bottom: 20px;">
       <table style="width: 100%; border-collapse: collapse;">
         <thead>
@@ -111,6 +107,8 @@
             <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">VISA</th>
             <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">MASTERCARD</th>
             <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">AMEX</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DISCOVER</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">RESULT</th>
           </tr>
         </thead>
         <tbody>
@@ -118,46 +116,64 @@
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4761344136141390</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5101081046006034</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375510513169537</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6509821665351005</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4761201381475297</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5101084411423750</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375510288656924</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6221267465440274</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
           </tr>
           <tr>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4159129252458086</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333304500657872</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375510379996452</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6500217278165735</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4123407439043051</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333308664112277</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375510082116984</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6522231777286524</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
           </tr>
           <tr>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4001888687412469</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5550345228382224</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6523077546008353</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4444493318246892</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5550347471347813</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6011494585241663</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
           </tr>
           <tr>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000996174334475 (1)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">2222755234426838</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000287447386587 (2)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">2221004483162815</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
           </tr>
           <tr>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333608104136723 (1)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
           </tr>
         </tbody>
       </table>
@@ -172,212 +188,167 @@
       <table style="width: 100%; border-collapse: collapse;">
         <thead>
           <tr style="background-color: rgba(240, 244, 248, 0.15);">
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DISCOVER</th>
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DINERS</th>
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">CHINA UNION PAY</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6509821665351005</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">361253433727425</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6221272566426206</td>
-          </tr>
-          <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6221267465440274</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">386009540225286</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6233050545583578</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6500217278165735</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">369116638070887</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
-          </tr>
-          <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6522231777286524</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">386000330170758</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6523077546008353</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">364096288088485</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
-          </tr>
-          <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6011494585241663</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">365650577650527</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    ## Cards that Return DECLINED
-
-    ### Visa, Mastercard, and Amex
-
-    <div style="overflow-x: auto; margin-bottom: 20px;">
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr style="background-color: rgba(240, 244, 248, 0.15);">
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DECLINE REASON</th>
             <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">VISA</th>
             <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">MASTERCARD</th>
             <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">AMEX</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DISCOVER</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">RESULT</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Decline</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4008370896662369 (UK)</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333418445863914 (Russian Federation)<br>5001638548736201 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333418445863914 (Russian Federation)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375521501910816</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Decline</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Soft Decline - Authentication is Advised</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4021937195658141 (UK)<br>4217641329972469 (US)</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5118081410264525 (UK)<br>5109486948867999 (US)</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">N/A</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5001638548736201 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Decline</span></td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">External Error in Processing</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000128449498204 (US)</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333423768173347 (US)<br>5100976565928800 (UK)</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375522679892992</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4021937195658141 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5118081410264525 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Soft Decline - Authentication is Advised</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Acquirer Validation</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4217641329972469 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5109486948867999 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Soft Decline - Authentication is Advised</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000128449498204 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333423768173347 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375522679892992</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">External Error in Processing</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5100976565928800 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">External Error in Processing</span></td>
+          </tr>
+          <tr>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000135814550378 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333435197139699 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375523500980436</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Acquirer Validation</span></td>
           </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Lost/Stolen</td>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000157454627969 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333452804487502 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375525991062202</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Lost/Stolen</span></td>
           </tr>
-          <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Do Not Honor</td>
+          <tr>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000164166749263 (India)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333463046218753 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375526064276158 (Germany)</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Insufficient Funds</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000173946194872 (India)<br>4008384424370890 (UK)</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333475572200849 (US)</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375527639875136 (Ireland)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6011206770448741</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Do Not Honor</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Exceeds Withdrawal Limit</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000173946194872 (India)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333475572200849 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375527639875136 (Ireland)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6504855645720348</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Insufficient Funds</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4008384424370890 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Insufficient Funds</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000189336416410 (India)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333482348715142 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375528929838107 (Ireland)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Exceeds Withdrawal Limit</span></td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Exceeds Withdrawal Frequency</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000196948974975 (India)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333498929343773 (South Korea)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375529856696120 (Ireland)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Exceeds Withdrawal Frequency</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Invalid Transaction</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000203016321921 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333502383316074 (Puerto Rico)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375530796593260</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Invalid Transaction</span></td>
           </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div style="overflow-x: auto; margin-bottom: 20px;">
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr style="background-color: rgba(240, 244, 248, 0.15);">
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DECLINE REASON</th>
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">VISA</th>
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">MASTERCARD</th>
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">AMEX</th>
-          </tr>
-        </thead>
-        <tbody>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Format Error</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000212384978055 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333518577223892 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375531494255517 (Indonesia)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Format Error</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Issuer or Switch Inoperative</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000229544877670 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333527145351713 (Costa Rica)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375532604034750</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Issuer or Switch Inoperative</span></td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Timeout/Retry</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000234977370839 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333532915594096 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375533558061005 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Timeout/Retry</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Expired Card</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000247422310226 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333540337444022 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375534876707683 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Expired Card</span></td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Transaction Not Permitted To Cardholder</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000254588011960 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333554636535091 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375535264614027 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Transaction Not Permitted To Cardholder</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Transaction Not Permitted on Terminal</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000269084739575 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333562868563707 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375536629108788 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Transaction Not Permitted on Terminal</span></td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Restricted Card</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000273652260030 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333578626428553 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375537795464104 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Restricted Card</span></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Invalid CVV</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">N/A</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333583123003909 (US)</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375538733297606 (Greece)</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    ### Discover, Diners, and China Union Pay
-
-    <div style="overflow-x: auto; margin-bottom: 20px;">
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr style="background-color: rgba(240, 244, 248, 0.15);">
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DECLINE REASON</th>
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DISCOVER</th>
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DINERS</th>
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">CHINA UNION PAY</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Do Not Honor</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6011206770448741</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">364095045584513</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6217993670836073</td>
-          </tr>
-          <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Insufficient Funds</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6504855645720348</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">361798030407730</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6227892150665366</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Invalid CVV</span></td>
           </tr>
         </tbody>
       </table>
