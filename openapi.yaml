@@ -597,13 +597,13 @@ components:
           example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
         type:
           type: string
-          enum: [physical, virtual, token]
+          enum: [Physical, Virtual, Token]
           description: |
             The type of payment method:
-            - `physical` - A physical payment terminal for Card Present transactions
-            - `virtual` - A hosted payment form/iframe for Card Not Present transactions
-            - `token` - A tokenized card for card-on-file transactions
-          example: 'token'
+            - `Physical` - A physical payment terminal for Card Present transactions
+            - `Virtual` - A hosted payment form/iframe for Card Not Present transactions
+            - `Token` - A tokenized card for card-on-file transactions
+          example: 'Token'
         currency:
           type: string
           enum: [USD, CAD]
@@ -965,9 +965,9 @@ components:
           example: '2025-04-17T14:19:03Z'
         status:
           type: string
-          enum: [pending, completed, expired, error]
+          enum: [Pending, Completed, Expired, Error]
           description: Status of the iframe session. When created, this will always be pending. The status values will be updated as the customer goes through the iframe process.
-          example: 'pending'
+          example: 'Pending'
 
     TransactionResponseObject:
       type: object
@@ -1232,9 +1232,9 @@ components:
           example: '2025-04-17T14:19:03Z'
         status:
           type: string
-          enum: [pending, completed, expired, error]
+          enum: [Pending, Completed, Expired, Error]
           description: Status of the iframe session. When created, this will always be pending. The status values will be updated as the customer goes through the iframe process.
-          example: 'pending'
+          example: 'Pending'
 
     CardOnFileUpdateResponse:
       type: object
@@ -1574,7 +1574,7 @@ components:
         id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
         paymentMethod:
           id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-          type: 'physical'
+          type: 'Physical'
           currency: 'USD'
           description: 'Main Store Terminal'
         invoiceNumber: 'inv_12345678'
@@ -1596,7 +1596,7 @@ components:
               tip: 0
             paymentMethod:
               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'token'
+              type: 'Token'
               currency: 'USD'
               description: "Token for John Doe's Visa"
               maskedCardNumber: '************0011'
@@ -1693,7 +1693,7 @@ components:
         id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
         paymentMethod:
           id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-          type: 'physical'
+          type: 'Physical'
           currency: 'USD'
           description: 'Main Store Terminal'
         invoiceNumber: 'inv_12345678'
@@ -1715,7 +1715,7 @@ components:
               tip: 0
             paymentMethod:
               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'token'
+              type: 'Token'
               currency: 'USD'
               description: "Token for John Doe's Visa"
               maskedCardNumber: '************0011'
@@ -1807,7 +1807,7 @@ components:
         referenceId: 'ref_s192i49i'
         paymentMethod:
           id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-          type: 'token'
+          type: 'Token'
           currency: 'USD'
           description: "Token for John Doe's Visa"
           maskedCardNumber: '************0011'
@@ -1898,7 +1898,7 @@ components:
         referenceId: 'ref_s192i49i'
         paymentMethod:
           id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-          type: 'token'
+          type: 'Token'
           currency: 'USD'
           description: "Token for John Doe's Visa"
           maskedCardNumber: '************0011'
@@ -1987,7 +1987,7 @@ components:
         referenceId: 'ref_s192i49i'
         paymentMethod:
           id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-          type: 'physical'
+          type: 'Physical'
           currency: 'USD'
           description: 'Main Store Terminal'
         invoiceNumber: 'inv_12345678'
@@ -2073,7 +2073,7 @@ components:
         id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
         paymentMethod:
           id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-          type: 'physical'
+          type: 'Physical'
           currency: 'USD'
           description: 'Main Store Terminal'
         referenceId: 'ref_add_card_12345'
@@ -2084,7 +2084,7 @@ components:
             authCode: '000AAA'
             paymentMethod:
               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'token'
+              type: 'Token'
               currency: 'USD'
               description: "Token for John Doe's Visa"
               maskedCardNumber: '************0011'
@@ -2100,7 +2100,7 @@ components:
         id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
         paymentMethod:
           id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-          type: 'token'
+          type: 'Token'
           currency: 'USD'
           description: "Token for John Doe's Visa"
           maskedCardNumber: '************0011'
@@ -2115,7 +2115,7 @@ components:
         id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
         paymentMethod:
           id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-          type: 'token'
+          type: 'Token'
           currency: 'USD'
           description: "Token for John Doe's Visa"
           maskedCardNumber: '************0011'
@@ -2157,7 +2157,7 @@ paths:
                             Example virtual format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
                         type:
                           type: string
-                          enum: [physical, virtual]
+                          enum: [Physical, Virtual]
                         currency:
                           type: string
                           enum: [USD, CAD]
@@ -2171,17 +2171,17 @@ paths:
                   value:
                     - paymentMethodId:
                         id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
-                        type: physical
+                        type: Physical
                         currency: USD
                         description: Main Store Terminal
                     - paymentMethodId:
                         id: pmt_trm_01JRZQW7FXMG62D8HJTPK3Y5VB
-                        type: physical
+                        type: Physical
                         currency: USD
                         description: Secondary Store Terminal
                     - paymentMethodId:
                         id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
-                        type: virtual
+                        type: Virtual
                         currency: USD
                         description: Online Checkout Iframe
         '401':
@@ -2291,7 +2291,7 @@ paths:
                     id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
                     paymentMethod:
                       id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                      type: 'virtual'
+                      type: 'Virtual'
                       currency: 'USD'
                       description: 'Online Checkout Iframe'
                     referenceId: 'ref_add_card_12345'
@@ -2299,7 +2299,7 @@ paths:
                     sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
                     iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
                     expirationTimestamp: '2025-04-17T14:19:03Z'
-                    status: 'pending'
+                    status: 'Pending'
         '400':
           description: Request Error
           content:
@@ -2566,7 +2566,7 @@ paths:
                     id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                     paymentMethod:
                       id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                      type: 'virtual'
+                      type: 'Virtual'
                       currency: 'USD'
                       description: 'Online Checkout Iframe'
                     invoiceNumber: 'inv_12345678'
@@ -2576,7 +2576,7 @@ paths:
                     sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
                     iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
                     expirationTimestamp: '2025-04-17T14:19:03Z'
-                    status: 'pending'
+                    status: 'Pending'
         '400':
           description: Request Error
           content:
@@ -2634,7 +2634,7 @@ paths:
                     id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                     paymentMethod:
                       id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                      type: 'token'
+                      type: 'Token'
                       currency: 'USD'
                       description: "Token for John Doe's Visa"
                       maskedCardNumber: '************0011'
@@ -2658,7 +2658,7 @@ paths:
                           paymentMethod:
                             {
                               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
-                              type: 'token',
+                              type: 'Token',
                               currency: 'USD',
                               description: "Token for John Doe's Visa",
                               maskedCardNumber: '************0011',
@@ -2803,7 +2803,7 @@ paths:
                     id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                     paymentMethod:
                       id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                      type: 'virtual'
+                      type: 'Virtual'
                       currency: 'USD'
                       description: 'Online Checkout Iframe'
                     invoiceNumber: 'inv_12345678'
@@ -2813,7 +2813,7 @@ paths:
                     sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
                     iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
                     expirationTimestamp: '2025-04-17T14:19:03Z'
-                    status: 'pending'
+                    status: 'Pending'
         '400':
           description: Request Error
           content:
@@ -2871,7 +2871,7 @@ paths:
                     id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                     paymentMethod:
                       id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                      type: 'token'
+                      type: 'Token'
                       currency: 'USD'
                       description: "Token for John Doe's Visa"
                       maskedCardNumber: '************0011'
@@ -2895,7 +2895,7 @@ paths:
                           paymentMethod:
                             {
                               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
-                              type: 'token',
+                              type: 'Token',
                               currency: 'USD',
                               description: "Token for John Doe's Visa",
                               maskedCardNumber: '************0011',
@@ -3125,7 +3125,7 @@ paths:
                     id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                     paymentMethod:
                       id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                      type: 'virtual'
+                      type: 'Virtual'
                       currency: 'USD'
                       description: 'Online Checkout Iframe'
                     invoiceNumber: 'inv_12345678'
@@ -3135,7 +3135,7 @@ paths:
                     sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
                     iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
                     expirationTimestamp: '2025-04-17T14:19:03Z'
-                    status: 'pending'
+                    status: 'Pending'
         '400':
           description: Request Error
           content:
