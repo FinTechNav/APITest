@@ -22,7 +22,7 @@ info:
 
     #### Card Not Present Transactions
 
-    For online payments, the API provides Hosted payment pages/iframes for payment transactions and secure card data collection for tokenization.  The API supports the following Card Not Present transaction types:
+    For online payments, the API provides Hosted Payment Forms/iframes for payment transactions and secure card data collection for tokenization.  The API supports the following Card Not Present transaction types:
     - Authorization: Verification with the Issuer if the card is valid for payment.  The authorization amount is reserved, but not captured/settled.
       - Includes AVS (Address Verification Service) and CVV validation support
     - Capture: Complete a previously authorized transaction.  The cardholder is billed for the transaction, and the transaction is settled to the merchant.
@@ -601,7 +601,7 @@ components:
           description: |
             The type of payment method:
             - `physical` - A physical payment terminal for Card Present transactions
-            - `virtual` - A hosted payment page/iframe for Card Not Present transactions
+            - `virtual` - A hosted payment form/iframe for Card Not Present transactions
             - `token` - A tokenized card for card-on-file transactions
           example: 'token'
         currency:
@@ -730,7 +730,7 @@ components:
 
     CardNotPresentRequest:
       type: object
-      description: Represents the request to process a Card Not Present transaction using a hosted payment page or iframe.
+      description: Represents the request to process a Card Not Present transaction using a hosted payment form/iframe.
       properties:
         amount:
           $ref: '#/components/schemas/Amount'
@@ -739,13 +739,13 @@ components:
         paymentMethodId:
           type: string
           description: |
-            The ID of the hosted payment page or iframe that will collect card information for this Card Not Present transaction.
+            The ID of the hosted payment form / iframe that will collect card information for this Card Not Present transaction.
 
             - Example format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
-            - OPTIONAL ONLY if you have a single hosted payment page configured
-            - REQUIRED if you have multiple hosted payment pages configured
+            - OPTIONAL ONLY if you have a single hosted payment form configured
+            - REQUIRED if you have multiple hosted payment forms configured
 
-            You can retrieve all available hosted payment page or iframe IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+            You can retrieve all available hosted payment form IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
           example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
@@ -851,13 +851,13 @@ components:
         paymentMethodId:
           type: string
           description: |
-            The ID of the hosted payment page or iframe that will collect card information for this Card Not Present unreferenced refund.
+            The ID of the hosted payment form / iframe that will collect card information for this Card Not Present unreferenced refund.
 
             - Example format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
-            - OPTIONAL ONLY if you have a single hosted payment page configured
-            - REQUIRED if you have multiple hosted payment pages configured
+            - OPTIONAL ONLY if you have a single hosted payment form configured
+            - REQUIRED if you have multiple hosted payment forms configured
 
-            You can retrieve all available hosted payment page or iframe IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+            You can retrieve all available hosted payment form IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -891,16 +891,16 @@ components:
 
     CardOnFileVirtualAddRequest:
       type: object
-      description: Represents the request to tokenize a card using a hosted payment page or iframe.
+      description: Represents the request to tokenize a card using a hosted payment form / iframe.
       properties:
         paymentMethodId:
           type: string
           description: |
-            The ID of the payment method (hosted payment page/iframe) to use for adding a card.
+            The ID of the payment method (hosted payment form/iframe) to use for adding a card.
 
             - Example format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
-            - OPTIONAL ONLY if you have a single hosted payment page configured
-            - REQUIRED if you have multiple hosted payment pages configured
+            - OPTIONAL ONLY if you have a single hosted payment form configured
+            - REQUIRED if you have multiple hosted payment forms configured
 
             You can retrieve all available payment method IDs for your account using the `GET /payment-methods` endpoint.
           example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
@@ -926,7 +926,7 @@ components:
 
     CNPVirtualResponse:
       type: object
-      description: Represents the response to a Card Not Present sale or authorization using a hosted payment page or iframe.
+      description: Represents the response to a Card Not Present sale or authorization using a hosted payment form / iframe.
       properties:
         id:
           type: string
@@ -1197,7 +1197,7 @@ components:
 
     CardOnFileVirtualAddResponse:
       type: object
-      description: Represents the response to a hosted payment page or iframe card tokenization request.
+      description: Represents the response to a hosted payment form / iframe card tokenization request.
       properties:
         id:
           type: string
@@ -2132,7 +2132,7 @@ paths:
       description: |
         Returns a list of valid payment methods that have been configured in the system for the authenticated merchant.
 
-        IDs of both "physical" payment terminals that can be used to process Card Present transactions and IDs of "virtual" terminals (hosted payment pages or iframes) that can be used to process Card Not Present transactions will be returned.
+        IDs of both "physical" payment terminals that can be used to process Card Present transactions and IDs of "virtual" terminals (hosted payment forms / iframes) that can be used to process Card Not Present transactions will be returned.
       tags:
         - Payment Methods
       responses:
@@ -2249,7 +2249,7 @@ paths:
       operationId: createCardNotPresentToken
       summary: Create Token (Card Not Present)
       description: |
-        Tokenize a card using a hosted payment page/iframe. This POST request initiates a tokenization session and returns a short-lived iframe URL to embed in your page, rather than using a static iframe URL.
+        Tokenize a card using a hosted payment form/iframe. This POST request initiates a tokenization session and returns a short-lived iframe URL to embed in your page, rather than using a static iframe URL.
 
         When the customer submits their card information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete tokenization result will be delivered via the Token Created webhook.
 
@@ -2262,7 +2262,7 @@ paths:
       tags:
         - Tokens
       requestBody:
-        description: The request to tokenize a card using a hosted payment page or iframe.
+        description: The request to tokenize a card using a hosted payment form / iframe.
         required: true
         content:
           application/json:
@@ -2515,7 +2515,7 @@ paths:
       operationId: saleCardNotPresent
       summary: Sale (Card Not Present)
       description: |
-        Process a financial transaction using a hosted payment page or iframe where the card is not physically present. This POST request initiates a payment session and returns a short-lived iframe URL to embed in your payment page, rather than using a static iframe URL.
+        Process a financial transaction using a hosted payment form / iframe where the card is not physically present. This POST request initiates a payment session and returns a short-lived iframe URL to embed in your payment page, rather than using a static iframe URL.
 
         When the customer submits their payment information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete transaction result will be delivered via the Sale Completed webhook.
 
@@ -2529,7 +2529,7 @@ paths:
       tags:
         - Transactions
       requestBody:
-        description: The request to process a Card Not Present transaction using a hosted payment page or iframe.
+        description: The request to process a Card Not Present transaction using a hosted payment form / iframe.
         required: true
         content:
           application/json:
@@ -2752,7 +2752,7 @@ paths:
       operationId: authCardNotPresent
       summary: Auth (Card Not Present)
       description: |
-        Create an authorization using a hosted payment page or iframe where the card is not physically present. This POST request initiates an authorization session and returns a short-lived iframe URL to embed in your payment page, rather than using a static iframe URL.
+        Create an authorization using a hosted payment form / iframe where the card is not physically present. This POST request initiates an authorization session and returns a short-lived iframe URL to embed in your payment page, rather than using a static iframe URL.
 
         When the customer submits their payment information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete authorization result will be delivered via the Auth Completed webhook.
 
@@ -2766,7 +2766,7 @@ paths:
       tags:
         - Transactions
       requestBody:
-        description: The request to create a Card Not Present authorization using a hosted payment page or iframe.
+        description: The request to create a Card Not Present authorization using a hosted payment form / iframe.
         required: true
         content:
           application/json:
@@ -3079,7 +3079,7 @@ paths:
       operationId: unreferencedRefundCardNotPresent
       summary: Unreferenced Refund (Card Not Present)
       description: |
-        Process an unreferenced refund without a matching completed sale or capture transaction using a hosted payment page or iframe where the card is not physically present. This POST request initiates a refund session and returns a short-lived iframe URL to embed in your refund page, rather than using a static iframe URL.
+        Process an unreferenced refund without a matching completed sale or capture transaction using a hosted payment form / iframe where the card is not physically present. This POST request initiates a refund session and returns a short-lived iframe URL to embed in your refund page, rather than using a static iframe URL.
 
         When the customer submits their card information, they will be redirected to the returnUrl (if provided) or a postMessage event will be sent to the parent window. The complete refund result will be delivered via the Refund Completed webhook.
 
@@ -3093,7 +3093,7 @@ paths:
       tags:
         - Transactions
       requestBody:
-        description: The request to process an unreferenced refund using a hosted payment page or iframe.
+        description: The request to process an unreferenced refund using a hosted payment form / iframe.
         required: true
         content:
           application/json:
