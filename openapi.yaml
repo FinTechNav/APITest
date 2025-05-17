@@ -691,7 +691,7 @@ components:
 
              * Completed - The request completed successfully.
              * Rejected - The request was rejected by the payment gateway. No action or side effects occurred. The transaction can safely be retried.
-             * Interrupted - The request was interrupted, and the final status is unknown. Possible side effects may have occurred (e.g., a Sale (Token) that returns Interrupted might still charge the customer, even if an error is returned). Additional checks are required before retrying the transactions.
+             * Interrupted - The request was interrupted, and the final status is unknown. Possible side effects may have occurred (e.g., a Sale (Token) that returns Interrupted might still charge the customer, even if an error is returned). Additional checks are required before retrying the transaction.
              * Unknown
 
           example: Completed
