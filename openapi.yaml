@@ -685,16 +685,15 @@ components:
           example: 2000
         status:
           type: string
-          enum: [Unknown, Rejected, Interrupted, Completed]
+          enum: [Completed, Rejected, Interrupted, Unknown]
           description: >
             Execution status of the request sent to the payment gateway.
 
+             * Completed - The request completed successfully.
+             * Rejected - The request was rejected by the payment gateway. No action or side effects occurred. The transaction can safely be retried.
+             * Interrupted - The request was interrupted, and the final status is unknown. Possible side effects may have occurred (e.g., a Sale (Token) that returns Interrupted might still charge the customer, even if an error is returned). Additional checks are required before retrying retrying the transactions.
              * Unknown
-             * Rejected - The request was rejected by the payment gateway. No action or side effects occurred.
-             * Interrupted - The request was interrupted, and the final status is unknown.
-             * Completed - The request was interrupted, and the final status is unknown. Possible side effects may have occurred (e.g., a Sale (Token) that returns Interrupted might still charge the customer, even if an error is returned).
 
-             This status indicates whether the transaction can safely be retried or if additional checks are required before retrying.
           example: Completed
         errorDetails:
           type: array
