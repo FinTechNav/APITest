@@ -2092,7 +2092,6 @@ components:
             cardType: 'VISA'
             accountType: 'Credit'
             hostResponseText: 'APPROVED 00'
-            customerVerificationMethod: 'SIGNATURE'
 
     UpdateTokenResponse:
       description: A successful response for a tokenized card update transaction.
