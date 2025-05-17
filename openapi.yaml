@@ -677,7 +677,7 @@ components:
           enum: [1000, 2000, 3000, 9000]
           description: >
             Numeric error code. These are grouped into ranges for easier identification and troubleshooting.
-            Error codes:
+
              * `1000` - AuthenticationGenericError
              * `2000` - RequestValidationGenericError
              * `3000` - UnknownServerGenericError
@@ -689,7 +689,6 @@ components:
           description: >
             Execution status of the request sent to the payment gateway.
 
-            Status:
              * Unknown
              * Rejected - The request was rejected by the payment gateway. No action or side effects occurred.
              * Interrupted - The request was interrupted, and the final status is unknown.
