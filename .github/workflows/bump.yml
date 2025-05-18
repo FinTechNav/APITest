@@ -33,52 +33,42 @@ jobs:
           cat > direct_replace.py << 'EOF'
           import re
           import yaml
+          import json
 
           def main():
-              # Read the OpenAPI file
+              # Read the OpenAPI spec
               with open('openapi.yaml', 'r') as f:
                   openapi_content = f.read()
               
-              # Read the topics file as raw text
+              # Parse the OpenAPI spec
+              openapi_spec = yaml.safe_load(openapi_content)
+              
+              # Read the topics file
               with open('topics.yaml', 'r') as f:
                   topics_content = f.read()
               
-              # Create the replacement pattern
-              # We need to properly indent the topics content to match where it will be inserted
+              # Parse the topics file - force it to preserve strings better
+              topics = yaml.safe_load(topics_content)
               
-              # First find the x-topics line in the openapi file to determine indentation
-              match = re.search(r'^([\s]*)x-topics:[\s]*\$ref:', openapi_content, re.MULTILINE)
-              if not match:
-                  print("Could not find x-topics reference in the OpenAPI file")
-                  return
+              # Manually update the OpenAPI spec
+              openapi_spec['x-topics'] = topics
               
-              # Get the indentation level
-              base_indent = match.group(1)
+              # Get proper clean YAML representation
+              class MyDumper(yaml.Dumper):
+                  def increase_indent(self, flow=False, *args, **kwargs):
+                      return super().increase_indent(flow=flow, indentless=False)
+                  
+                  def represent_scalar(self, tag, value, style=None):
+                      if style is None and '\n' in value:
+                          style = '|'
+                      return super().represent_scalar(tag, value, style)
               
-              # Prepare the topics content with correct indentation
-              # The topics content needs to start right after "x-topics:"
-              indented_topics = []
-              for i, line in enumerate(topics_content.splitlines()):
-                  if i == 0:
-                      # The first line replaces "$ref: './topics.yaml'" with "- title: ..."
-                      indented_topics.append(line)  # No additional indent for first line
-                  else:
-                      # All other lines need to be indented to align with the first item
-                      indented_topics.append("  " + line)  # Two additional spaces for alignment
-              
-              # Join the lines back together
-              formatted_topics = "\n".join([f"{base_indent}{line}" for line in indented_topics])
-              
-              # Replace the reference with the actual content
-              pattern = r'x-topics:\s*\$ref:\s*[\'"]?[\./\w-]+\.ya?ml[\'"]?'
-              replacement = f"x-topics:\n{formatted_topics}"
-              updated_content = re.sub(pattern, replacement, openapi_content)
-              
-              # Write the result to the output file
+              # Write the modified spec
               with open('openapi-resolved.yaml', 'w') as f:
-                  f.write(updated_content)
+                  yaml.dump(openapi_spec, f, Dumper=MyDumper, default_flow_style=False, 
+                          allow_unicode=True, sort_keys=False, width=1000)
               
-              print("Successfully created openapi-resolved.yaml with exact formatting preserved")
+              print("Successfully created openapi-resolved.yaml with proper YAML formatting")
 
           if __name__ == "__main__":
               main()
