@@ -9,7 +9,7 @@
     <h2>How It Works</h2>
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-    1. <strong>Initiate Session</strong>: Your backend server makes a POST request to our API (e.g., <code>/payment-methods/virtual</code>, <code>/transactions/virtual-sale</code>, etc.) with your transaction details. You can include a <code>returnUrl</code> parameter to control where customers are redirected after completing payment. The <code>returnUrl</code> is typically used to direct customers to order confirmation pages, receipt pages, or to grant immediate access to purchased digital content after successful payment.<br><br>
+    1. <strong>Initiate Session</strong>: Your backend server makes a POST request to our API (e.g., <code>/payment-methods/virtual</code>, <code>/transactions/virtual-sale</code>, etc.) with your transaction details. You can include a <code>returnUrl</code> parameter to control where customers are redirected after completing payment, tokenizing a card, etc. The <code>returnUrl</code> is typically used to direct customers to order confirmation pages, receipt pages, or to grant immediate access to purchased digital content after successful payment.<br><br>
 
     2. <strong>Receive Session URL</strong>: Our API returns a short-lived, unique iframe URL specific to this transaction, along with a session ID and expiration timestamp.<br><br>
 
@@ -116,7 +116,7 @@
           </tr>
           <tr>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">hash</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A base64-encoded HMAC-SHA256 signature calculated from the transaction parameters and your shared secret value. This is the same secret used for webhook authentication, ensuring consistent security across both channels. Example: <code>5Zwu...rI=</code></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A base64-encoded SHA-256 signature calculated from the transaction response values (excluding the hash itself) and using the payment method ID (pmt_vrt_...) as the secret. This verification method is different from webhook authentication and provides security for redirect responses. Example: <code>5Zwu...rI=</code></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">errorMessage</td>
