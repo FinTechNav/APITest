@@ -136,8 +136,6 @@
 
     ## Secure Payment Redirect Verification
 
-    ## Secure Payment Redirect Verification
-
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     When using the <code>returnUrl</code> approach, our system secures these redirects with strong cryptographic validation. To validate the authenticity of the returnUrl responses, a hash value is included in the query string.
     <div style="margin-top: 15px;"></div>
