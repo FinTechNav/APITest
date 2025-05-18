@@ -31,10 +31,8 @@ jobs:
         run: |
           # Create a Python script that uses a different approach to integrate topics
           cat > direct_replace.py << 'EOF'
-          import re
           import yaml
-          import json
-          import os
+          import re
 
           def main():
               # Read the OpenAPI spec
@@ -44,36 +42,48 @@ jobs:
               # Parse the OpenAPI spec
               openapi_spec = yaml.safe_load(openapi_content)
               
-              # Read the topics file as text to preserve exact formatting
+              # Read the topics file
               with open('topics.yaml', 'r') as f:
                   topics_content = f.read()
               
               # Parse the topics file
               topics = yaml.safe_load(topics_content)
               
-              # Custom representation for strings with line breaks to ensure they use the pipe style
-              def str_presenter(dumper, data):
+              # Define a custom literal string presenter that preserves all formatting
+              def literal_presenter(dumper, data):
                   if '\n' in data:
+                      # Force all multiline strings to use literal style with pipe
                       return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
                   return dumper.represent_scalar('tag:yaml.org,2002:str', data)
               
-              # Custom dumper class that handles indentation properly
-              class MyDumper(yaml.Dumper):
+              # Define custom YAML dumper
+              class PreservingDumper(yaml.Dumper):
                   def increase_indent(self, flow=False, indentless=False):
                       return super().increase_indent(flow=flow, indentless=indentless)
+                  
+                  # Override how strings are represented to ensure HTML tags don't trigger flow style
+                  def represent_scalar(self, tag, value, style=None):
+                      if tag == 'tag:yaml.org,2002:str' and ('<' in value or '\n' in value):
+                          style = '|'
+                      return super().represent_scalar(tag, value, style)
               
-              # Add the custom string presenter to our dumper
-              yaml.add_representer(str, str_presenter, Dumper=MyDumper)
+              # Register the presenter
+              yaml.add_representer(str, literal_presenter, Dumper=PreservingDumper)
               
-              # Manually update the OpenAPI spec with the topics
+              # Manually update the OpenAPI spec
               openapi_spec['x-topics'] = topics
               
-              # Write the modified spec, disabling automatic line wrapping
+              # Write the modified spec with careful attention to formatting
               with open('openapi-resolved.yaml', 'w') as f:
-                  yaml.dump(openapi_spec, f, Dumper=MyDumper, default_flow_style=False, 
-                            allow_unicode=True, sort_keys=False, width=10000)
+                  yaml.dump(openapi_spec, f, 
+                            Dumper=PreservingDumper, 
+                            default_flow_style=False, 
+                            allow_unicode=True, 
+                            sort_keys=False, 
+                            width=100000,  # Effectively disable line wrapping
+                            line_break='\n')  # Use standard line breaks
               
-              print("Successfully created openapi-resolved.yaml with proper YAML formatting")
+              print("Successfully created openapi-resolved.yaml with strictly preserved formatting")
 
           if __name__ == "__main__":
               main()
