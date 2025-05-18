@@ -35,49 +35,24 @@ jobs:
           import os
           import sys
           import yaml
+          import json
 
           def main():
               # Read the main OpenAPI file as text
               with open('openapi.yaml', 'r') as f:
                   content = f.read()
               
-              # Load the topics file properly
+              # Load the topics file as plain text to preserve markdown formatting
               with open('topics.yaml', 'r') as f:
-                  topics = yaml.safe_load(f)
+                  topics_text = f.read()
               
-              # Use explicit dumping configuration to prevent backslash escaping of markdown
-              yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str
-
-              def repr_str(self, data):
-                  if '\n' in data:
-                      return self.represent_scalar('tag:yaml.org,2002:str', data, style='|')
-                  return self.org_represent_str(data)
-
-              yaml.SafeDumper.represent_str = repr_str
-
-              # Convert topics to proper YAML format with block style for multi-line strings
-              topics_yaml = yaml.dump(topics, default_flow_style=False, indent=2, Dumper=yaml.SafeDumper).strip()
-
-              # Create the proper replacement - first line needs special handling
-              replacement = "x-topics:"
-
-              # Add the topics content with proper indentation
-              indented_content = ""
-              for i, line in enumerate(topics_yaml.split('\n')):
-                  if i == 0:  # First line needs special handling for array
-                      if line.startswith('-'):
-                          indented_content += f"\n  {line}"  # Add proper indentation for array
-                      else:
-                          indented_content += f" {line}"  # For non-array, add a space
-                  else:
-                      indented_content += f"\n  {line}"  # Indent all other lines with 2 spaces
-
-              replacement += indented_content
+              # Create the proper replacement
+              replacement = "x-topics: " + topics_text
               
               # Find the x-topics reference pattern
               pattern = r"x-topics:\s+\$ref:\s+['\"]?[\./\w-]+\.ya?ml['\"]?"
               
-              # Replace the reference with our properly formatted content
+              # Replace the reference with our content
               updated_content = re.sub(pattern, replacement, content)
               
               # Write the result to the output file
