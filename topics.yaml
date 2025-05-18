@@ -171,8 +171,6 @@
     </ol>
 
     <p>This verification should be a standard part of your integration when using the <code>returnUrl</code> parameter, providing an additional layer of security to your payment flow.</p>
-    </div>
-
 
     <h2>Error Handling</h2>
 
