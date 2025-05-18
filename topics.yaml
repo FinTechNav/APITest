@@ -183,7 +183,47 @@
       <li>Compare your generated hash with the received <code>hash</code> parameter using an exact match comparison</li>
       <li>Only process the transaction if the signatures match exactly</li>
     </ol>
-    <div style="margin-top: 15px;"></div>
+    <div style="margin-top: 20px;"></div>
+
+    <p><strong>Example</strong></p>
+    <div style="margin-top: 10px;"></div>
+
+    <p>When a payment method with ID <code>pmt_vrt_01JTNZ2Z2XBNMGMG9ENY41AKRG</code> was used to create a hosted payment page session, and given the following returnUrl:</p>
+
+    <p style="word-break: break-all; font-size: 0.9em; background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; overflow-x: auto;">https://merchant.example.com/payment-complete?paymentMethodId=pmt_tkn_01JVGD11ZW2N8859Z9RSJKBPDB&resultCode=0&cardType=VISA&transactionId=trx_01JVGD0BD3D6SRW6A941CPWCJ5&referenceId=ref_238832ae&amount=1899&invoiceNumber=inv_7d7ab39d&orderNumber=ord_cead58aa&hash=MaJhBa%2BIs00cdKgq3TRWbun%2FmsFKCfoCvEzlD2grCm0%3D</p>
+
+    <p>Extract the query string key/value pairs (preserving the original order):</p>
+
+    <p style="background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; font-family: monospace;">
+    paymentMethodId=pmt_tkn_01JVGD11ZW2N8859Z9RSJKBPDB<br>
+    resultCode=0<br>
+    cardType=VISA<br>
+    transactionId=trx_01JVGD0BD3D6SRW6A941CPWCJ5<br>
+    referenceId=ref_238832ae<br>
+    amount=1899<br>
+    invoiceNumber=inv_7d7ab39d<br>
+    orderNumber=ord_cead58aa<br>
+    </p>
+
+    <p>Concatenate the values only into a single string:</p>
+
+    <p style="background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; font-family: monospace; overflow-x: auto;">pmt_tkn_01JVGD11ZW2N8859Z9RSJKBPDB0VISAtrx_01JVGD0BD3D6SRW6A941CPWCJ5ref_238832ae1899inv_7d7ab39dord_cead58aa</p>
+
+    <p>Append the payment method ID used to create the hosted payment page session:</p>
+
+    <p style="background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; font-family: monospace; overflow-x: auto;">pmt_tkn_01JVGD11ZW2N8859Z9RSJKBPDB0VISAtrx_01JVGD0BD3D6SRW6A941CPWCJ5ref_238832ae1899inv_7d7ab39dord_cead58aapmt_vrt_01JTNZ2Z2XBNMGMG9ENY41AKRG</p>
+
+    <p>Hash the string using SHA-256, using Base64 output encoding:</p>
+
+    <p style="background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; font-family: monospace;">MaJhBa+Is00cdKgq3TRWbun/msFKCfoCvEzlD2grCm0=</p>
+
+    <p>URL encode the hashed Base64 string:</p>
+
+    <p style="background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; font-family: monospace;">MaJhBa%2BIs00cdKgq3TRWbun%2FmsFKCfoCvEzlD2grCm0%3D</p>
+
+    <p>The <code>hash</code> value from the query string must match <code>MaJhBa%2BIs00cdKgq3TRWbun%2FmsFKCfoCvEzlD2grCm0%3D</code>.</p>
+
+    <div style="margin-top: 20px;"></div>
 
     This verification should be a standard part of your integration when using the <code>returnUrl</code> parameter, providing an additional layer of security to your payment flow.
     </div>
