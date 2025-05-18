@@ -34,6 +34,7 @@ jobs:
           import re
           import yaml
           import json
+          import os
 
           def main():
               # Read the OpenAPI spec
@@ -43,30 +44,34 @@ jobs:
               # Parse the OpenAPI spec
               openapi_spec = yaml.safe_load(openapi_content)
               
-              # Read the topics file
+              # Read the topics file as text to preserve exact formatting
               with open('topics.yaml', 'r') as f:
                   topics_content = f.read()
               
-              # Parse the topics file - force it to preserve strings better
+              # Parse the topics file
               topics = yaml.safe_load(topics_content)
               
-              # Manually update the OpenAPI spec
+              # Custom representation for strings with line breaks to ensure they use the pipe style
+              def str_presenter(dumper, data):
+                  if '\n' in data:
+                      return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+                  return dumper.represent_scalar('tag:yaml.org,2002:str', data)
+              
+              # Custom dumper class that handles indentation properly
+              class MyDumper(yaml.Dumper):
+                  def increase_indent(self, flow=False, indentless=False):
+                      return super().increase_indent(flow=flow, indentless=indentless)
+              
+              # Add the custom string presenter to our dumper
+              yaml.add_representer(str, str_presenter, Dumper=MyDumper)
+              
+              # Manually update the OpenAPI spec with the topics
               openapi_spec['x-topics'] = topics
               
-              # Get proper clean YAML representation
-              class MyDumper(yaml.Dumper):
-                  def increase_indent(self, flow=False, *args, **kwargs):
-                      return super().increase_indent(flow=flow, indentless=False)
-                  
-                  def represent_scalar(self, tag, value, style=None):
-                      if style is None and '\n' in value:
-                          style = '|'
-                      return super().represent_scalar(tag, value, style)
-              
-              # Write the modified spec
+              # Write the modified spec, disabling automatic line wrapping
               with open('openapi-resolved.yaml', 'w') as f:
                   yaml.dump(openapi_spec, f, Dumper=MyDumper, default_flow_style=False, 
-                          allow_unicode=True, sort_keys=False, width=1000)
+                            allow_unicode=True, sort_keys=False, width=10000)
               
               print("Successfully created openapi-resolved.yaml with proper YAML formatting")
 
