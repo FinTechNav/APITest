@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Integrated Commerce Omni-Channel Payment API test
+  title: Integrated Commerce Omni-Channel Payment API
   description: |
     ### Introduction
 
@@ -197,7 +197,7 @@ components:
 
         ## Rate Limiting
 
-        API requests are subject to rate limiting based on your subscription plan. Rate limit headers are included in all responses:
+        API requests are subject to rate limiting. Rate limit headers are included in all responses:
 
         - `X-RateLimit-Limit`: Maximum number of requests allowed per time window
         - `X-RateLimit-Remaining`: Number of requests remaining in the current time window
@@ -2167,17 +2167,17 @@ paths:
                 successfulResponse:
                   description: A successful response for retrieving the available payment methods.
                   value:
-                    - paymentMethodId:
+                    - paymentMethod:
                         id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
                         type: Physical
                         currency: USD
                         description: Main Store Terminal
-                    - paymentMethodId:
+                    - paymentMethod:
                         id: pmt_trm_01JRZQW7FXMG62D8HJTPK3Y5VB
                         type: Physical
                         currency: USD
                         description: Secondary Store Terminal
-                    - paymentMethodId:
+                    - paymentMethod:
                         id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
                         type: Virtual
                         currency: USD
