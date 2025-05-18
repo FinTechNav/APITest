@@ -72,7 +72,7 @@
     <p>These parameters allow your application to respond appropriately to transaction outcomes, update your order systems, and provide relevant feedback to customers without requiring a separate API call to check transaction status.</p>
     </div>
 
-    ## Transaction Result Parameters
+    <h2>Transaction Result Parameters</h2>
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     <p>When using the <code>returnUrl</code> parameter, the following information is appended to your URL when the customer is redirected back to your site:</p>
