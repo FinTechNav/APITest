@@ -133,8 +133,7 @@
 
     <p>These parameters allow your application to respond appropriately to transaction outcomes, update your order systems, and provide relevant feedback to customers without requiring a separate API call to check transaction status.</p>
     </div>
-
-    <div></div>
+    &nbsp;
 
     ## Secure Payment Redirect Verification
 
