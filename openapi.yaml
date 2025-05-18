@@ -753,7 +753,7 @@ components:
           $ref: '#/components/schemas/ReferenceId'
         returnUrl:
           type: string
-          description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided.
+          description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided. The URL will include various parameters that are detailed in "Transaction Result Parameters" section of the Hosted Payment Form section. If you do not provide a returnUrl, the customer will see either a "Payment Processed Successfully" or "Payment Processing Issue" screen.
           example: https://merchant.example.com/payment-complete
       required:
         - amount
@@ -864,7 +864,7 @@ components:
           $ref: '#/components/schemas/ReferenceId'
         returnUrl:
           type: string
-          description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided.
+          description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided. The URL will include various parameters that are detailed in "Transaction Result Parameters" section of the Hosted Payment Form section. If you do not provide a returnUrl, the customer will see either a "Payment Processed Successfully" or "Payment Processing Issue" screen.
           example: https://merchant.example.com/refund-complete
       required:
         - amount
@@ -906,7 +906,7 @@ components:
           $ref: '#/components/schemas/ReferenceId'
         returnUrl:
           type: string
-          description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided.
+          description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided. The URL will include various parameters that are detailed in "Transaction Result Parameters" section of the Hosted Payment Form section. If you do not provide a returnUrl, the customer will see either a "Payment Processed Successfully" or "Payment Processing Issue" screen.
           example: https://merchant.example.com/payment-complete
 
     CardOnFileUpdateRequest:
