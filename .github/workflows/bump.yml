@@ -29,67 +29,45 @@ jobs:
 
       - name: Custom script for x-topics import
         run: |
-          # Create a Python script for proper handling of YAML arrays
+          # Create a Python script that uses a different approach to integrate topics
           cat > direct_replace.py << 'EOF'
           import re
-          import os
-          import sys
           import yaml
-
-          class SafeLineLoader(yaml.SafeLoader):
-              """Custom YAML loader that preserves line breaks in scalar strings."""
-              pass
-
-          # Add constructor for preserving newlines
-          def construct_scalar(self, node):
-              if isinstance(node, yaml.ScalarNode) and node.style == '|':
-                  return self.construct_scalar(node)
-              return self.construct_scalar(node)
-
-          SafeLineLoader.add_constructor('tag:yaml.org,2002:str', construct_scalar)
-
-          class PreserveStringDumper(yaml.SafeDumper):
-              """Custom YAML dumper that uses literal style for multiline strings."""
-              def represent_scalar(self, tag, value, style=None):
-                  if tag == 'tag:yaml.org,2002:str' and '\n' in value:
-                      style = '|'
-                  return super().represent_scalar(tag, value, style)
+          import json
 
           def main():
-              # Read the main OpenAPI file as text
+              # Read the OpenAPI spec
               with open('openapi.yaml', 'r') as f:
-                  content = f.read()
+                  openapi_content = f.read()
               
-              # Load the topics file
+              # Parse the OpenAPI spec
+              openapi_spec = yaml.safe_load(openapi_content)
+              
+              # Read the topics file
               with open('topics.yaml', 'r') as f:
-                  topics_raw = f.read()
+                  topics_content = f.read()
               
-              # Use a safer approach - manually format the topics array
-              replacement = "x-topics:\n"
+              # Parse the topics file - force it to preserve strings better
+              topics = yaml.safe_load(topics_content)
               
-              # Process each line of the topics file
-              lines = topics_raw.split('\n')
-              for line in lines:
-                  # If it's a top-level item, add 2 spaces. Otherwise, add 4 spaces
-                  if line.startswith('-'):
-                      replacement += f"  {line}\n"  # 2 spaces for top-level items
-                  else:
-                      # Skip empty lines or add with indentation
-                      if line.strip():
-                          replacement += f"    {line}\n"  # 4 spaces for content
-                      else:
-                          replacement += "\n"  # Preserve empty lines
+              # Manually update the OpenAPI spec
+              openapi_spec['x-topics'] = topics
               
-              # Find the x-topics reference pattern
-              pattern = r"x-topics:\s+\$ref:\s+['\"]?[\./\w-]+\.ya?ml['\"]?"
-              
-              # Replace the reference with our properly formatted content
-              updated_content = re.sub(pattern, replacement.rstrip(), content)
-              
-              # Write the result to the output file
-              with open('openapi-resolved.yaml', 'w') as f:
-                  f.write(updated_content)
+              # Get proper clean YAML representation
+              class MyDumper(yaml.Dumper):
+                  def increase_indent(self, flow=False, *args, **kwargs):
+                      return super().increase_indent(flow=flow, indentless=False)
                   
+                  def represent_scalar(self, tag, value, style=None):
+                      if style is None and '\n' in value:
+                          style = '|'
+                      return super().represent_scalar(tag, value, style)
+              
+              # Write the modified spec
+              with open('openapi-resolved.yaml', 'w') as f:
+                  yaml.dump(openapi_spec, f, Dumper=MyDumper, default_flow_style=False, 
+                          allow_unicode=True, sort_keys=False, width=1000)
+              
               print("Successfully created openapi-resolved.yaml with proper YAML formatting")
 
           if __name__ == "__main__":
