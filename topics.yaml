@@ -241,9 +241,6 @@
     ## Implementation Best Practices
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-      <h4 style="margin-top: 0; font-size: 16px;">Keep Session IDs Private</h4>
-      <p>Never expose the full session ID in client-side code outside the iframe src.</p>
-      
       <h4 style="margin-top: 15px; font-size: 16px;">Implement Proper Origin Validation</h4>
       <p>Always verify the origin of postMessage events.</p>
       
