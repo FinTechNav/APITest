@@ -31,103 +31,39 @@
 
     ## Payment Form and Response Screens
 
-    <div style="display: flex; margin-bottom: 20px;">
-      <div style="flex: 1; padding-right: 20px;">
-        <p>Our Hosted Payment Form provides a clean, professional payment interface that collects:</p>
-        <ul>
-          <li>Cardholder name</li>
-          <li>Card number, expiration date, and security code</li>
-          <li>Billing address details</li>
-        </ul>
-        <br>
-        <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
-        <p>When no <code>returnUrl</code> is provided, customers will see branded success or issue screens that provide immediate visual feedback about their transaction status.</p>
-        <p>If a payment session expires or becomes invalid, customers will see an expiration notification screen explaining that the session is no longer available. This screen includes an error code and instructions to return to your site to restart the process.</p>
-      </div>
-      <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center;">
+    <div style="margin-bottom: 20px;">
+      <p>Our Hosted Payment Form provides a clean, professional payment interface that collects:</p>
+      <ul>
+        <li>Cardholder name</li>
+        <li>Card number, expiration date, and security code</li>
+        <li>Billing address details</li>
+      </ul>
+      <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
+      
+      <div style="margin-bottom: 20px;">
         <img src="https://fintechnav.com/images/HPF.png" alt="Hosted Payment Form Example" style="max-width: 100%; height: auto;" />
-        <small style="display: block; margin-top: 10px; opacity: 0.7;">Example of the hosted payment form</small>
+        <small style="display: block; margin-top: 5px; opacity: 0.7;">Example of the hosted payment form</small>
       </div>
-    </div>
-
-    <div style="display: flex; margin-bottom: 20px;">
-      <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center; margin-right: 10px;">
-        <img src="https://fintechnav.com/images/success-screen.png" alt="Success Screen Example" style="max-width: 100%; height: auto;" />
-        <small style="display: block; margin-top: 10px; opacity: 0.7;">Success screen shown after completed payment</small>
+      
+      <p>If a payment session expires or becomes invalid, customers will see an expiration notification screen explaining that the session is no longer available. This screen includes an error code and instructions to return to your site to restart the process.</p>
+      
+      <div style="margin-bottom: 20px;">
+        <img src="https://fintechnav.com/images/problem-screen.png" alt="Session Expiration Screen Example" style="max-width: 60%; height: auto;" />
+        <small style="display: block; margin-top: 5px; opacity: 0.7;">Session expiration screen shown when payment session times out</small>
       </div>
-      <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center; margin-left: 10px;">
-        <img src="https://fintechnav.com/images/issue-screen.png" alt="Issue Screen Example" style="max-width: 100%; height: auto;" />
-        <small style="display: block; margin-top: 10px; opacity: 0.7;">Issue screen shown when payment problems occur</small>
+      
+      <p>When no <code>returnUrl</code> is provided, customers will see branded success or issue screens that provide immediate visual feedback about their transaction status.</p>
+      
+      <div style="display: flex; margin-bottom: 20px;">
+        <div style="margin-right: 20px;">
+          <img src="https://fintechnav.com/images/success-screen.png" alt="Success Screen Example" style="max-width: 100%; height: auto;" />
+          <small style="display: block; margin-top: 5px; opacity: 0.7;">Success screen shown after completed payment</small>
+        </div>
+        <div>
+          <img src="https://fintechnav.com/images/issue-screen.png" alt="Issue Screen Example" style="max-width: 100%; height: auto;" />
+          <small style="display: block; margin-top: 5px; opacity: 0.7;">Issue screen shown when payment problems occur</small>
+        </div>
       </div>
-    </div>
-
-    <div style="display: flex; margin-bottom: 20px;">
-      <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center;">
-        <img src="https://fintechnav.com/images/problem-screen.png" alt="Session Expiration Screen Example" style="max-width: 100%; height: auto;" />
-        <small style="display: block; margin-top: 10px; opacity: 0.7;">Session expiration screen shown when payment session times out</small>
-      </div>
-    </div>
-
-    ## Transaction Result Parameters
-
-    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-    <p>When using the <code>returnUrl</code> parameter, the following information is appended to your URL when the customer is redirected back to your site:</p>
-
-    <div style="overflow-x: auto; margin-bottom: 20px;">
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr style="background-color: rgba(240, 244, 248, 0.15);">
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Parameter</th>
-            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">paymentMethodId</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">The ID of the tokenized card that was used or created during this transaction. Example: <code>pmt_tkn_01JV...2HA</code></td>
-          </tr>
-          <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">resultCode</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Transaction result status code: 0 (successful) or 9999 (issue). Example: <code>0</code></td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">cardType</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If successful, the type of card used for this transaction. Example: <code>VISA</code></td>
-          </tr>
-          <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">transactionId</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Unique identifier for the transaction. Example: <code>trx_01JV...6R</code></td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">referenceId</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A reference ID to tag and track this transaction for reconciliation. The reference ID is also used for processing referenced refunds. Example: <code>ref_7ec1...75f</code></td>
-          </tr>
-          <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">amount</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If successful, the approved amount. The amount is always a positive integer in the smallest denomination of the currency (e.g., cents for USD or CAD). Example: <code>1101</code></td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">invoiceNumber</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">An alphanumeric invoice number for this transaction if one was provided in the request. Example: <code>inv_1062...d2f</code></td>
-          </tr>
-          <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">orderNumber</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">An alphanumeric order number for this transaction if one was provided in the request. Example: <code>ord_ed1a...f8</code></td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">hash</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A base64-encoded HMAC-SHA256 signature calculated from the transaction parameters and your shared secret value. This is the same secret used for webhook authentication, ensuring consistent security across both channels. Example: <code>5Zwu...rI=</code></td>
-          </tr>
-          <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">errorMessage</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If an issue occurred, text explaining what the issue was. Example: "Transaction declined"</td>
-          </tr>
-          <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">errorCode</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If an issue occurred, a specific error code for the issue. Example: <code>1234</code></td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
     <p>These parameters allow your application to respond appropriately to transaction outcomes, update your order systems, and provide relevant feedback to customers without requiring a separate API call to check transaction status.</p>
