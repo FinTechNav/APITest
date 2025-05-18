@@ -45,12 +45,22 @@ jobs:
               with open('topics.yaml', 'r') as f:
                   topics = yaml.safe_load(f)
               
-              # Convert topics to proper YAML format
-              topics_yaml = yaml.dump(topics, default_flow_style=False, indent=2).strip()
-              
+              # Use explicit dumping configuration to prevent backslash escaping of markdown
+              yaml.SafeDumper.org_represent_str = yaml.SafeDumper.represent_str
+
+              def repr_str(self, data):
+                  if '\n' in data:
+                      return self.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+                  return self.org_represent_str(data)
+
+              yaml.SafeDumper.represent_str = repr_str
+
+              # Convert topics to proper YAML format with block style for multi-line strings
+              topics_yaml = yaml.dump(topics, default_flow_style=False, indent=2, Dumper=yaml.SafeDumper).strip()
+
               # Create the proper replacement - first line needs special handling
               replacement = "x-topics:"
-              
+
               # Add the topics content with proper indentation
               indented_content = ""
               for i, line in enumerate(topics_yaml.split('\n')):
@@ -61,7 +71,7 @@ jobs:
                           indented_content += f" {line}"  # For non-array, add a space
                   else:
                       indented_content += f"\n  {line}"  # Indent all other lines with 2 spaces
-              
+
               replacement += indented_content
               
               # Find the x-topics reference pattern
