@@ -20,37 +20,36 @@
     5. <strong>Payment Processing</strong>: When the customer submits the form, we process the payment in our secure environment.<br><br>
 
     6. <strong>Flow Completion</strong>: The flow completes differently depending on whether you included a <code>returnUrl</code> parameter in your initial request:
-       <ul>
-         <li><strong>Without returnUrl</strong>: The customer sees either a success or error screen directly within the iframe based on the transaction outcome.</li>
-         <li><strong>With returnUrl</strong>: The customer is redirected back to the URL you specified, without seeing our success/error screens. The URL will include the transaction result parameters detailed in the Transaction Result Parameters section below, allowing your page to display appropriate messaging and update your systems.</li>
-       </ul>
-       <br>
+      <ul style="padding-left: 40px;">
+        <li><strong>Without returnUrl</strong>: The customer sees either a success or error screen directly within the iframe based on the transaction outcome.</li>
+        <li><strong>With returnUrl</strong>: The customer is redirected back to the URL you specified, without seeing our success/error screens. The URL will include the transaction result parameters detailed in the Transaction Result Parameters section below, allowing your page to display appropriate messaging and update your systems.</li>
+      </ul>
+      <br>
 
     7. <strong>Webhook Notification</strong>: Regardless of the flow, your system receives a webhook notification with complete transaction details.
     </div>
 
-    <h2>Payment Form and Response Screens</h2> 
+    <h2>Payment Form and Response Screens</h2>
 
     <div style="margin-bottom: 20px;">
       <p>Our Hosted Payment Form provides a clean, professional payment interface that collects:</p>
-      <ul>
+      <ul style="padding-left: 40px;">
         <li>Cardholder name</li>
         <li>Card number, expiration date, and security code</li>
         <li>Billing address details</li>
       </ul>
       
-      <div style="margin-top: 30px; margin-bottom: 10px;">
-        <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
-      </div>
+      <div style="margin-top: 15px;"></div>
+      <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
       
-      <div style="margin-bottom: 40px;">
+      <div style="margin-bottom: 30px;">
         <img src="https://fintechnav.com/images/HPF.png" alt="Hosted Payment Form Example" style="max-width: 100%; height: auto;" />
         <small style="display: block; margin-top: 5px; opacity: 0.7;">Example of the hosted payment form</small>
       </div>
       
       <p>When no <code>returnUrl</code> is provided, customers will see branded success or issue screens that provide immediate visual feedback about their transaction status.</p>
       
-      <div style="display: flex; margin-bottom: 40px;">
+      <div style="display: flex; margin-bottom: 30px;">
         <div style="margin-right: 20px;">
           <img src="https://fintechnav.com/images/success-screen.png" alt="Success Screen Example" style="max-width: 100%; height: auto;" />
           <small style="display: block; margin-top: 5px; opacity: 0.7;">Success screen shown after completed payment</small>
@@ -67,9 +66,6 @@
         <img src="https://fintechnav.com/images/problem-screen.png" alt="Session Expiration Screen Example" style="max-width: 60%; height: auto;" />
         <small style="display: block; margin-top: 5px; opacity: 0.7;">Session expiration screen shown when payment session times out</small>
       </div>
-    </div> 
-
-    <p>These parameters allow your application to respond appropriately to transaction outcomes, update your order systems, and provide relevant feedback to customers without requiring a separate API call to check transaction status.</p>
     </div>
 
     <h2>Transaction Result Parameters</h2>
@@ -184,7 +180,7 @@
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     Your implementation should handle various response statuses, including:
-    <ul>
+    <ul style="padding-left: 40px;">
       <li>Successful payments (resultCode = 0)</li>
       <li>Declined transactions</li>
       <li>Expired sessions</li>
