@@ -6,7 +6,7 @@
 
     The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Form (HPF) solution that simplifies payment collection while maintaining strong security and compliance standards.
 
-    <h2>How It Works</h2>
+    ## How It Works
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     1. <strong>Initiate Session</strong>: Your backend server makes a POST request to our API (e.g., <code>/payment-methods/virtual</code>, <code>/transactions/virtual-sale</code>, etc.) with your transaction details. You can include a <code>returnUrl</code> parameter to control where customers are redirected after completing payment, tokenizing a card, etc. The <code>returnUrl</code> is typically used to direct customers to order confirmation pages, receipt pages, or to grant immediate access to purchased digital content after successful payment.<br><br>
@@ -29,7 +29,7 @@
     7. <strong>Webhook Notification</strong>: Regardless of the flow, your system receives a webhook notification with complete transaction details.
     </div>
 
-    <h2>Payment Form and Response Screens</h2>
+    ## Payment Form and Response Screens
 
     <div style="margin-bottom: 20px;">
       <p>Our Hosted Payment Form provides a clean, professional payment interface that collects:</p>
@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <h2>Transaction Result Parameters</h2>
+    ## Transaction Result Parameters
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     <p>When using the <code>returnUrl</code> parameter, the following information is appended to your URL when the customer is redirected back to your site:</p>
@@ -133,7 +133,7 @@
     <p>These parameters allow your application to respond appropriately to transaction outcomes, update your order systems, and provide relevant feedback to customers without requiring a separate API call to check transaction status.</p>
     </div>
 
-    <h2>Secure Payment Redirect Verification</h2>
+    ## Secure Payment Redirect Verification
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     When using the <code>returnUrl</code> approach, our system secures these redirects with strong cryptographic validation. To validate the authenticity of the returnUrl responses, a hash value is included in the query string.
@@ -225,7 +225,7 @@
     This verification should be a standard part of your integration when using the <code>returnUrl</code> parameter, providing an additional layer of security to your payment flow.
     </div>
 
-    <h2>Error Handling</h2>
+    ## Error Handling
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
     Your implementation should handle various response statuses, including:
@@ -237,7 +237,7 @@
     </ul>
     </div>
 
-    <h2>Implementation Best Practices</h2>
+    ## Implementation Best Practices
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
       <h4 style="margin-top: 0; font-size: 16px;">Keep Session IDs Private</h4>
