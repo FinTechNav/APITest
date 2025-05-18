@@ -35,25 +35,56 @@ jobs:
           import os
           import sys
           import yaml
-          import json
+
+          class SafeLineLoader(yaml.SafeLoader):
+              """Custom YAML loader that preserves line breaks in scalar strings."""
+              pass
+
+          # Add constructor for preserving newlines
+          def construct_scalar(self, node):
+              if isinstance(node, yaml.ScalarNode) and node.style == '|':
+                  return self.construct_scalar(node)
+              return self.construct_scalar(node)
+
+          SafeLineLoader.add_constructor('tag:yaml.org,2002:str', construct_scalar)
+
+          class PreserveStringDumper(yaml.SafeDumper):
+              """Custom YAML dumper that uses literal style for multiline strings."""
+              def represent_scalar(self, tag, value, style=None):
+                  if tag == 'tag:yaml.org,2002:str' and '\n' in value:
+                      style = '|'
+                  return super().represent_scalar(tag, value, style)
 
           def main():
               # Read the main OpenAPI file as text
               with open('openapi.yaml', 'r') as f:
                   content = f.read()
               
-              # Load the topics file as plain text to preserve markdown formatting
+              # Load the topics file
               with open('topics.yaml', 'r') as f:
-                  topics_text = f.read()
+                  topics_raw = f.read()
               
-              # Create the proper replacement
-              replacement = "x-topics: " + topics_text
+              # Use a safer approach - manually format the topics array
+              replacement = "x-topics:\n"
+              
+              # Process each line of the topics file
+              lines = topics_raw.split('\n')
+              for line in lines:
+                  # If it's a top-level item, add 2 spaces. Otherwise, add 4 spaces
+                  if line.startswith('-'):
+                      replacement += f"  {line}\n"  # 2 spaces for top-level items
+                  else:
+                      # Skip empty lines or add with indentation
+                      if line.strip():
+                          replacement += f"    {line}\n"  # 4 spaces for content
+                      else:
+                          replacement += "\n"  # Preserve empty lines
               
               # Find the x-topics reference pattern
               pattern = r"x-topics:\s+\$ref:\s+['\"]?[\./\w-]+\.ya?ml['\"]?"
               
-              # Replace the reference with our content
-              updated_content = re.sub(pattern, replacement, content)
+              # Replace the reference with our properly formatted content
+              updated_content = re.sub(pattern, replacement.rstrip(), content)
               
               # Write the result to the output file
               with open('openapi-resolved.yaml', 'w') as f:
