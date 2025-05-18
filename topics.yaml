@@ -8,10 +8,8 @@
 
     ## How It Works
 
-    Our Hosted Payment Form system uses a session-based approach rather than static iframes. Here's how the flow works:
-
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-    1. <strong>Initiate Session</strong>: Your backend server makes a POST request to our API (e.g., <code>/payment-methods/virtual</code>, <code>/transactions/virtual-sale</code>, etc.) with your transaction details.<br><br>
+    1. <strong>Initiate Session</strong>: Your backend server makes a POST request to our API (e.g., <code>/payment-methods/virtual</code>, <code>/transactions/virtual-sale</code>, etc.) with your transaction details. You can include a <code>returnUrl</code> parameter to control where customers are redirected after completing payment. The <code>returnUrl</code> is typically used to direct customers to order confirmation pages, receipt pages, or to grant immediate access to purchased digital content after successful payment.<br><br>
 
     2. <strong>Receive Session URL</strong>: Our API returns a short-lived, unique iframe URL specific to this transaction, along with a session ID and expiration timestamp.<br><br>
 
@@ -21,16 +19,17 @@
 
     5. <strong>Payment Processing</strong>: When the customer submits the form, we process the payment in our secure environment.<br><br>
 
-    6. <strong>Result Communication</strong>: Results are communicated back to your system in three ways:
+    6. <strong>Flow Completion</strong>: The flow completes differently depending on whether you included a <code>returnUrl</code> parameter in your initial request:
        <ul>
-         <li>Redirect: If you provided a <code>returnUrl</code> parameter, the customer will be redirected there with status information. The URL will include parameters like <code>paymentMethodId</code>, <code>resultCode</code>, <code>cardType</code>, <code>transactionId</code>, and your <code>referenceId</code>.</li>
-         <li>postMessage: A JavaScript event is sent to your parent window with transaction details</li>
-         <li>Webhook: The complete transaction result is delivered via the appropriate webhook</li>
+         <li><strong>Without returnUrl</strong>: The customer sees either a success or error screen directly within the iframe based on the transaction outcome.</li>
+         <li><strong>With returnUrl</strong>: The customer is redirected back to the URL you specified, without seeing our success/error screens. The URL will include the transaction result parameters detailed in the Transaction Result Parameters section below, allowing your page to display appropriate messaging and update your systems.</li>
        </ul>
-       <br>Your page can then parse these parameters to display appropriate confirmation or error messages. Additionally, you'll receive a webhook notification with the complete transaction details that you can use for order fulfillment and record-keeping.
+       <br>
+
+    7. <strong>Webhook Notification</strong>: Regardless of the flow, your system receives a webhook notification with complete transaction details.
     </div>
 
-    ## Hosted Payment Form Appearance
+    ## Payment Form and Response Screens
 
     <div style="display: flex; margin-bottom: 20px;">
       <div style="flex: 1; padding-right: 20px;">
@@ -42,6 +41,8 @@
         </ul>
         <br>
         <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
+        <p>When no <code>returnUrl</code> is provided, customers will see branded success or issue screens that provide immediate visual feedback about their transaction status.</p>
+        <p>If a payment session expires or becomes invalid, customers will see an expiration notification screen explaining that the session is no longer available. This screen includes an error code and instructions to return to your site to restart the process.</p>
       </div>
       <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center;">
         <img src="https://fintechnav.com/images/HPF.png" alt="Hosted Payment Form Example" style="max-width: 100%; height: auto;" />
@@ -49,10 +50,112 @@
       </div>
     </div>
 
+    <div style="display: flex; margin-bottom: 20px;">
+      <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center; margin-right: 10px;">
+        <img src="https://fintechnav.com/images/success-screen.png" alt="Success Screen Example" style="max-width: 100%; height: auto;" />
+        <small style="display: block; margin-top: 10px; opacity: 0.7;">Success screen shown after completed payment</small>
+      </div>
+      <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center; margin-left: 10px;">
+        <img src="https://fintechnav.com/images/issue-screen.png" alt="Issue Screen Example" style="max-width: 100%; height: auto;" />
+        <small style="display: block; margin-top: 10px; opacity: 0.7;">Issue screen shown when payment problems occur</small>
+      </div>
+    </div>
+
+    <div style="display: flex; margin-bottom: 20px;">
+      <div style="flex: 1; padding: 15px; border-radius: 6px; text-align: center;">
+        <img src="https://fintechnav.com/images/problem-screen.png" alt="Session Expiration Screen Example" style="max-width: 100%; height: auto;" />
+        <small style="display: block; margin-top: 10px; opacity: 0.7;">Session expiration screen shown when payment session times out</small>
+      </div>
+    </div>
+
+    ## Transaction Result Parameters
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+    <p>When using the <code>returnUrl</code> parameter, the following information is appended to your URL when the customer is redirected back to your site:</p>
+
+    <div style="overflow-x: auto; margin-bottom: 20px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: rgba(240, 244, 248, 0.15);">
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Parameter</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">paymentMethodId</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">The ID of the tokenized card that was used or created during this transaction. Example: <code>pmt_tkn_01JV...2HA</code></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">resultCode</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Transaction result status code: 0 (successful) or 9999 (issue). Example: <code>0</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">cardType</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If successful, the type of card used for this transaction. Example: <code>VISA</code></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">transactionId</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Unique identifier for the transaction. Example: <code>trx_01JV...6R</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">referenceId</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A reference ID to tag and track this transaction for reconciliation. The reference ID is also used for processing referenced refunds. Example: <code>ref_7ec1...75f</code></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">amount</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If successful, the approved amount. The amount is always a positive integer in the smallest denomination of the currency (e.g., cents for USD or CAD). Example: <code>1101</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">invoiceNumber</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">An alphanumeric invoice number for this transaction if one was provided in the request. Example: <code>inv_1062...d2f</code></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">orderNumber</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">An alphanumeric order number for this transaction if one was provided in the request. Example: <code>ord_ed1a...f8</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">hash</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A base64-encoded HMAC-SHA256 signature calculated from the transaction parameters and your shared secret value. This is the same secret used for webhook authentication, ensuring consistent security across both channels. Example: <code>5Zwu...rI=</code></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">errorMessage</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If an issue occurred, text explaining what the issue was. Example: "Transaction declined"</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">errorCode</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If an issue occurred, a specific error code for the issue. Example: <code>1234</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>These parameters allow your application to respond appropriately to transaction outcomes, update your order systems, and provide relevant feedback to customers without requiring a separate API call to check transaction status.</p>
+    </div>
+
+    ## Secure Payment Redirect Verification
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+      <p>When using the <code>returnUrl</code> approach, our system secures these redirects with strong cryptographic validation. This prevents tampering with transaction data and protects both you and your customers from potential fraud.</p>
+      
+      <p>The security process works through HMAC-SHA256 hashing. When we redirect customers to your return URL, we include all transaction parameters along with a <code>hash</code> parameter, which contains a base64-encoded signature. This signature is generated using the same shared secret value that authenticates your webhook notifications.</p>
+      
+      <p>To validate the authenticity of a redirect:</p>
+      <ol>
+        <li>Extract the <code>hash</code> parameter from the returned URL parameters</li>
+        <li>Generate your own HMAC-SHA256 hash of the remaining parameters using your shared secret</li>
+        <li>Encode your generated hash as base64</li>
+        <li>Compare your generated hash with the received <code>hash</code> using constant-time comparison (to prevent timing attacks)</li>
+        <li>Only process the transaction if the signatures match exactly</li>
+      </ol>
+      
+      <p>This verification should be a standard part of your integration when using the <code>returnUrl</code> parameter, providing an additional layer of security beyond the webhook notifications.</p>
+    </div>
+
     ## Error Handling
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-    If a payment session experiences an error or expires, the customer will see an appropriate error message. Your implementation should handle various response statuses, including:
+    Your implementation should handle various response statuses, including:
     <ul>
       <li>Successful payments (resultCode = 0)</li>
       <li>Declined transactions</li>
