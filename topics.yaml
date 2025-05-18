@@ -133,7 +133,7 @@
     <p>These parameters allow your application to respond appropriately to transaction outcomes, update your order systems, and provide relevant feedback to customers without requiring a separate API call to check transaction status.</p>
 
     <p>Example of the return string:</p>
-    <p style="word-break: break-all; font-size: 0.9em; background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; overflow-x: auto;">https://merchant.example.com/payment-complete?paymentMethodId=pmt_tkn_01JVGAN46DSHTE39HR7T3MB2HA&resultCode=0&cardType=VISA&transactionId=trx_01JVGAKAE6KPWF0HACZDCKWD6R&referenceId=ref_7ec19d9c-4209-4268-85b8-aa88d788d75f&amount=%2411.01&invoiceNumber=inv_10625272-40e4-4c5b-8afe-cd6a8f231d2f&orderNumber=ord_ed1a57f9-ae58-4c4e-b0cd-1c286afcf8f8&hash=5Zwu5d9ILR7c08mu5nXiOYVhJafDxNae%2bDl3D5cPArI%3d</p>
+    <p style="word-break: break-all; font-size: 0.9em; background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; overflow-x: auto;">https://merchant.example.com/payment-complete?paymentMethodId=pmt_tkn_01JVGAN46DSHTE39HR7T3MB2HA&resultCode=0&cardType=VISA&transactionId=trx_01JVGAKAE6KPWF0HACZDCKWD6R&referenceId=ref_7ec19d9c-4209-4268-85b8-aa88d788d75f&amount=1101&invoiceNumber=inv_10625272-40e4-4c5b-8afe-cd6a8f231d2f&orderNumber=ord_ed1a57f9-ae58-4c4e-b0cd-1c286afcf8f8&hash=5Zwu5d9ILR7c08mu5nXiOYVhJafDxNae%2bDl3D5cPArI%3d</p>
     </div>
 
     <h2>Secure Payment Redirect Verification</h2>
