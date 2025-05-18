@@ -139,17 +139,17 @@
     <h2>Secure Payment Redirect Verification</h2>
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-    When using the <code>returnUrl</code> approach, our system secures these redirects with strong cryptographic validation. This prevents tampering with transaction data and protects both you and your customers from potential fraud.
+    When using the <code>returnUrl</code> approach, our system secures these redirects with strong cryptographic validation. To validate the authenticity of the returnUrl responses, a hash value is included in the query string.
     <div style="margin-top: 15px;"></div>
 
-    The security process works through HMAC-SHA256 hashing. When we redirect customers to your return URL, we include all transaction parameters along with a <code>hash</code> parameter, which contains a base64-encoded signature.
+    The security process works through SHA-256 hashing. When we redirect customers to your return URL, we include all transaction parameters along with a <code>hash</code> parameter, which contains a base64-encoded signature.
     <div style="margin-top: 15px;"></div>
 
     While similar to our webhook authentication method, the redirect hashing process has important differences:
 
     <ul style="padding-left: 40px;">
-      <li><strong>Content being hashed:</strong> All query string parameters in the return URL (except the <code>hash</code> parameter itself) are concatenated together with no spaces, and then the secret is appended at the end.</li>
-      <li><strong>Secret used:</strong> The paymentMethodId used for the sale/tokenization (the iframe <code>pmt_vrt_...</code> ID) is used as the secret.</li>
+      <li><strong>Content being hashed:</strong> All query string parameter values (except the hash value itself) in the return URL. The values are kept in their original order as they appear in the URL, concatenated together with no spaces, and then the payment method ID used for the hosted payment form is appended at the end.</li>
+      <li><strong>Secret used:</strong> The paymentMethodId used for the payment form/iframe (the <code>pmt_vrt_...</code> ID) is used as the secret.</li>
     </ul>
     <div style="margin-top: 15px;"></div>
 
@@ -161,14 +161,23 @@
     </ul>
     <div style="margin-top: 15px;"></div>
 
-    To validate the authenticity of a redirect:
+    To validate the authenticity of a redirect, you can use one of two approaches:
+
+    <p><strong>Framework Integration:</strong></p>
+    <p>Many web frameworks provide built-in functionality to validate hash signatures. In these cases, you may only need a few lines of code to validate the hash using the payment method ID (<code>pmt_vrt_...</code>) as the secret key.</p>
+    <div style="margin-top: 15px;"></div>
+
+    <p><strong>Manual Validation:</strong></p>
+    <p>If you need to implement validation manually, follow these steps:</p>
 
     <ol style="padding-left: 40px;">
       <li>Extract the <code>hash</code> parameter from the returned URL parameters</li>
-      <li>Concatenate all other URL parameters with no spaces</li>
-      <li>Append the paymentMethodId (the <code>pmt_vrt_...</code> value) to the end of the string</li>
-      <li>Generate the SHA-256 hash and encode it using base64</li>
-      <li>Compare your generated hash with the received <code>hash</code> using constant-time comparison (to prevent timing attacks)</li>
+      <li>Extract all other parameter values (not keys) from the URL in the original order</li>
+      <li>Concatenate all these values with no spaces</li>
+      <li>Append the payment method ID that was used to create the hosted payment form session (the <code>pmt_vrt_...</code> value)</li>
+      <li>Generate the SHA-256 hash using hex output encoding</li>
+      <li>URL encode the resulting hash string to make it URL safe</li>
+      <li>Compare your generated hash with the received <code>hash</code> parameter using an exact match comparison</li>
       <li>Only process the transaction if the signatures match exactly</li>
     </ol>
     <div style="margin-top: 15px;"></div>
