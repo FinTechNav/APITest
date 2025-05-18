@@ -87,47 +87,47 @@
         </thead>
         <tbody>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">paymentMethodId</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">paymentMethodId</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">The ID of the tokenized card that was used or created during this transaction. Example: <code>pmt_tkn_01JV...2HA</code></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">resultCode</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">resultCode</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Transaction result status code: 0 (successful) or 9999 (issue). Example: <code>0</code></td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">cardType</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">cardType</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If successful, the type of card used for this transaction. Example: <code>VISA</code></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">transactionId</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">transactionId</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Unique identifier for the transaction. Example: <code>trx_01JV...6R</code></td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">referenceId</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">referenceId</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A reference ID to tag and track this transaction for reconciliation. The reference ID is also used for processing referenced refunds. Example: <code>ref_7ec1...75f</code></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">amount</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">amount</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If successful, the approved amount. The amount is always a positive integer in the smallest denomination of the currency (e.g., cents for USD or CAD). Example: <code>1101</code></td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">invoiceNumber</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">invoiceNumber</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">An alphanumeric invoice number for this transaction if one was provided in the request. Example: <code>inv_1062...d2f</code></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">orderNumber</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">orderNumber</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">An alphanumeric order number for this transaction if one was provided in the request. Example: <code>ord_ed1a...f8</code></td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">hash</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">hash</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A base64-encoded HMAC-SHA256 signature calculated from the transaction parameters and your shared secret value. This is the same secret used for webhook authentication, ensuring consistent security across both channels. Example: <code>5Zwu...rI=</code></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">errorMessage</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">errorMessage</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If an issue occurred, text explaining what the issue was. Example: "Transaction declined"</td>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">errorCode</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">errorCode</td>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If an issue occurred, a specific error code for the issue. Example: <code>1234</code></td>
           </tr>
         </tbody>
@@ -139,23 +139,38 @@
     <p>Example of the return string:</p>
     <p style="word-break: break-all; font-size: 0.9em; background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; overflow-x: auto;">https://merchant.example.com/payment-complete?paymentMethodId=pmt_tkn_01JVGAN46DSHTE39HR7T3MB2HA&resultCode=0&cardType=VISA&transactionId=trx_01JVGAKAE6KPWF0HACZDCKWD6R&referenceId=ref_7ec19d9c-4209-4268-85b8-aa88d788d75f&amount=%2411.01&invoiceNumber=inv_10625272-40e4-4c5b-8afe-cd6a8f231d2f&orderNumber=ord_ed1a57f9-ae58-4c4e-b0cd-1c286afcf8f8&hash=5Zwu5d9ILR7c08mu5nXiOYVhJafDxNae%2bDl3D5cPArI%3d</p>
     </div>
+
     ## Secure Payment Redirect Verification
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
       <p>When using the <code>returnUrl</code> approach, our system secures these redirects with strong cryptographic validation. This prevents tampering with transaction data and protects both you and your customers from potential fraud.</p>
       
-      <p>The security process works through HMAC-SHA256 hashing. When we redirect customers to your return URL, we include all transaction parameters along with a <code>hash</code> parameter, which contains a base64-encoded signature. This signature is generated using the same shared secret value that authenticates your webhook notifications.</p>
+      <p>The security process works through HMAC-SHA256 hashing. When we redirect customers to your return URL, we include all transaction parameters along with a <code>hash</code> parameter, which contains a base64-encoded signature.</p>
+      
+      <p>While similar to our webhook authentication method, the redirect hashing process has important differences:</p>
+      
+      <ul>
+        <li><strong>Content being hashed:</strong> All query string parameters in the return URL (except the <code>hash</code> parameter itself) are concatenated together with no spaces, and then the secret is appended at the end.</li>
+        <li><strong>Secret used:</strong> The paymentMethodId used for the sale/tokenization (the iframe <code>pmt_vrt_...</code> ID) is used as the secret.</li>
+      </ul>
+      
+      <p>For comparison, our webhook authentication:</p>
+      <ul>
+        <li>Hashes the entire raw body of the webhook request + secret value</li>
+        <li>Uses a shared secret value generated by our system</li>
+      </ul>
       
       <p>To validate the authenticity of a redirect:</p>
       <ol>
         <li>Extract the <code>hash</code> parameter from the returned URL parameters</li>
-        <li>Generate your own HMAC-SHA256 hash of the remaining parameters using your shared secret</li>
-        <li>Encode your generated hash as base64</li>
+        <li>Concatenate all other URL parameters with no spaces</li>
+        <li>Append the paymentMethodId (the <code>pmt_vrt_...</code> value) to the end of the string</li>
+        <li>Generate the SHA-256 hash and encode it using base64</li>
         <li>Compare your generated hash with the received <code>hash</code> using constant-time comparison (to prevent timing attacks)</li>
         <li>Only process the transaction if the signatures match exactly</li>
       </ol>
       
-      <p>This verification should be a standard part of your integration when using the <code>returnUrl</code> parameter, providing an additional layer of security beyond the webhook notifications.</p>
+      <p>This verification should be a standard part of your integration when using the <code>returnUrl</code> parameter, providing an additional layer of security to your payment flow.</p>
     </div>
 
     ## Error Handling
