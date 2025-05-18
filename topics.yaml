@@ -162,12 +162,15 @@
     <div style="margin-top: 15px;"></div>
 
     To validate the authenticity of a redirect, you can use one of two approaches:
+    <div style="margin-top: 20px;"></div>
 
     <p><strong>Framework Integration:</strong></p>
+    <div style="margin-top: 10px;"></div>
     <p>Many web frameworks provide built-in functionality to validate hash signatures. In these cases, you may only need a few lines of code to validate the hash using the payment method ID (<code>pmt_vrt_...</code>) as the secret key.</p>
-    <div style="margin-top: 15px;"></div>
+    <div style="margin-top: 20px;"></div>
 
     <p><strong>Manual Validation:</strong></p>
+    <div style="margin-top: 10px;"></div>
     <p>If you need to implement validation manually, follow these steps:</p>
 
     <ol style="padding-left: 40px;">
