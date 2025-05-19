@@ -152,6 +152,8 @@
 
     While similar to our webhook authentication method, the redirect hashing process has important differences:
 
+    <div style="margin-top: 15px;"></div>
+
     <div style="overflow-x: auto; margin-bottom: 20px;">
       <table style="width: 100%; border-collapse: collapse;">
         <thead>
