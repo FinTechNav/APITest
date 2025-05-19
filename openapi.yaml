@@ -609,8 +609,7 @@ components:
           type: string
           enum:
             [UNKNOWN, DEBIT, VISA, MASTERCARD, AMEX, DINERS, DISCOVER, JCB, UNIONPAY, GIFT, CASH, EBT, OTHER]
-          description: >
-            The type of card used for this transaction:
+          description: The type of card used for this transaction
              * `UNKNOWN` - The card type is unknown
              * `DEBIT` - Debit Card
              * `VISA` - Visa Credit Card
@@ -624,7 +623,7 @@ components:
              * `CASH` - All-cash Transaction
              * `EBT` - Electronic Benefits Transfer Card
              * `OTHER` - Other tender types
-           example: 'VISA'
+          example: 'VISA'
         maskedCardNumber:
           type: string
           description: The masked card number.
