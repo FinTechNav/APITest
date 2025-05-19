@@ -316,7 +316,7 @@ components:
 
     Receipt:
       type: object
-      description: The receipt associated with this transaction.
+      description: The receipt associated with this transaction.  Returned for Card Present transactions.
       properties:
         lines:
           type: array
