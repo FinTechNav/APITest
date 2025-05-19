@@ -608,7 +608,21 @@ components:
         cardType:
           type: string
           enum:
-            [UNKNOWN, DEBIT, VISA, MASTERCARD, AMEX, DINERS, DISCOVER, JCB, UNIONPAY, GIFT, CASH, EBT, OTHER]
+            [
+              UNKNOWN,
+              DEBIT,
+              VISA,
+              MASTERCARD,
+              AMEX,
+              DINERS,
+              DISCOVER,
+              JCB,
+              UNIONPAY,
+              GIFT,
+              CASH,
+              EBT,
+              OTHER,
+            ]
           description: >
             The type of card used for this transaction:
              * `UNKNOWN` - The card type is unknown
@@ -1611,6 +1625,7 @@ components:
               type: 'Token'
               currency: 'USD'
               description: "Token for John Doe's Visa"
+              cardType: 'VISA'
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
             cardType: 'VISA'
@@ -1730,6 +1745,7 @@ components:
               type: 'Token'
               currency: 'USD'
               description: "Token for John Doe's Visa"
+              cardType: 'VISA'
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
             cardType: 'VISA'
@@ -1822,6 +1838,7 @@ components:
           type: 'Token'
           currency: 'USD'
           description: "Token for John Doe's Visa"
+          cardType: 'VISA'
           maskedCardNumber: '************0011'
           cardExpDate: '1225'
         invoiceNumber: 'inv_12345678'
@@ -1913,6 +1930,7 @@ components:
           type: 'Token'
           currency: 'USD'
           description: "Token for John Doe's Visa"
+          cardType: 'VISA'
           maskedCardNumber: '************0011'
           cardExpDate: '1225'
         invoiceNumber: 'ref_inv_12345678'
@@ -2099,6 +2117,7 @@ components:
               type: 'Token'
               currency: 'USD'
               description: "Token for John Doe's Visa"
+              cardType: 'VISA'
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
             cardType: 'VISA'
@@ -2114,6 +2133,7 @@ components:
           type: 'Token'
           currency: 'USD'
           description: "Token for John Doe's Visa"
+          cardType: 'VISA'
           maskedCardNumber: '************0011'
           cardExpDate: '1225'
         referenceId: 'ref_update_card_12345'
@@ -2129,6 +2149,7 @@ components:
           type: 'Token'
           currency: 'USD'
           description: "Token for John Doe's Visa"
+          cardType: 'VISA'
           maskedCardNumber: '************0011'
           cardExpDate: '1225'
         referenceId: 'ref_remove_card_12345'
@@ -2648,6 +2669,7 @@ paths:
                       type: 'Token'
                       currency: 'USD'
                       description: "Token for John Doe's Visa"
+                      cardType: 'VISA'
                       maskedCardNumber: '************0011'
                       cardExpDate: '1225'
                     invoiceNumber: 'inv_12345678'
@@ -2672,6 +2694,7 @@ paths:
                               type: 'Token',
                               currency: 'USD',
                               description: "Token for John Doe's Visa",
+                              cardType: 'VISA',
                               maskedCardNumber: '************0011',
                               cardExpDate: '1225',
                             },
@@ -2885,6 +2908,7 @@ paths:
                       type: 'Token'
                       currency: 'USD'
                       description: "Token for John Doe's Visa"
+                      cardType: 'VISA'
                       maskedCardNumber: '************0011'
                       cardExpDate: '1225'
                     invoiceNumber: 'inv_12345678'
@@ -2910,6 +2934,7 @@ paths:
                               currency: 'USD',
                               description: "Token for John Doe's Visa",
                               maskedCardNumber: '************0011',
+                              cardType: 'VISA',
                               cardExpDate: '1225',
                             },
                           cardType: 'VISA',
