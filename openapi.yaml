@@ -240,6 +240,7 @@ components:
           DISCOVER,
           JCB,
           UNIONPAY,
+          MAESTRO,
           GIFT,
           CASH,
           EBT,
@@ -256,6 +257,7 @@ components:
          * `DISCOVER` - Discover Credit Card
          * `JCB` - JCB Credit Card
          * `UNIONPAY` - UnionPay Credit Card
+         * `MAESTRO` - Maestro Debit Card
          * `GIFT` - Gift Card
          * `CASH` - All-cash Transaction
          * `EBT` - Electronic Benefits Transfer Card
@@ -618,6 +620,7 @@ components:
               DISCOVER,
               JCB,
               UNIONPAY,
+              MAESTRO,
               GIFT,
               CASH,
               EBT,
@@ -634,6 +637,7 @@ components:
              * `DISCOVER` - Discover Credit Card
              * `JCB` - JCB Credit Card
              * `UNIONPAY` - UnionPay Credit Card
+             * `MAESTRO` - Maestro Debit Card
              * `GIFT` - Gift Card
              * `CASH` - All-cash Transaction
              * `EBT` - Electronic Benefits Transfer Card
