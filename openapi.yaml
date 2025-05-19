@@ -557,7 +557,7 @@ components:
         ]
       description: |
         Result codes:
-        * `0` - Successful transaction request. (Check each transactionResponse's responseCode to determine if a transaction was approved or declined)
+        * `0` - Successful transaction request. (Check each transactionResponse's responseCode to determine if a transaction was approved or declined, card was tokenized, etc.)
         * `1003` - No payment terminal available.
         * `1005` - The specified terminal could not be found.
         * `3000` - An unexpected error occurred. Please try again.
