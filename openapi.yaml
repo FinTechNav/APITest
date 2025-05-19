@@ -641,7 +641,7 @@ components:
           example: 'VISA'
         maskedCardNumber:
           type: string
-          description: The masked card number.
+          description: The masked card number. The format may vary (e.g. ************0011, 4****0011, etc.)
           example: '************0011'
         cardExpDate:
           type: string
