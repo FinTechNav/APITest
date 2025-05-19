@@ -112,13 +112,7 @@ tags:
 
       Given the following webhook request body (partial example shown):
       ```json
-      {
-        "event": {
-          "id": "evt_01JSQ33SMQKET4DMRV46W9WY84",
-          "type": "sale.completed",
-          "timestamp": "2025-04-07T20:03:05Z"
-        }
-      }
+      {"event":{"id":"evt_01JSQ33SMQKET4DMRV46W9WY84","type":"sale.completed","timestamp":"2025-04-07T20:03:05Z"}}
       ```
 
       And using `secret_value` as the shared secret, the HMAC-SHA256 hash is calculated with:
@@ -130,7 +124,7 @@ tags:
       )
       ```
 
-      Note: The JSON must be serialized exactly as received in the HTTP request body — no additional whitespace, indentation, or formatting changes. In the above example, whitespace is removed for clarity.
+      Note: Use the raw JSON exactly as received in the HTTP request body — no reformatting, indentation changes, or whitespace modifications.
 
       The resulting lowercase hex-encoded hash:
 
