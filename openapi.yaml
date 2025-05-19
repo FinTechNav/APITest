@@ -605,6 +605,26 @@ components:
           type: string
           description: A human-readable name for the payment method.
           example: "Token for John Doe's Visa"
+        cardType:
+          type: string
+          enum:
+            [UNKNOWN, DEBIT, VISA, MASTERCARD, AMEX, DINERS, DISCOVER, JCB, UNIONPAY, GIFT, CASH, EBT, OTHER]
+          description: >
+            The type of card used for this transaction:
+             * `UNKNOWN` - The card type is unknown
+             * `DEBIT` - Debit Card
+             * `VISA` - Visa Credit Card
+             * `MASTERCARD` - MasterCard Credit Card
+             * `AMEX` - American Express Credit Card
+             * `DINERS` - Diners Club Credit Card
+             * `DISCOVER` - Discover Credit Card
+             * `JCB` - JCB Credit Card
+             * `UNIONPAY` - UnionPay Credit Card
+             * `GIFT` - Gift Card
+             * `CASH` - All-cash Transaction
+             * `EBT` - Electronic Benefits Transfer Card
+             * `OTHER` - Other tender types
+           example: 'VISA'
         maskedCardNumber:
           type: string
           description: The masked card number.
