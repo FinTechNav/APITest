@@ -117,7 +117,7 @@
           </tr>
           <tr>
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">hash</td>
-            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A base64-encoded SHA-256 signature calculated from the transaction response values (excluding the hash itself) and using the payment method ID (pmt_vrt_...) as the secret. This verification method is different from webhook authentication and provides security for redirect responses. Example: <code>5Zwu...rI=</code></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A lowercase hex-encoded HMAC-SHA256 hash that validates the authenticity of the redirect and protects against tampering of the query string parameters. It is calculated using the concatenated `referenceId` and `resultCode` values as input and the payment method ID (pmt_vrt_...) as the secret key. This cryptographic validation ensures that redirect responses haven't been modified. Example: <code>7795ad4335...0d7ecdbce</code></td>
           </tr>
           <tr style="background-color: rgba(240, 244, 248, 0.05);">
             <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">errorMessage</td>
