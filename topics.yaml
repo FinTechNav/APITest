@@ -201,7 +201,7 @@
 
     <p>When a payment method with ID <code>pmt_vrt_01JTNZ2Z2XBNMGMG9ENY41AKRG</code> was used to create a hosted payment page session, and given the following returnUrl:</p>
 
-    <p style="word-break: break-all; font-size: 0.9em; background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; overflow-x: auto;">https://merchant.example.com/payment-complete?paymentMethodId=pmt_tkn_01JVGD11ZW2N8859Z9RSJKBPDB&resultCode=0&cardType=VISA&transactionId=trx_01JVGD0BD3D6SRW6A941CPWCJ5&referenceId=ref_238832ae&amount=1899&invoiceNumber=inv_7d7ab39d&orderNumber=ord_cead58aa&hash=MaJhBa%2BIs00cdKgq3TRWbun%2FmsFKCfoCvEzlD2grCm0%3D</p>
+    <p style="word-break: break-all; font-size: 0.9em; background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; overflow-x: auto;">https://merchant.example.com/payment-complete?paymentMethodId=pmt_tkn_01JVGD11ZW2N8859Z9RSJKBPDB&resultCode=0&cardType=VISA&transactionId=trx_01JVGD0BD3D6SRW6A941CPWCJ5&referenceId=ref_238832ae&amount=1899&invoiceNumber=inv_7d7ab39d&orderNumber=ord_cead58aa&hash=7795ad43353004b2d8434af7ff5253d597ca290492eec43c714460a0d7ecdbce</p>
 
     <p>Extract the <code>referenceId</code> and <code>resultCode</code> query string key/value pairs:</p>
 
