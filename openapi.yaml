@@ -1154,7 +1154,7 @@ components:
               merchantId:
                 type: string
                 description: Merchant identifier
-                example: 'mer_01JVAYEP1MC8DM1CJMD000BRAD'
+                example: 'mer_01JVAYEP1MC8DM1CJMD000001'
               paymentMethodId:
                 type: string
                 description: Payment method identifier used for this transaction
@@ -2659,7 +2659,7 @@ paths:
                 timestampRange:
                   summary: Transactions within timestamp range
                   value:
-                    totalCount: 5
+                    totalCount: 2
                     page: 1
                     pageSize: 10
                     totalPages: 1
@@ -2667,10 +2667,10 @@ paths:
                     hasPreviousPage: false
                     items:
                       - id: 'trx_01JVWF1FVKW3Q6QYRN43DV9C63'
-                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000BRAD'
+                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
                         paymentMethodId: 'pmt_tkn_01JVWEW7Z45JAWY91VKSRA97Z7'
-                        orderNumber: 'ord_1747933249285'
-                        invoiceNumber: 'inv_1747933249285'
+                        orderNumber: 'order_number_1234'
+                        invoiceNumber: 'inv_12345678'
                         referenceId: 'ref_1747933249285'
                         timestamp: '2025-05-22T17:00:50Z'
                         type: 'Sale'
@@ -2684,10 +2684,10 @@ paths:
                         cvvResult: 'M'
                         avsResult: 'Y'
                       - id: 'trx_01JVWQ4XRNR50YPQ4QDZGGGH7B'
-                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000BRAD'
-                        paymentMethodId: 'pmt_vrt_01JVAYEP1MC8DM1CJMD000BRAD'
-                        orderNumber: 'ord_1747941749798'
-                        invoiceNumber: 'inv_1747941749798'
+                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
+                        paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                        orderNumber: 'order_number_1234'
+                        invoiceNumber: 'inv_12345678'
                         referenceId: 'ref_1747941749798'
                         timestamp: '2025-05-22T19:22:47Z'
                         type: 'Sale'
@@ -2711,7 +2711,7 @@ paths:
                     hasPreviousPage: false
                     items:
                       - id: 'trx_01JW9HE9EZB7HMERDD4N48CVJP'
-                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000BRAD'
+                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
                         paymentMethodId: 'pmt_tkn_01JW9H840KEWJAVZXKKY06D47M'
                         orderNumber: ''
                         invoiceNumber: ''
@@ -2728,10 +2728,10 @@ paths:
                         cvvResult: ''
                         avsResult: ''
                       - id: 'trx_01JW9H7B78T0B64J3QQZ1VPEH3'
-                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000BRAD'
-                        paymentMethodId: 'pmt_vrt_01JVAYEP1MC8DM1CJMD000BRAD'
-                        orderNumber: 'ord_1748371745911'
-                        invoiceNumber: 'inv_1748371745911'
+                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
+                        paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                        orderNumber: 'order_number_1234'
+                        invoiceNumber: 'inv_12345678'
                         referenceId: 'asdf3'
                         timestamp: '2025-05-27T18:49:31Z'
                         type: 'Sale'
