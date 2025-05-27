@@ -2260,6 +2260,45 @@ paths:
         - Combined: `?filters=currency==USD&sorts=description`
 
         **Note:** All timestamps returned are in UTC.
+      parameters:
+        - name: filters
+          in: query
+          required: false
+          description: |
+            Filter criteria in the format: field==value,field!=value
+            Multiple filters can be separated by commas.
+            Available fields: id, paymentMethodType, currency, description, ownerId
+          schema:
+            type: string
+          example: 'paymentMethodType==Physical,currency==USD'
+        - name: sorts
+          in: query
+          required: false
+          description: |
+            Sort criteria as comma-separated field names.
+            Available fields: id, paymentMethodType, currency, description, ownerId
+          schema:
+            type: string
+          example: 'paymentMethodType,description'
+        - name: pageNumber
+          in: query
+          required: false
+          description: Page number to retrieve (starts at 1)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: pageSize
+          in: query
+          required: false
+          description: Number of items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          example: 10
       tags:
         - Payment Methods
       responses:
