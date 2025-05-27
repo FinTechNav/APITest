@@ -2296,7 +2296,7 @@ paths:
         - `paymentMethodType` - Type of payment method (Physical, Virtual)
         - `currency` - Currency (USD, CAD)  
         - `description` - Payment method description
-        - `ownerId` - Owner identifier
+        - `ownerId` - The Merchant ID that owns this Payment Method ID
 
         #### Filter Operators:
 
@@ -2328,7 +2328,6 @@ paths:
         - Sort results: `?sorts=paymentMethodType,description`
         - Combined: `?filters=currency==USD&sorts=description`
 
-        **Note:** All timestamps returned are in UTC.
       parameters:
         - name: filters
           in: query
