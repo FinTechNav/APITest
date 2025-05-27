@@ -315,6 +315,11 @@ components:
           type: string
           description: Additional details about the error
           example: "'Amount' must be between 1 and 999999999."
+      example:
+        code: 2000
+        field: 'amount'
+        message: 'Request validation failed'
+        details: "'Amount' must be between 1 and 999999999."
 
     Receipt:
       type: object
@@ -757,7 +762,13 @@ components:
         amount:
           $ref: '#/components/schemas/Amount'
         amountBreakdown:
-          $ref: '#/components/schemas/AmountBreakdown'
+          allOf:
+            - $ref: '#/components/schemas/AmountBreakdown'
+            - example:
+                amountGoodsAndServices: 1000
+                tax: 130
+                cashBack: 0
+                tip: 200
         paymentMethodId:
           type: string
           description: |
@@ -1000,6 +1011,11 @@ components:
               properties:
                 id:
                   example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+              example:
+                id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                type: 'Virtual'
+                currency: 'USD'
+                description: 'Online Checkout Iframe'
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -1201,7 +1217,7 @@ components:
         orderNumber:
           $ref: '#/components/schemas/OrderNumber'
         referenceId:
-          $ref: '#/components/schemas/ReferenceIdforResponse'
+          $ref: '#/components/schemas/ReferenceIdForResponse'
         resultCode:
           $ref: '#/components/schemas/ResultCode'
         resultText:
@@ -1271,6 +1287,11 @@ components:
               properties:
                 id:
                   example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+              example:
+                id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                type: 'Virtual'
+                currency: 'USD'
+                description: 'Online Checkout Iframe'
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
         requestedAmount:
