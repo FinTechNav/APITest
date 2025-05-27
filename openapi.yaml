@@ -1045,6 +1045,72 @@ components:
           description: Status of the iframe session. When created, this will always be pending. The status values will be updated as the customer goes through the iframe process.
           example: 'Pending'
 
+    PaymentMethodsListResponse:
+      type: object
+      description: Paginated response containing payment methods
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of payment methods that match the filter criteria
+          example: 2
+        pageNumber:
+          type: integer
+          description: The current page number (starts at 1)
+          example: 1
+        pageSize:
+          type: integer
+          description: Number of items per page
+          example: 10
+        totalPages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        hasNextPage:
+          type: boolean
+          description: True if there are more pages of results available
+          example: false
+        hasPreviousPage:
+          type: boolean
+          description: True if there are previous pages of results available
+          example: false
+        items:
+          type: array
+          description: Array of payment methods for the current page
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: |
+                  The payment method ID. Physical terminals will be prefixed with `pmt_trm_` and virtual terminals will be prefixed with `pmt_vrt_`.
+                example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+              type:
+                type: string
+                enum: [Physical, Virtual]
+                example: 'Physical'
+              currency:
+                type: string
+                enum: [USD, CAD]
+                example: 'USD'
+              description:
+                type: string
+                maxLength: 1000
+                description: A human-readable name for the payment method
+                example: 'Main Store Terminal'
+            required:
+              - id
+              - type
+              - currency
+              - description
+      required:
+        - totalCount
+        - pageNumber
+        - pageSize
+        - totalPages
+        - hasNextPage
+        - hasPreviousPage
+        - items
+
     TransactionResponseObject:
       type: object
       description: Represents the response to a sale or authorization transaction.
@@ -2303,53 +2369,48 @@ paths:
         - Payment Methods
       responses:
         '200':
-          description: A successful response containing available payment methods
+          description: A successful paginated response containing available payment methods
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    paymentMethod:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          description: |
-                            The payment method ID. Physical terminals will be prefixed with `pmt_trm_` and virtual terminals will be prefixed with `pmt_vrt_`.
-
-                            Example physical format: `pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF`
-                            Example virtual format: `pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS`
-                        type:
-                          type: string
-                          enum: [Physical, Virtual]
-                        currency:
-                          type: string
-                          enum: [USD, CAD]
-                        description:
-                          type: string
-                          maxLength: 1000
-                          description: A human-readable name for the payment method
+                $ref: '#/components/schemas/PaymentMethodsListResponse'
               examples:
-                successfulResponse:
-                  description: A successful response for retrieving the available payment methods.
+                singleResult:
+                  summary: Single payment method result
                   value:
-                    - paymentMethod:
-                        id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
-                        type: Physical
-                        currency: USD
-                        description: Main Store Terminal
-                    - paymentMethod:
-                        id: pmt_trm_01JRZQW7FXMG62D8HJTPK3Y5VB
-                        type: Physical
-                        currency: USD
-                        description: Secondary Store Terminal
-                    - paymentMethod:
-                        id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
-                        type: Virtual
-                        currency: USD
-                        description: Online Checkout Iframe
+                    totalCount: 1
+                    pageNumber: 1
+                    pageSize: 10
+                    totalPages: 1
+                    hasNextPage: false
+                    hasPreviousPage: false
+                    items:
+                      - id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                        type: 'Physical'
+                        currency: 'USD'
+                        description: 'Main Store Terminal'
+                multipleResults:
+                  summary: Multiple payment methods result
+                  value:
+                    totalCount: 3
+                    pageNumber: 1
+                    pageSize: 10
+                    totalPages: 1
+                    hasNextPage: false
+                    hasPreviousPage: false
+                    items:
+                      - id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                        type: 'Physical'
+                        currency: 'USD'
+                        description: 'Main Store Terminal'
+                      - id: 'pmt_trm_01JRZQW7FXMG62D8HJTPK3Y5VB'
+                        type: 'Physical'
+                        currency: 'USD'
+                        description: 'Secondary Store Terminal'
+                      - id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                        type: 'Virtual'
+                        currency: 'USD'
+                        description: 'Online Checkout Iframe'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
