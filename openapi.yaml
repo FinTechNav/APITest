@@ -2217,9 +2217,49 @@ paths:
       operationId: getPaymentMethods
       summary: List Payment Methods
       description: |
-        Returns a list of valid payment methods that have been configured in the system for the authenticated merchant.
+        Returns a paginated list of payment methods that have been configured in the system for the authenticated merchant.
 
-        IDs of both "physical" payment terminals that can be used to process Card Present transactions and IDs of "virtual" terminals (hosted payment forms / iframes) that can be used to process Card Not Present transactions will be returned.
+        IDs of both "Physical" payment terminals that can be used to process Card Present transactions and IDs of "Virtual" terminals (hosted payment forms / iframes) that can be used to process Card Not Present transactions will be returned.
+
+        ### Filtering and Sorting
+
+        You can filter and sort the results using query parameters:
+
+        #### Available Filter/Sort Fields:
+        - `id` - Payment method ID
+        - `paymentMethodType` - Type of payment method (Physical, Virtual)
+        - `currency` - Currency (USD, CAD)  
+        - `description` - Payment method description
+        - `ownerId` - Owner identifier
+
+        #### Filter Operators:
+        - `==` Equals
+        - `!=` Not equals
+        - `>` Greater than
+        - `<` Less than
+        - `>=` Greater than or equal to
+        - `<=` Less than or equal to
+        - `@=` Contains
+        - `_=` Starts with
+        - `_-=` Ends with
+        - `!@=` Does not contain
+        - `!_=` Does not start with
+        - `!_-=` Does not end with
+        - `@=*` Case-insensitive contains
+        - `_=*` Case-insensitive starts with
+        - `_-=*` Case-insensitive ends with
+        - `==*` Case-insensitive equals
+        - `!=*` Case-insensitive not equals
+        - `!@=*` Case-insensitive does not contain
+        - `!_=*` Case-insensitive does not start with
+
+        #### Examples:
+        - Filter by type: `?filters=paymentMethodType==Physical`
+        - Multiple filters: `?filters=paymentMethodType==Physical,currency==USD`
+        - Sort results: `?sorts=paymentMethodType,description`
+        - Combined: `?filters=currency==USD&sorts=description`
+
+        **Note:** All timestamps returned are in UTC.
       tags:
         - Payment Methods
       responses:
