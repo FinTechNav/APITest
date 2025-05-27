@@ -79,11 +79,13 @@ x-topics:
 
 tags:
   - name: Transactions
-    description: Endpoints for processing payments
+    description: Endpoints for processing transactions
   - name: Tokens
-    description: Endpoints for managing tokenized payment methods
+    description: Endpoints for creating, updating and removing tokenized payment methods
   - name: Payment Methods
     description: Endpoints for managing payment methods
+  - name: Transaction Retrieval
+    description: Endpoints for retrieving transaction details
   - name: Transaction Notifications
     description: |
       Our webhooks provide real-time notifications for completed transaction and token events. You can configure webhooks to receive notifications for specific events, such as when a sale transaction is completed or a token is created. Each event type is separate, so you can choose to subscribe to only the events you want to receive notifications for. See the individual endpoint documentation for more details about when each event is triggered.
@@ -1102,6 +1104,132 @@ components:
               - type
               - currency
               - description
+      required:
+        - totalCount
+        - page
+        - pageSize
+        - totalPages
+        - hasNextPage
+        - hasPreviousPage
+        - items
+
+    TransactionsListResponse:
+      type: object
+      description: Paginated response containing transactions
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of transactions that match the filter criteria
+          example: 5
+        page:
+          type: integer
+          description: The current page number (starts at 1)
+          example: 1
+        pageSize:
+          type: integer
+          description: Number of items per page
+          example: 10
+        totalPages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        hasNextPage:
+          type: boolean
+          description: True if there are more pages of results available
+          example: false
+        hasPreviousPage:
+          type: boolean
+          description: True if there are previous pages of results available
+          example: false
+        items:
+          type: array
+          description: Array of transactions for the current page
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Unique transaction identifier
+                example: 'trx_01JVWF1FVKW3Q6QYRN43DV9C63'
+              merchantId:
+                type: string
+                description: Merchant identifier
+                example: 'mer_01JVAYEP1MC8DM1CJMD000BRAD'
+              paymentMethodId:
+                type: string
+                description: Payment method identifier used for this transaction
+                example: 'pmt_tkn_01JVWEW7Z45JAWY91VKSRA97Z7'
+              orderNumber:
+                type: string
+                description: Order number associated with the transaction
+                example: 'ord_1748012539527'
+              invoiceNumber:
+                type: string
+                description: Invoice number associated with the transaction
+                example: 'inv_1748012539527'
+              referenceId:
+                type: string
+                description: Reference ID for the transaction
+                example: 'ref_1748012539527'
+              timestamp:
+                type: string
+                format: date-time
+                description: Transaction timestamp in UTC
+                example: '2025-05-22T17:00:50Z'
+              type:
+                type: string
+                enum: [Sale, Auth, Capture, Refund, TokenAdd, TokenUpdate, TokenRemove]
+                description: Type of transaction
+                example: 'Sale'
+              amount:
+                type: integer
+                description: Transaction amount in smallest currency denomination (e.g., cents for USD)
+                example: 440
+              cardType:
+                type: string
+                enum:
+                  [VISA, MASTERCARD, AMEX, DISCOVER, JCB, UNIONPAY, MAESTRO, DEBIT, UNKNOWN, OTHER]
+                description: Type of card used for the transaction
+                example: 'VISA'
+              maskedCardNumber:
+                type: string
+                description: Masked card number
+                example: '4****1111'
+              last4:
+                type: string
+                description: Last 4 digits of the card number
+                example: '1111'
+              currency:
+                type: string
+                enum: [USD, CAD]
+                description: Transaction currency
+                example: 'USD'
+              status:
+                type: string
+                enum: [APPROVED, DECLINED, ERROR, PENDING]
+                description: Transaction status
+                example: 'APPROVED'
+              authCode:
+                type: string
+                description: Authorization code from the card issuer
+                example: '111625'
+              cvvResult:
+                type: string
+                description: CVV verification result
+                example: 'M'
+              avsResult:
+                type: string
+                description: AVS (Address Verification Service) result
+                example: 'Y'
+            required:
+              - id
+              - merchantId
+              - paymentMethodId
+              - timestamp
+              - type
+              - amount
+              - currency
+              - status
       required:
         - totalCount
         - page
@@ -2417,6 +2545,205 @@ paths:
                         type: 'Virtual'
                         currency: 'USD'
                         description: 'Online Checkout Iframe'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions:
+    get:
+      operationId: getTransactions
+      summary: List Transactions
+      description: |
+        Returns a paginated list of transactions for the authenticated merchant.
+
+        ### Filtering and Sorting
+
+        You can filter and sort the results using query parameters:
+
+        #### Available Filter/Sort Fields:
+        - `id` - Transaction ID
+        - `timestamp` - Transaction timestamp (ISO 8601 format)
+        - `referenceId` - Reference ID
+        - `orderNumber` - Order number
+        - `invoiceNumber` - Invoice number
+        - `type` - Transaction type (Sale, Auth, Capture, Refund, TokenAdd, TokenUpdate, TokenRemove)
+        - `amount` - Transaction amount
+
+        #### Filter Operators:
+
+        | Operator | Meaning |
+        |----------|---------|
+        | `==` | Equals |
+        | `!=` | Not equals |
+        | `>` | Greater than |
+        | `<` | Less than |
+        | `>=` | Greater than or equal to |
+        | `<=` | Less than or equal to |
+        | `@=` | Contains |
+        | `_=` | Starts with |
+        | `_-=` | Ends with |
+        | `!@=` | Does not Contains |
+        | `!_=` | Does not Starts with |
+        | `!_-=` | Does not Ends with |
+        | `@=*` | Case-insensitive string Contains |
+        | `_=*` | Case-insensitive string Starts with |
+        | `_-=*` | Case-insensitive string Ends with |
+        | `==*` | Case-insensitive string Equals |
+        | `!=*` | Case-insensitive string Not equals |
+        | `!@=*` | Case-insensitive string does not Contains |
+        | `!_=*` | Case-insensitive string does not Starts with |
+
+        #### Special Filter Syntax:
+        - Use `|` (pipe) for OR conditions: `type==Sale|Capture`
+        - Use `-` prefix for descending sort: `sorts=-timestamp`
+
+        #### Examples:
+        - Filter by timestamp range: `?filters=timestamp>=2025-05-21T01:00:00,timestamp<2025-05-22T01:00:00`
+        - Filter by type with OR: `?filters=type==Sale|Capture`
+        - Sort by timestamp descending: `?sorts=-timestamp`
+        - Combined: `?filters=timestamp>=2025-05-27T04:00:00.000Z,type==Sale|Capture&sorts=-timestamp`
+
+        **Note:** All transaction timestamps are in UTC.
+      tags:
+        - Transaction Retrieval
+      parameters:
+        - name: filters
+          in: query
+          required: false
+          description: |
+            Filter criteria in the format: field==value,field!=value
+            Multiple filters can be separated by commas. Use | for OR conditions within a field.
+            Available fields: id, timestamp, referenceId, orderNumber, invoiceNumber, type, amount
+          schema:
+            type: string
+          example: 'timestamp>=2025-05-21T01:00:00,type==Sale|Capture'
+        - name: sorts
+          in: query
+          required: false
+          description: |
+            Sort criteria as comma-separated field names. Use - prefix for descending order.
+            Available fields: id, timestamp, referenceId, orderNumber, invoiceNumber, type, amount
+          schema:
+            type: string
+          example: '-timestamp,type'
+        - name: page
+          in: query
+          required: false
+          description: |
+            Page number to retrieve (starts at 1). 
+            For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: pageSize
+          in: query
+          required: false
+          description: |
+            Number of records per page.
+            For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          example: 10
+      responses:
+        '200':
+          description: A successful paginated response containing transactions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsListResponse'
+              examples:
+                timestampRange:
+                  summary: Transactions within timestamp range
+                  value:
+                    totalCount: 5
+                    page: 1
+                    pageSize: 10
+                    totalPages: 1
+                    hasNextPage: false
+                    hasPreviousPage: false
+                    items:
+                      - id: 'trx_01JVWF1FVKW3Q6QYRN43DV9C63'
+                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000BRAD'
+                        paymentMethodId: 'pmt_tkn_01JVWEW7Z45JAWY91VKSRA97Z7'
+                        orderNumber: 'ord_1747933249285'
+                        invoiceNumber: 'inv_1747933249285'
+                        referenceId: 'ref_1747933249285'
+                        timestamp: '2025-05-22T17:00:50Z'
+                        type: 'Sale'
+                        amount: 440
+                        cardType: 'VISA'
+                        maskedCardNumber: '4****1111'
+                        last4: '1111'
+                        currency: 'USD'
+                        status: 'APPROVED'
+                        authCode: '111625'
+                        cvvResult: 'M'
+                        avsResult: 'Y'
+                      - id: 'trx_01JVWQ4XRNR50YPQ4QDZGGGH7B'
+                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000BRAD'
+                        paymentMethodId: 'pmt_vrt_01JVAYEP1MC8DM1CJMD000BRAD'
+                        orderNumber: 'ord_1747941749798'
+                        invoiceNumber: 'inv_1747941749798'
+                        referenceId: 'ref_1747941749798'
+                        timestamp: '2025-05-22T19:22:47Z'
+                        type: 'Sale'
+                        amount: 440
+                        cardType: 'VISA'
+                        maskedCardNumber: '4****1111'
+                        last4: '1111'
+                        currency: 'USD'
+                        status: 'APPROVED'
+                        authCode: '111048'
+                        cvvResult: ''
+                        avsResult: ''
+                saleAndCapture:
+                  summary: Sale and Capture transactions with descending timestamp sort
+                  value:
+                    totalCount: 2
+                    page: 1
+                    pageSize: 10
+                    totalPages: 1
+                    hasNextPage: false
+                    hasPreviousPage: false
+                    items:
+                      - id: 'trx_01JW9HE9EZB7HMERDD4N48CVJP'
+                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000BRAD'
+                        paymentMethodId: 'pmt_tkn_01JW9H840KEWJAVZXKKY06D47M'
+                        orderNumber: ''
+                        invoiceNumber: ''
+                        referenceId: 'asdf5'
+                        timestamp: '2025-05-27T18:52:54Z'
+                        type: 'Capture'
+                        amount: 450
+                        cardType: 'VISA'
+                        maskedCardNumber: '4****5297'
+                        last4: '5297'
+                        currency: 'USD'
+                        status: 'APPROVED'
+                        authCode: '111905'
+                        cvvResult: ''
+                        avsResult: ''
+                      - id: 'trx_01JW9H7B78T0B64J3QQZ1VPEH3'
+                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000BRAD'
+                        paymentMethodId: 'pmt_vrt_01JVAYEP1MC8DM1CJMD000BRAD'
+                        orderNumber: 'ord_1748371745911'
+                        invoiceNumber: 'inv_1748371745911'
+                        referenceId: 'asdf3'
+                        timestamp: '2025-05-27T18:49:31Z'
+                        type: 'Sale'
+                        amount: 450
+                        cardType: 'VISA'
+                        maskedCardNumber: '4****5297'
+                        last4: '5297'
+                        currency: 'USD'
+                        status: 'APPROVED'
+                        authCode: '111640'
+                        cvvResult: ''
+                        avsResult: ''
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
