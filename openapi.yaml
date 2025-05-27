@@ -2349,7 +2349,9 @@ paths:
         - name: page
           in: query
           required: false
-          description: Page number to retrieve (starts at 1)
+          description: |
+            Page number to retrieve (starts at 1). 
+            For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
           schema:
             type: integer
             minimum: 1
@@ -2358,7 +2360,9 @@ paths:
         - name: pageSize
           in: query
           required: false
-          description: Number of items per page
+          description: |
+            Number of records per page.
+            For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
           schema:
             type: integer
             minimum: 1
