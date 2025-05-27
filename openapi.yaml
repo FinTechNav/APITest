@@ -436,32 +436,38 @@ components:
       type: string
       maxLength: 100
       description: >
-        A reference ID to tag and track this transaction for reconciliation. The reference ID
-        is also used for processing referenced refunds. This value can be set by the merchant,
-        or a unique reference ID will be generated automatically if not set by the merchant.
+        An optional reference ID to tag and track this transaction for reconciliation. 
+        If provided, this value must be unique per merchant. The reference ID can be used 
+        for processing captures and referenced refunds by including it in the originalReferenceId 
+        field of subsequent transactions. If not provided, a unique reference ID will be 
+        generated automatically by the system.
       example: ref_s192i49i
 
     ReferenceIdForResponse:
       type: string
       maxLength: 100
       description: >
-        The value returned will either be the reference ID set in the transaction request or if
-        no value was set, it will be a value that is generated automatically by the system.
-        The reference ID is needed for processing referenced transactions like captures and refunds.
+        The reference ID for this transaction. This will either be the reference ID provided 
+        in the transaction request or, if no value was provided, a value generated automatically 
+        by the system. This reference ID can be used for processing captures and referenced 
+        refunds by including it in the originalReferenceId field of subsequent transactions.
       example: ref_s192i49i
 
-    ReferenceIdForCapture:
+    OriginalTransactionId:
+      type: string
+      description: >
+        The unique transaction ID of the original transaction to be captured or refunded. 
+        This is the 'id' value returned from a previous sale, authorization, or capture transaction.
+        Either originalTransactionId or originalReferenceId must be provided.
+      example: trx_01J2F0EKHC7HY2R93C8ENBD1FG
+
+    OriginalReferenceId:
       type: string
       maxLength: 100
       description: >
-        The reference ID that identifies the original authorization transaction being captured.
-      example: ref_s192i49i
-
-    ReferenceIdForRefund:
-      type: string
-      maxLength: 100
-      description: >
-        The reference ID that identifies the original transaction being refunded.
+        The reference ID of the original transaction to be captured or refunded. 
+        This should match the referenceId from a previous sale, authorization, or capture transaction.
+        Either originalTransactionId or originalReferenceId must be provided.
       example: ref_s192i49i
 
     InvoiceNumber:
@@ -820,31 +826,41 @@ components:
       type: object
       description: Represents the request to capture a previously authorized transaction.
       properties:
+        originalTransactionId:
+          $ref: '#/components/schemas/OriginalTransactionId'
+        originalReferenceId:
+          $ref: '#/components/schemas/OriginalReferenceId'
         referenceId:
-          $ref: '#/components/schemas/ReferenceIdForCapture'
+          $ref: '#/components/schemas/ReferenceId'
         amount:
           $ref: '#/components/schemas/AmountToCapture'
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
           $ref: '#/components/schemas/OrderNumber'
-      required:
-        - referenceId
+      oneOf:
+        - required: [originalTransactionId]
+        - required: [originalReferenceId]
 
     RefundRequest:
       type: object
       description: Represents the request to refund or void a previously completed transaction.
       properties:
+        originalTransactionId:
+          $ref: '#/components/schemas/OriginalTransactionId'
+        originalReferenceId:
+          $ref: '#/components/schemas/OriginalReferenceId'
         referenceId:
-          $ref: '#/components/schemas/ReferenceIdForRefund'
+          $ref: '#/components/schemas/ReferenceId'
         amount:
           $ref: '#/components/schemas/AmountToRefund'
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
           $ref: '#/components/schemas/OrderNumber'
-      required:
-        - referenceId
+      oneOf:
+        - required: [originalTransactionId]
+        - required: [originalReferenceId]
 
     UnreferencedPhysicalRefundRequest:
       type: object
@@ -1127,7 +1143,7 @@ components:
         orderNumber:
           $ref: '#/components/schemas/OrderNumber'
         referenceId:
-          $ref: '#/components/schemas/ReferenceIdForCapture'
+          $ref: '#/components/schemas/ReferenceIdForResponse'
         resultCode:
           $ref: '#/components/schemas/ResultCode'
         resultText:
@@ -1171,7 +1187,7 @@ components:
         orderNumber:
           $ref: '#/components/schemas/OrderNumber'
         referenceId:
-          $ref: '#/components/schemas/ReferenceIdForRefund'
+          $ref: '#/components/schemas/ReferenceIdforResponse'
         resultCode:
           $ref: '#/components/schemas/ResultCode'
         resultText:
