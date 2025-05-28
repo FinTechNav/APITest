@@ -1112,6 +1112,7 @@ components:
         - hasNextPage
         - hasPreviousPage
         - items
+
     TransactionsListResponse:
       type: object
       description: Paginated response containing transactions
@@ -1144,151 +1145,28 @@ components:
           type: array
           description: Array of transactions for the current page
           items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: Unique transaction identifier
-                example: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
-              merchantId:
-                type: string
-                description: Merchant identifier
-                example: 'mer_01JVAYEP1MC8DM1CJMD000001'
-              resultCode:
-                type: integer
-                description: Result code for the transaction
-                example: 0
-              resultText:
-                type: string
-                description: Result text for the transaction
-                example: 'APPROVED'
-              referenceId:
-                type: string
-                description: Reference ID for the transaction
-                example: 'ref_s192i49i'
-              orderNumber:
-                type: string
-                description: Order number associated with the transaction
-                example: 'order_number_1234'
-              invoiceNumber:
-                type: string
-                description: Invoice number associated with the transaction
-                example: 'inv_12345678'
-              timestamp:
-                type: string
-                format: date-time
-                description: Transaction timestamp in UTC
-                example: '2025-05-27T18:49:31Z'
-              type:
-                type: string
-                enum: [Sale, Auth, Capture, Refund, TokenAdd, TokenUpdate, TokenRemove]
-                description: Type of transaction
-                example: 'Sale'
-              requestedAmount:
-                type: integer
-                description: Requested transaction amount in smallest currency denomination
-                example: 1000
-              approvedAmount:
-                type: integer
-                description: Approved transaction amount in smallest currency denomination
-                example: 1000
-              balanceAmount:
-                type: integer
-                description: Balance amount remaining
-                example: 0
-              paymentMethod:
-                type: object
-                description: Payment method used for this transaction
+            allOf:
+              - $ref: '#/components/schemas/TransactionResponseObject'
+              - type: object
                 properties:
-                  id:
+                  merchantId:
                     type: string
-                    description: Payment method ID
-                    example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                    description: Merchant identifier
+                    example: 'mer_01JVAYEP1MC8DM1CJMD000001'
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: Transaction timestamp in UTC
+                    example: '2025-05-27T18:49:31Z'
                   type:
                     type: string
-                    enum: [Physical, Virtual, Token]
-                    description: Payment method type
-                    example: 'Virtual'
-                  currency:
-                    type: string
-                    enum: [USD, CAD]
-                    description: Payment method currency
-                    example: 'USD'
-                  description:
-                    type: string
-                    description: Payment method description
-                    example: 'Online Checkout Iframe'
-              transactionResponses:
-                type: array
-                description: Array of transaction responses
-                items:
-                  type: object
-                  properties:
-                    authCode:
-                      type: string
-                      description: Authorization code
-                      example: '111890'
-                    cardType:
-                      type: string
-                      enum:
-                        [
-                          VISA,
-                          MASTERCARD,
-                          AMEX,
-                          DISCOVER,
-                          JCB,
-                          UNIONPAY,
-                          MAESTRO,
-                          DEBIT,
-                          UNKNOWN,
-                          OTHER,
-                        ]
-                      description: Card type
-                      example: 'VISA'
-                    accountType:
-                      type: string
-                      description: Account type
-                      example: 'Credit'
-                    maskedCardNumber:
-                      type: string
-                      description: Masked card number
-                      example: '4****5297'
-                    last4:
-                      type: string
-                      description: Last 4 digits of card number
-                      example: '5297'
-                    responseCode:
-                      type: integer
-                      description: Response code
-                      example: 1
-                    hostResponseText:
-                      type: string
-                      description: Host response text
-                      example: 'APPROVED'
-                    amountApproved:
-                      type: integer
-                      description: Amount approved
-                      example: 1000
-                    avsResult:
-                      type: string
-                      description: AVS result
-                      example: ''
-                    cvvResult:
-                      type: string
-                      description: CVV result
-                      example: ''
-            required:
-              - id
-              - merchantId
-              - resultCode
-              - resultText
-              - timestamp
-              - type
-              - requestedAmount
-              - approvedAmount
-              - balanceAmount
-              - paymentMethod
-              - transactionResponses
+                    enum: [Sale, Auth, Capture, Refund, TokenAdd, TokenUpdate, TokenRemove]
+                    description: Type of transaction
+                    example: 'Sale'
+                required:
+                  - merchantId
+                  - timestamp
+                  - type
       required:
         - totalCount
         - page
