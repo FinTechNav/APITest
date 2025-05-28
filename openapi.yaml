@@ -1112,7 +1112,6 @@ components:
         - hasNextPage
         - hasPreviousPage
         - items
-
     TransactionsListResponse:
       type: object
       description: Paginated response containing transactions
@@ -1150,86 +1149,146 @@ components:
               id:
                 type: string
                 description: Unique transaction identifier
-                example: 'trx_01JVWF1FVKW3Q6QYRN43DV9C63'
+                example: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
               merchantId:
                 type: string
                 description: Merchant identifier
                 example: 'mer_01JVAYEP1MC8DM1CJMD000001'
-              paymentMethodId:
+              resultCode:
+                type: integer
+                description: Result code for the transaction
+                example: 0
+              resultText:
                 type: string
-                description: Payment method identifier used for this transaction
-                example: 'pmt_tkn_01JVWEW7Z45JAWY91VKSRA97Z7'
-              orderNumber:
-                type: string
-                description: Order number associated with the transaction
-                example: 'ord_1748012539527'
-              invoiceNumber:
-                type: string
-                description: Invoice number associated with the transaction
-                example: 'inv_1748012539527'
+                description: Result text for the transaction
+                example: 'APPROVED'
               referenceId:
                 type: string
                 description: Reference ID for the transaction
-                example: 'ref_1748012539527'
+                example: 'ref_s192i49i'
+              orderNumber:
+                type: string
+                description: Order number associated with the transaction
+                example: 'order_number_1234'
+              invoiceNumber:
+                type: string
+                description: Invoice number associated with the transaction
+                example: 'inv_12345678'
               timestamp:
                 type: string
                 format: date-time
                 description: Transaction timestamp in UTC
-                example: '2025-05-22T17:00:50Z'
+                example: '2025-05-27T18:49:31Z'
               type:
                 type: string
                 enum: [Sale, Auth, Capture, Refund, TokenAdd, TokenUpdate, TokenRemove]
                 description: Type of transaction
                 example: 'Sale'
-              amount:
+              requestedAmount:
                 type: integer
-                description: Transaction amount in smallest currency denomination (e.g., cents for USD)
-                example: 440
-              cardType:
-                type: string
-                enum:
-                  [VISA, MASTERCARD, AMEX, DISCOVER, JCB, UNIONPAY, MAESTRO, DEBIT, UNKNOWN, OTHER]
-                description: Type of card used for the transaction
-                example: 'VISA'
-              maskedCardNumber:
-                type: string
-                description: Masked card number
-                example: '4****1111'
-              last4:
-                type: string
-                description: Last 4 digits of the card number
-                example: '1111'
-              currency:
-                type: string
-                enum: [USD, CAD]
-                description: Transaction currency
-                example: 'USD'
-              status:
-                type: string
-                enum: [APPROVED, DECLINED, ERROR, PENDING]
-                description: Transaction status
-                example: 'APPROVED'
-              authCode:
-                type: string
-                description: Authorization code from the card issuer
-                example: '111625'
-              cvvResult:
-                type: string
-                description: CVV verification result
-                example: 'M'
-              avsResult:
-                type: string
-                description: AVS (Address Verification Service) result
-                example: 'Y'
+                description: Requested transaction amount in smallest currency denomination
+                example: 1000
+              approvedAmount:
+                type: integer
+                description: Approved transaction amount in smallest currency denomination
+                example: 1000
+              balanceAmount:
+                type: integer
+                description: Balance amount remaining
+                example: 0
+              paymentMethod:
+                type: object
+                description: Payment method used for this transaction
+                properties:
+                  id:
+                    type: string
+                    description: Payment method ID
+                    example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                  type:
+                    type: string
+                    enum: [Physical, Virtual, Token]
+                    description: Payment method type
+                    example: 'Virtual'
+                  currency:
+                    type: string
+                    enum: [USD, CAD]
+                    description: Payment method currency
+                    example: 'USD'
+                  description:
+                    type: string
+                    description: Payment method description
+                    example: 'Online Checkout Iframe'
+              transactionResponses:
+                type: array
+                description: Array of transaction responses
+                items:
+                  type: object
+                  properties:
+                    authCode:
+                      type: string
+                      description: Authorization code
+                      example: '111890'
+                    cardType:
+                      type: string
+                      enum:
+                        [
+                          VISA,
+                          MASTERCARD,
+                          AMEX,
+                          DISCOVER,
+                          JCB,
+                          UNIONPAY,
+                          MAESTRO,
+                          DEBIT,
+                          UNKNOWN,
+                          OTHER,
+                        ]
+                      description: Card type
+                      example: 'VISA'
+                    accountType:
+                      type: string
+                      description: Account type
+                      example: 'Credit'
+                    maskedCardNumber:
+                      type: string
+                      description: Masked card number
+                      example: '4****5297'
+                    last4:
+                      type: string
+                      description: Last 4 digits of card number
+                      example: '5297'
+                    responseCode:
+                      type: integer
+                      description: Response code
+                      example: 1
+                    hostResponseText:
+                      type: string
+                      description: Host response text
+                      example: 'APPROVED'
+                    amountApproved:
+                      type: integer
+                      description: Amount approved
+                      example: 1000
+                    avsResult:
+                      type: string
+                      description: AVS result
+                      example: ''
+                    cvvResult:
+                      type: string
+                      description: CVV result
+                      example: ''
             required:
               - id
               - merchantId
-              - paymentMethodId
+              - resultCode
+              - resultText
               - timestamp
               - type
-              - amount
-              - currency
-              - status
+              - requestedAmount
+              - approvedAmount
+              - balanceAmount
+              - paymentMethod
+              - transactionResponses
       required:
         - totalCount
         - page
@@ -2666,40 +2725,62 @@ paths:
                     hasNextPage: false
                     hasPreviousPage: false
                     items:
-                      - id: 'trx_01JVWF1FVKW3Q6QYRN43DV9C63'
+                      - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
                         merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
-                        paymentMethodId: 'pmt_tkn_01JVWEW7Z45JAWY91VKSRA97Z7'
+                        resultCode: 0
+                        resultText: 'APPROVED'
+                        referenceId: 'ref_s192i49i'
                         orderNumber: 'order_number_1234'
                         invoiceNumber: 'inv_12345678'
-                        referenceId: 'ref_1747933249285'
                         timestamp: '2025-05-22T17:00:50Z'
                         type: 'Sale'
-                        amount: 440
-                        cardType: 'VISA'
-                        maskedCardNumber: '4****1111'
-                        last4: '1111'
-                        currency: 'USD'
-                        status: 'APPROVED'
-                        authCode: '111625'
-                        cvvResult: 'M'
-                        avsResult: 'Y'
-                      - id: 'trx_01JVWQ4XRNR50YPQ4QDZGGGH7B'
+                        requestedAmount: 1000
+                        approvedAmount: 1000
+                        balanceAmount: 0
+                        paymentMethod:
+                          id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                          type: 'Virtual'
+                          currency: 'USD'
+                          description: 'Online Checkout Iframe'
+                        transactionResponses:
+                          - authCode: '111890'
+                            cardType: 'VISA'
+                            accountType: 'Credit'
+                            maskedCardNumber: '4****1111'
+                            last4: '1111'
+                            responseCode: 1
+                            hostResponseText: 'APPROVED'
+                            amountApproved: 1000
+                            avsResult: 'Y'
+                            cvvResult: 'M'
+                      - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
                         merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
-                        paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                        resultCode: 0
+                        resultText: 'APPROVED'
+                        referenceId: 'ref_s192i49i'
                         orderNumber: 'order_number_1234'
                         invoiceNumber: 'inv_12345678'
-                        referenceId: 'ref_1747941749798'
                         timestamp: '2025-05-22T19:22:47Z'
                         type: 'Sale'
-                        amount: 440
-                        cardType: 'VISA'
-                        maskedCardNumber: '4****1111'
-                        last4: '1111'
-                        currency: 'USD'
-                        status: 'APPROVED'
-                        authCode: '111048'
-                        cvvResult: ''
-                        avsResult: ''
+                        requestedAmount: 1000
+                        approvedAmount: 1000
+                        balanceAmount: 0
+                        paymentMethod:
+                          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                          type: 'Token'
+                          currency: 'USD'
+                          description: "Token for John Doe's Visa"
+                        transactionResponses:
+                          - authCode: '111048'
+                            cardType: 'VISA'
+                            accountType: 'Credit'
+                            maskedCardNumber: '4****1111'
+                            last4: '1111'
+                            responseCode: 1
+                            hostResponseText: 'APPROVED'
+                            amountApproved: 1000
+                            avsResult: ''
+                            cvvResult: ''
                 saleAndCapture:
                   summary: Sale and Capture transactions with descending timestamp sort
                   value:
@@ -2710,40 +2791,62 @@ paths:
                     hasNextPage: false
                     hasPreviousPage: false
                     items:
-                      - id: 'trx_01JW9HE9EZB7HMERDD4N48CVJP'
+                      - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
                         merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
-                        paymentMethodId: 'pmt_tkn_01JW9H840KEWJAVZXKKY06D47M'
+                        resultCode: 0
+                        resultText: 'APPROVED'
+                        referenceId: 'ref_s192i49i'
                         orderNumber: ''
                         invoiceNumber: ''
-                        referenceId: 'asdf5'
-                        timestamp: '2025-05-27T18:52:54Z'
+                        timestamp: '2025-05-27T18:59:31Z'
                         type: 'Capture'
-                        amount: 450
-                        cardType: 'VISA'
-                        maskedCardNumber: '4****5297'
-                        last4: '5297'
-                        currency: 'USD'
-                        status: 'APPROVED'
-                        authCode: '111905'
-                        cvvResult: ''
-                        avsResult: ''
-                      - id: 'trx_01JW9H7B78T0B64J3QQZ1VPEH3'
+                        requestedAmount: 450
+                        approvedAmount: 450
+                        balanceAmount: 0
+                        paymentMethod:
+                          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                          type: 'Token'
+                          currency: 'USD'
+                          description: "Token for John Doe's Visa"
+                        transactionResponses:
+                          - authCode: '111688'
+                            cardType: 'VISA'
+                            maskedCardNumber: '4****5297'
+                            last4: '5297'
+                            accountType: 'Credit'
+                            responseCode: 1
+                            hostResponseText: 'APPROVED'
+                            amountApproved: 450
+                            avsResult: ''
+                            cvvResult: ''
+                      - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
                         merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
-                        paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                        resultCode: 0
+                        resultText: 'APPROVED'
+                        referenceId: 'ref_s192i49i'
                         orderNumber: 'order_number_1234'
                         invoiceNumber: 'inv_12345678'
-                        referenceId: 'asdf3'
                         timestamp: '2025-05-27T18:49:31Z'
                         type: 'Sale'
-                        amount: 450
-                        cardType: 'VISA'
-                        maskedCardNumber: '4****5297'
-                        last4: '5297'
-                        currency: 'USD'
-                        status: 'APPROVED'
-                        authCode: '111640'
-                        cvvResult: ''
-                        avsResult: ''
+                        requestedAmount: 1000
+                        approvedAmount: 1000
+                        balanceAmount: 0
+                        paymentMethod:
+                          id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                          type: 'Virtual'
+                          currency: 'USD'
+                          description: 'Online Checkout Iframe'
+                        transactionResponses:
+                          - authCode: '111890'
+                            cardType: 'VISA'
+                            accountType: 'Credit'
+                            maskedCardNumber: '4****1111'
+                            last4: '1111'
+                            responseCode: 1
+                            hostResponseText: 'APPROVED'
+                            amountApproved: 1000
+                            avsResult: 'Y'
+                            cvvResult: 'M'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
