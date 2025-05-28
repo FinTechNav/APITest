@@ -196,7 +196,7 @@ components:
 
         - `X-RateLimit-Limit`: Maximum number of requests allowed per time window
         - `X-RateLimit-Remaining`: Number of requests remaining in the current time window
-        - `X-RateLimit-Reset`: Unix timestamp when the rate limit will reset
+        - `X-RateLimit-Reset`: Unix timestamp when the rate limit will reset (UTC)
 
         When you exceed the rate limit, you will receive a `429 Too Many Requests` response.
 
@@ -1509,7 +1509,7 @@ components:
         timestamp:
           type: string
           format: date-time
-          description: The time when the event was triggered.
+          description: The time when the event was triggered (UTC).
           example: '2025-04-16T14:30:00Z'
       required:
         - id
@@ -2498,7 +2498,7 @@ paths:
 
         #### Available Filter/Sort Fields:
         - `id` - Transaction ID
-        - `timestamp` - Transaction timestamp (ISO 8601 format)
+        - `timestamp` - Transaction timestamp (UTC)
         - `referenceId` - Reference ID
         - `orderNumber` - Order number
         - `invoiceNumber` - Invoice number
@@ -2594,7 +2594,7 @@ paths:
                 $ref: '#/components/schemas/TransactionsListResponse'
               examples:
                 timestampRange:
-                  summary: Transactions within timestamp range
+                  summary: Transactions within timestamp range (UTC)
                   value:
                     totalCount: 2
                     page: 1
