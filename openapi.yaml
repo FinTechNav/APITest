@@ -3523,13 +3523,22 @@ paths:
             schema:
               $ref: '#/components/schemas/CaptureRequest'
             examples:
-              captureRequest:
-                summary: Capture request example
+              captureWithOriginalTransactionId:
+                summary: Capture using original transaction ID
                 value:
-                  referenceId: 'ref_s192i49i'
+                  originalTransactionId: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                   amount: 1000
                   invoiceNumber: 'inv_12345678'
                   orderNumber: 'order_number_1234'
+                  referenceId: 'ref_capture_12345'
+              captureWithOriginalReferenceId:
+                summary: Capture using original reference ID
+                value:
+                  originalReferenceId: 'ref_s192i49i'
+                  amount: 1000
+                  invoiceNumber: 'inv_12345678'
+                  orderNumber: 'order_number_1234'
+                  referenceId: 'ref_capture_12345'
       responses:
         '200':
           description: A successful capture response
@@ -3570,13 +3579,22 @@ paths:
             schema:
               $ref: '#/components/schemas/RefundRequest'
             examples:
-              refundRequest:
-                summary: Refund request example
+              refundWithOriginalTransactionId:
+                summary: Refund using original transaction ID
                 value:
-                  referenceId: 'ref_s192i49i'
+                  originalTransactionId: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
                   amount: 1000
                   invoiceNumber: 'ref_inv_12345678'
                   orderNumber: 'ref_order_1234'
+                  referenceId: 'ref_refund_12345'
+              refundWithOriginalReferenceId:
+                summary: Refund using original reference ID
+                value:
+                  originalReferenceId: 'ref_s192i49i'
+                  amount: 1000
+                  invoiceNumber: 'ref_inv_12345678'
+                  orderNumber: 'ref_order_1234'
+                  referenceId: 'ref_refund_12345'
       responses:
         '200':
           description: A successful refund response
