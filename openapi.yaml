@@ -1576,6 +1576,10 @@ components:
               properties:
                 type:
                   example: 'auth.completed'
+              example:
+                id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+                type: 'auth.completed'
+                timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           $ref: '#/components/schemas/TransactionResponseObject'
       required:
@@ -1593,6 +1597,10 @@ components:
               properties:
                 type:
                   example: 'capture.completed'
+              example:
+                id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+                type: 'capture.completed'
+                timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           $ref: '#/components/schemas/CaptureResponse'
       required:
@@ -1610,6 +1618,10 @@ components:
               properties:
                 type:
                   example: 'refund.completed'
+              example:
+                id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+                type: 'refund.completed'
+                timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           $ref: '#/components/schemas/RefundResponse'
       required:
@@ -1627,6 +1639,10 @@ components:
               properties:
                 type:
                   example: 'token.created'
+              example:
+                id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+                type: 'token.created'
+                timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           $ref: '#/components/schemas/CardOnFileAddResponse'
       required:
@@ -1644,6 +1660,11 @@ components:
               properties:
                 type:
                   example: 'token.updated'
+              example:
+                id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+                type: 'token.updated'
+                timestamp: '2025-04-16T14:30:00Z'
+
         originalResponse:
           $ref: '#/components/schemas/CardOnFileUpdateResponse'
       required:
@@ -1661,6 +1682,10 @@ components:
               properties:
                 type:
                   example: 'token.removed'
+              example:
+                id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+                type: 'token.removed'
+                timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           $ref: '#/components/schemas/CardOnFileRemoveResponse'
       required:
@@ -2845,6 +2870,15 @@ paths:
                                 example: 'paymentMethodId'
                               details:
                                 example: "'PaymentMethodId' must not be empty."
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'paymentMethodId'
+                    message: 'Request validation failed'
+                    details: "'PaymentMethodId' must not be empty."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -2921,6 +2955,15 @@ paths:
                                 example: 'paymentMethodId'
                               details:
                                 example: "'PaymentMethodId' must not be empty."
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'paymentMethodId'
+                    message: 'Request validation failed'
+                    details: "'PaymentMethodId' must not be empty."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -2986,6 +3029,15 @@ paths:
                                 example: 'cardExpDate'
                               details:
                                 example: "The length of 'CardExpDate' must be 4 characters or fewer."
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'cardExpDate'
+                    message: 'Request validation failed'
+                    details: "The length of 'CardExpDate' must be 4 characters or fewer."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -3044,6 +3096,15 @@ paths:
                                 example: 'id'
                               details:
                                 example: "'Id' must not be empty."
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'id'
+                    message: 'Request validation failed'
+                    details: "'Id' must not be empty."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
