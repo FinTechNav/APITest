@@ -756,6 +756,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
+      example:
+        message: 'Request failed validation'
+        code: 2000
+        status: 'Rejected'
+        errorDetails:
+          - code: 2000
+            field: 'amount'
+            message: 'Request validation failed'
+            details: "'Amount' must be between 1 and 999999999."
 
     CardPresentRequest:
       type: object
@@ -1104,6 +1113,15 @@ components:
               - type
               - currency
               - description
+          example:
+            - id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+              type: 'Physical'
+              currency: 'USD'
+              description: 'Main Store Terminal'
+            - id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+              type: 'Virtual'
+              currency: 'USD'
+              description: 'Online Checkout Iframe'
       required:
         - totalCount
         - page
@@ -1525,6 +1543,10 @@ components:
         - id
         - type
         - timestamp
+      example:
+        id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+        type: 'sale.completed'
+        timestamp: '2025-04-16T14:30:00Z'
 
     SaleCompletedWebhook:
       type: object
