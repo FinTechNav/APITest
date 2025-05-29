@@ -2744,8 +2744,8 @@ paths:
                             responseCode: 1
                             hostResponseText: 'APPROVED'
                             amountApproved: 1000
-                            avsResult: ''
-                            cvvResult: ''
+                            avsResult: 'Y'
+                            cvvResult: 'M'
                 saleAndCapture:
                   summary: Sale and Capture transactions with descending timestamp sort
                   value:
@@ -2782,8 +2782,8 @@ paths:
                             responseCode: 1
                             hostResponseText: 'APPROVED'
                             amountApproved: 450
-                            avsResult: ''
-                            cvvResult: ''
+                            avsResult: 'Y'
+                            cvvResult: 'M'
                       - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
                         merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
                         resultCode: 0
