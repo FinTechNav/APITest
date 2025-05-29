@@ -425,11 +425,11 @@ components:
         amountGoodsAndServices:
           type: number
           description: The approved amount for goods and services.
-          example: 1000
+          example: 900
         tax:
           type: number
           description: The approved tax amount.
-          example: 0
+          example: 100
         cashBack:
           type: number
           description: The approved cashback amount.
@@ -1881,8 +1881,8 @@ components:
             authCode: '000AAA'
             amountApproved: 1000
             approvedAmountBreakdown:
-              amountGoodsAndServices: 1000
-              tax: 0
+              amountGoodsAndServices: 900
+              tax: 100
               cashBack: 0
               tip: 0
             paymentMethod:
@@ -2001,8 +2001,8 @@ components:
             authCode: '000AAA'
             amountApproved: 1000
             approvedAmountBreakdown:
-              amountGoodsAndServices: 1000
-              tax: 0
+              amountGoodsAndServices: 900
+              tax: 100
               cashBack: 0
               tip: 0
             paymentMethod:
@@ -3109,8 +3109,8 @@ paths:
                 value:
                   amount: 1000
                   amountBreakdown:
-                    amountGoodsAndServices: 1000
-                    tax: 0
+                    amountGoodsAndServices: 900
+                    tax: 100
                     cashBack: 0
                     tip: 0
                   paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
@@ -3181,8 +3181,8 @@ paths:
                 value:
                   amount: 1000
                   amountBreakdown:
-                    amountGoodsAndServices: 1000
-                    tax: 0
+                    amountGoodsAndServices: 900
+                    tax: 100
                     cashBack: 0
                     tip: 0
                   paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
@@ -3250,8 +3250,8 @@ paths:
                 value:
                   amount: 1000
                   amountBreakdown:
-                    amountGoodsAndServices: 1000
-                    tax: 0
+                    amountGoodsAndServices: 900
+                    tax: 100
                     cashBack: 0
                     tip: 0
                   paymentMethodId: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
@@ -3293,7 +3293,7 @@ paths:
                           authCode: '000AAA',
                           amountApproved: 1000,
                           approvedAmountBreakdown:
-                            { amountGoodsAndServices: 1000, tax: 0, cashBack: 0, tip: 0 },
+                            { amountGoodsAndServices: 900, tax: 100, cashBack: 0, tip: 0 },
                           paymentMethod:
                             {
                               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
@@ -3347,8 +3347,8 @@ paths:
                 value:
                   amount: 1000
                   amountBreakdown:
-                    amountGoodsAndServices: 1000
-                    tax: 0
+                    amountGoodsAndServices: 900
+                    tax: 100
                     cashBack: 0
                     tip: 0
                   paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
@@ -3420,8 +3420,8 @@ paths:
                 value:
                   amount: 1000
                   amountBreakdown:
-                    amountGoodsAndServices: 1000
-                    tax: 0
+                    amountGoodsAndServices: 900
+                    tax: 100
                     cashBack: 0
                     tip: 0
                   paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
@@ -3489,8 +3489,8 @@ paths:
                 value:
                   amount: 1000
                   amountBreakdown:
-                    amountGoodsAndServices: 1000
-                    tax: 0
+                    amountGoodsAndServices: 900
+                    tax: 100
                     cashBack: 0
                     tip: 0
                   paymentMethodId: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
@@ -3532,7 +3532,7 @@ paths:
                           authCode: '000AAA',
                           amountApproved: 1000,
                           approvedAmountBreakdown:
-                            { amountGoodsAndServices: 1000, tax: 0, cashBack: 0, tip: 0 },
+                            { amountGoodsAndServices: 900, tax: 100, cashBack: 0, tip: 0 },
                           paymentMethod:
                             {
                               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
