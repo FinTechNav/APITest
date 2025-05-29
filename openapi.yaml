@@ -523,11 +523,11 @@ components:
         amountGoodsAndServices:
           type: number
           description: The amount for goods and services.
-          example: 1000
+          example: 900
         tax:
           type: number
           description: The tax amount.
-          example: 0
+          example: 100
         cashBack:
           type: number
           description: The cashback amount.
@@ -536,6 +536,11 @@ components:
           type: number
           description: The tip amount.
           example: 0
+      example:
+        amountGoodsAndServices: 900
+        tax: 100
+        cashBack: 0
+        tip: 0
 
     AmountToCapture:
       type: number
@@ -775,11 +780,11 @@ components:
         amountBreakdown:
           allOf:
             - $ref: '#/components/schemas/AmountBreakdown'
-            - example:
-                amountGoodsAndServices: 1000
-                tax: 130
-                cashBack: 0
-                tip: 200
+          example:
+            amountGoodsAndServices: 900
+            tax: 100
+            cashBack: 0
+            tip: 0
         paymentMethodId:
           type: string
           description: |
@@ -1185,6 +1190,19 @@ components:
                   - merchantId
                   - timestamp
                   - type
+          example:
+            - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
+              merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
+              resultCode: 0
+              resultText: 'APPROVED'
+              referenceId: 'ref_s192i49i'
+              orderNumber: 'order_number_1234'
+              invoiceNumber: 'inv_12345678'
+              timestamp: '2025-05-27T18:49:31Z'
+              type: 'Sale'
+              requestedAmount: 1000
+              approvedAmount: 1000
+              balanceAmount: 0
       required:
         - totalCount
         - page
@@ -1559,6 +1577,10 @@ components:
               properties:
                 type:
                   example: 'sale.completed'
+          example:
+            id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+            type: 'sale.completed'
+            timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           $ref: '#/components/schemas/TransactionResponseObject'
       required:
