@@ -1335,6 +1335,16 @@ components:
           type: string
           description: Unique ID for this capture transaction.
           example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        timestamp:
+          type: string
+          format: date-time
+          description: Transaction timestamp in UTC
+          example: '2025-05-27T18:49:31Z'
+        type:
+          type: string
+          enum: [Sale, Auth, Capture, Refund]
+          description: Type of transaction
+          example: 'Capture'
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1384,6 +1394,16 @@ components:
           type: string
           description: Unique ID for this refund transaction.
           example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        timestamp:
+          type: string
+          format: date-time
+          description: Transaction timestamp in UTC
+          example: '2025-05-27T18:49:31Z'
+        type:
+          type: string
+          enum: [Sale, Auth, Capture, Refund]
+          description: Type of transaction
+          example: 'Refund'
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
