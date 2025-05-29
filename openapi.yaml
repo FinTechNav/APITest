@@ -2870,15 +2870,15 @@ paths:
                                 example: 'paymentMethodId'
                               details:
                                 example: "'PaymentMethodId' must not be empty."
-            example:
-              message: 'Request failed validation'
-              code: 2000
-              status: 'Rejected'
-              errorDetails:
-                - code: 2000
-                  field: 'paymentMethodId'
-                  message: 'Request validation failed'
-                  details: "'PaymentMethodId' must not be empty."
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'paymentMethodId'
+                    message: 'Request validation failed'
+                    details: "'PaymentMethodId' must not be empty."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -2955,15 +2955,15 @@ paths:
                                 example: 'paymentMethodId'
                               details:
                                 example: "'PaymentMethodId' must not be empty."
-            example:
-              message: 'Request failed validation'
-              code: 2000
-              status: 'Rejected'
-              errorDetails:
-                - code: 2000
-                  field: 'paymentMethodId'
-                  message: 'Request validation failed'
-                  details: "'PaymentMethodId' must not be empty."
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'paymentMethodId'
+                    message: 'Request validation failed'
+                    details: "'PaymentMethodId' must not be empty."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -3029,15 +3029,15 @@ paths:
                                 example: 'cardExpDate'
                               details:
                                 example: "The length of 'CardExpDate' must be 4 characters or fewer."
-            example:
-              message: 'Request failed validation'
-              code: 2000
-              status: 'Rejected'
-              errorDetails:
-                - code: 2000
-                  field: 'cardExpDate'
-                  message: 'Request validation failed'
-                  details: "The length of 'CardExpDate' must be 4 characters or fewer."
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'cardExpDate'
+                    message: 'Request validation failed'
+                    details: "The length of 'CardExpDate' must be 4 characters or fewer."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -3096,15 +3096,15 @@ paths:
                                 example: 'id'
                               details:
                                 example: "'Id' must not be empty."
-            example:
-              message: 'Request failed validation'
-              code: 2000
-              status: 'Rejected'
-              errorDetails:
-                - code: 2000
-                  field: 'id'
-                  message: 'Request validation failed'
-                  details: "'Id' must not be empty."
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'id'
+                    message: 'Request validation failed'
+                    details: "'Id' must not be empty."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
