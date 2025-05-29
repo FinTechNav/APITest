@@ -1042,11 +1042,11 @@ components:
               properties:
                 id:
                   example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-              example:
-                id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                type: 'Virtual'
-                currency: 'USD'
-                description: 'Online Checkout Iframe'
+          example:
+            id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+            type: 'Virtual'
+            currency: 'USD'
+            description: 'Online Checkout Iframe'
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -1299,6 +1299,14 @@ components:
               properties:
                 id:
                   example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+          example:
+            id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+            type: 'Token'
+            currency: 'USD'
+            description: "Token for John Doe's Visa"
+            cardType: 'VISA'
+            maskedCardNumber: '************0011'
+            cardExpDate: '1225'
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
