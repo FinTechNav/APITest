@@ -1291,6 +1291,16 @@ components:
           type: string
           description: Unique ID for this transaction.
           example: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+        timestamp:
+          type: string
+          format: date-time
+          description: Transaction timestamp in UTC
+          example: '2025-05-27T18:49:31Z'
+        type:
+          type: string
+          enum: [Sale, Auth, Capture, Refund]
+          description: Type of transaction
+          example: 'Sale'
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1298,7 +1308,7 @@ components:
               description: The payment method used for this transaction.
               properties:
                 id:
-                  example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                  example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
           example:
             id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
             type: 'Token'
@@ -3333,6 +3343,8 @@ paths:
                   summary: A successful response for a Card On File sale transaction.
                   value:
                     id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    timestamp: '2025-05-27T18:49:31Z'
+                    type: 'Sale'
                     paymentMethod:
                       id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
                       type: 'Token'
@@ -3572,6 +3584,8 @@ paths:
                   summary: A successful response for a Card On File authorization transaction.
                   value:
                     id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    timestamp: '2025-05-27T18:49:31Z'
+                    type: 'Auth'
                     paymentMethod:
                       id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
                       type: 'Token'
