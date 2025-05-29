@@ -1576,10 +1576,10 @@ components:
               properties:
                 type:
                   example: 'auth.completed'
-              example:
-                id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-                type: 'auth.completed'
-                timestamp: '2025-04-16T14:30:00Z'
+          example:
+            id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+            type: 'auth.completed'
+            timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           $ref: '#/components/schemas/TransactionResponseObject'
       required:
