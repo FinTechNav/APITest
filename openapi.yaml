@@ -1464,11 +1464,11 @@ components:
               properties:
                 id:
                   example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-              example:
-                id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                type: 'Virtual'
-                currency: 'USD'
-                description: 'Online Checkout Iframe'
+          example:
+            id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+            type: 'Virtual'
+            currency: 'USD'
+            description: 'Online Checkout Iframe'
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
         requestedAmount:
@@ -1603,7 +1603,30 @@ components:
             type: 'auth.completed'
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          $ref: '#/components/schemas/TransactionResponseObject'
+          allOf:
+            - $ref: '#/components/schemas/TransactionResponseObject'
+          example:
+            id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+            paymentMethod:
+              id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+              type: 'Physical'
+              currency: 'USD'
+              description: 'Main Store Terminal'
+            invoiceNumber: 'inv_12345678'
+            orderNumber: 'order_number_1234'
+            referenceId: 'ref_s192i49i'
+            resultCode: 0
+            resultText: 'Successful transaction request'
+            requestedAmount: 1000
+            approvedAmount: 1000
+            balanceAmount: 0
+            transactionResponses:
+              - responseCode: 1
+                authCode: '000AAA'
+                amountApproved: 1000
+                cardType: 'VISA'
+                accountType: 'Credit'
+                hostResponseText: 'APPROVED 00'
       required:
         - event
         - originalResponse
