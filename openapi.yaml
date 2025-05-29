@@ -548,7 +548,7 @@ components:
       minimum: 1
       maximum: 999999999
       description: >
-        The amount to capture. Must be less than or equal to the original authorization amount. If not specified, the full authorized amount will be captured.
+        The amount to capture. Must be less than or equal to the original authorization amount. If not specified, the full authorized amount will be captured. If you have already performed partial captures on this authorization, you must provide an explicit amount or an error will be returned.
       example: 1000
 
     AmountToRefund:
@@ -557,7 +557,7 @@ components:
       minimum: 1
       maximum: 999999999
       description: >
-        The requested amount to refund or void. If not specified, the full transaction amount will be refunded or voided. For partial refunds, must be less than the original transaction amount.
+        The requested amount to refund or void. If not specified, the full transaction amount will be refunded or voided. For partial refunds, must be less than the original transaction amount. If you have already performed partial refunds on this transaction, you must provide an explicit amount or an error will be returned.
       example: 1000
 
     AmountToRefundUnreferenced:
