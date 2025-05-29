@@ -297,7 +297,7 @@ components:
 
         NOTE: Transactions can still be authorized if the AVS responses are no match or failure. AVS responses are for merchant information only, and usually do not influence the overall Authorization result. This can vary based on the Issuing Bank.
 
-    ValidationError:
+    ErrorDetail:
       type: object
       description: Represents a validation error that occurred during the request.
       properties:
@@ -755,7 +755,7 @@ components:
         errorDetails:
           type: array
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/ErrorDetail'
       example:
         message: 'Request failed validation'
         code: 2000
@@ -2857,29 +2857,16 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/Error'
-                  - type: object
-                    properties:
-                      errorDetails:
-                        allOf:
-                          - $ref: '#/components/schemas/ValidationError'
-                          - type: object
-                            properties:
-                              field:
-                                example: 'paymentMethodId'
-                              details:
-                                example: "'PaymentMethodId' must not be empty."
-                example:
-                  message: 'Request failed validation'
-                  code: 2000
-                  status: 'Rejected'
-                  errorDetails:
-                    code: 2000
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
                     field: 'paymentMethodId'
                     message: 'Request validation failed'
                     details: "'PaymentMethodId' must not be empty."
-
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -2943,28 +2930,16 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/Error'
-                  - type: object
-                    properties:
-                      errorDetails:
-                        allOf:
-                          - $ref: '#/components/schemas/ValidationError'
-                          - type: object
-                            properties:
-                              field:
-                                example: 'paymentMethodId'
-                              details:
-                                example: "'PaymentMethodId' must not be empty."
-                example:
-                  message: 'Request failed validation'
-                  code: 2000
-                  status: 'Rejected'
-                  errorDetails:
-                    - code: 2000
-                      field: 'paymentMethodId'
-                      message: 'Request validation failed'
-                      details: "'PaymentMethodId' must not be empty."
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'paymentMethodId'
+                    message: 'Request validation failed'
+                    details: "'PaymentMethodId' must not be empty."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -3017,28 +2992,16 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/Error'
-                  - type: object
-                    properties:
-                      errorDetails:
-                        allOf:
-                          - $ref: '#/components/schemas/ValidationError'
-                          - type: object
-                            properties:
-                              field:
-                                example: 'cardExpDate'
-                              details:
-                                example: "The length of 'CardExpDate' must be 4 characters or fewer."
-                example:
-                  message: 'Request failed validation'
-                  code: 2000
-                  status: 'Rejected'
-                  errorDetails:
-                    - code: 2000
-                      field: 'cardExpDate'
-                      message: 'Request validation failed'
-                      details: "The length of 'CardExpDate' must be 4 characters or fewer."
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'cardExpDate'
+                    message: 'Request validation failed'
+                    details: "The length of 'CardExpDate' must be 4 characters or fewer."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -3084,28 +3047,16 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/Error'
-                  - type: object
-                    properties:
-                      errorDetails:
-                        allOf:
-                          - $ref: '#/components/schemas/ValidationError'
-                          - type: object
-                            properties:
-                              field:
-                                example: 'id'
-                              details:
-                                example: "'Id' must not be empty."
-                example:
-                  message: 'Request failed validation'
-                  code: 2000
-                  status: 'Rejected'
-                  errorDetails:
-                    - code: 2000
-                      field: 'id'
-                      message: 'Request validation failed'
-                      details: "'Id' must not be empty."
+                $ref: '#/components/schemas/Error'
+              example:
+                message: 'Request failed validation'
+                code: 2000
+                status: 'Rejected'
+                errorDetails:
+                  - code: 2000
+                    field: 'id'
+                    message: 'Request validation failed'
+                    details: "'Id' must not be empty."
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
