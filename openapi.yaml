@@ -316,12 +316,12 @@ components:
         details:
           type: string
           description: Additional details about the error
-          example: "'Amount' must be between 1 and 999999999."
+          example: 'The Amount field must be a positive number between 1 and 999999999.'
       example:
         code: 2000
         field: 'amount'
         message: 'Request validation failed'
-        details: "'Amount' must be between 1 and 999999999."
+        details: 'The Amount field must be a positive number between 1 and 999999999.'
 
     Receipt:
       type: object
@@ -733,7 +733,7 @@ components:
         message:
           type: string
           description: Developer-facing error message.
-          example: Request failed validation
+          example: One or more validation errors occurred.
         code:
           type: number
           enum: [1000, 2000, 3000, 9000]
@@ -762,14 +762,14 @@ components:
           items:
             $ref: '#/components/schemas/ErrorDetail'
       example:
-        message: 'Request failed validation'
+        message: 'One or more validation errors occurred.'
         code: 2000
         status: 'Rejected'
         errorDetails:
           - code: 2000
             field: 'amount'
             message: 'Request validation failed'
-            details: "'Amount' must be between 1 and 999999999."
+            details: 'The Amount field must be a positive number between 1 and 999999999.'
 
     CardPresentRequest:
       type: object
@@ -2904,7 +2904,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: 'Request failed validation'
+                message: 'One or more validation errors occurred.'
                 code: 2000
                 status: 'Rejected'
                 errorDetails:
@@ -2977,7 +2977,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: 'Request failed validation'
+                message: 'One or more validation errors occurred.'
                 code: 2000
                 status: 'Rejected'
                 errorDetails:
@@ -3039,7 +3039,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: 'Request failed validation'
+                message: 'One or more validation errors occurred.'
                 code: 2000
                 status: 'Rejected'
                 errorDetails:
@@ -3094,7 +3094,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                message: 'Request failed validation'
+                message: 'One or more validation errors occurred.'
                 code: 2000
                 status: 'Rejected'
                 errorDetails:
