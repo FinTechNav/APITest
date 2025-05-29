@@ -1176,10 +1176,6 @@ components:
               - $ref: '#/components/schemas/TransactionResponseObject'
               - type: object
                 properties:
-                  merchantId:
-                    type: string
-                    description: Merchant identifier
-                    example: 'mer_01JVAYEP1MC8DM1CJMD000001'
                   timestamp:
                     type: string
                     format: date-time
@@ -1191,21 +1187,24 @@ components:
                     description: Type of transaction
                     example: 'Sale'
                 required:
-                  - merchantId
                   - timestamp
                   - type
           example:
             - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
-              merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
+              timestamp: '2025-05-27T18:49:31Z'
+              type: 'Auth'
+              paymentMethod:
+                id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                type: 'Virtual'
+                currency: 'USD'
+                description: 'Online Checkout Iframe'
+              referenceId: 'ref_s192i49i'
+              orderNumber: ''
+              invoiceNumber: ''
               resultCode: 0
               resultText: 'APPROVED'
-              referenceId: 'ref_s192i49i'
-              orderNumber: 'order_number_1234'
-              invoiceNumber: 'inv_12345678'
-              timestamp: '2025-05-27T18:49:31Z'
-              type: 'Sale'
-              requestedAmount: 1000
-              approvedAmount: 1000
+              requestedAmount: 0
+              approvedAmount: 0
               balanceAmount: 0
       required:
         - totalCount
@@ -2740,14 +2739,13 @@ paths:
                     hasPreviousPage: false
                     items:
                       - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
-                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
+                        timestamp: '2025-05-22T17:00:50Z'
+                        type: 'Sale'
                         resultCode: 0
                         resultText: 'APPROVED'
                         referenceId: 'ref_s192i49i'
                         orderNumber: 'order_number_1234'
                         invoiceNumber: 'inv_12345678'
-                        timestamp: '2025-05-22T17:00:50Z'
-                        type: 'Sale'
                         requestedAmount: 1000
                         approvedAmount: 1000
                         balanceAmount: 0
@@ -2768,14 +2766,13 @@ paths:
                             avsResult: 'Y'
                             cvvResult: 'M'
                       - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
-                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
+                        timestamp: '2025-05-22T19:22:47Z'
+                        type: 'Sale'
                         resultCode: 0
                         resultText: 'APPROVED'
                         referenceId: 'ref_s192i49i'
                         orderNumber: 'order_number_1234'
                         invoiceNumber: 'inv_12345678'
-                        timestamp: '2025-05-22T19:22:47Z'
-                        type: 'Sale'
                         requestedAmount: 1000
                         approvedAmount: 1000
                         balanceAmount: 0
