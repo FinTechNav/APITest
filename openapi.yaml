@@ -1184,8 +1184,7 @@ components:
           description: Array of transactions for the current page
           items:
             allOf:
-              $ref: '#/components/schemas/TransactionResponseObject'
-
+              - $ref: '#/components/schemas/TransactionResponseObject'
           example:
             - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
               timestamp: '2025-05-27T18:49:31Z'
