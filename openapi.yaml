@@ -308,7 +308,7 @@ components:
         field:
           type: string
           description: The field with the error
-          example: amount
+          example: Amount
         message:
           type: string
           description: Error message
@@ -319,7 +319,7 @@ components:
           example: 'The Amount field must be a positive number between 1 and 999999999.'
       example:
         code: 2000
-        field: 'amount'
+        field: 'Amount'
         message: 'Request validation failed'
         details: 'The Amount field must be a positive number between 1 and 999999999.'
 
@@ -767,7 +767,7 @@ components:
         status: 'Rejected'
         errorDetails:
           - code: 2000
-            field: 'amount'
+            field: 'Amount'
             message: 'Request validation failed'
             details: 'The Amount field must be a positive number between 1 and 999999999.'
 
