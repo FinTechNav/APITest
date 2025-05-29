@@ -880,8 +880,10 @@ components:
         orderNumber:
           $ref: '#/components/schemas/OrderNumber'
       oneOf:
-        - required: [originalTransactionId]
-        - required: [originalReferenceId]
+        - title: 'Capture using Transaction ID'
+          required: [originalTransactionId]
+        - title: 'Capture using Reference ID'
+          required: [originalReferenceId]
 
     RefundRequest:
       type: object
@@ -900,8 +902,10 @@ components:
         orderNumber:
           $ref: '#/components/schemas/OrderNumber'
       oneOf:
-        - required: [originalTransactionId]
-        - required: [originalReferenceId]
+        - title: 'Refund using Transaction ID'
+          required: [originalTransactionId]
+        - title: 'Refund using Reference ID'
+          required: [originalReferenceId]
 
     UnreferencedPhysicalRefundRequest:
       type: object
