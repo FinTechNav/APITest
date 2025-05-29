@@ -730,10 +730,6 @@ components:
       type: object
       description: Represents an error that occurred during the request.
       properties:
-        message:
-          type: string
-          description: Developer-facing error message.
-          example: One or more validation errors occurred.
         code:
           type: number
           enum: [1000, 2000, 3000, 9000]
@@ -756,15 +752,30 @@ components:
              * Interrupted - The request was interrupted, and the final status is unknown. Possible side effects may have occurred (e.g., a Sale (Token) that returns Interrupted might still charge the customer, even if an error is returned). Additional checks are required before retrying the transaction.
              * Unknown
 
-          example: Completed
+          example: Rejected
+        message:
+          type: string
+          description: Developer-facing error message.
+          example: One or more validation errors occurred.
+        traceId:
+          type: string
+          description: Unique trace identifier for tracking and debugging this request.
+          example: '1-6838bcce-5c0074e82ac7170d4f990d87'
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp when the error occurred (UTC).
+          example: '2025-05-29T20:00:15.5752808Z'
         errorDetails:
           type: array
           items:
             $ref: '#/components/schemas/ErrorDetail'
       example:
-        message: 'One or more validation errors occurred.'
         code: 2000
         status: 'Rejected'
+        message: 'One or more validation errors occurred.'
+        traceId: '1-6838bcce-5c0074e82ac7170d4f990d87'
+        timestamp: '2025-05-29T20:00:15.5752808Z'
         errorDetails:
           - code: 2000
             field: 'Amount'
@@ -1855,23 +1866,17 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              error:
-                type: object
-                properties:
-                  code:
-                    type: number
-                    example: 1000
-                  message:
-                    type: string
-                    example: Invalid or missing API key
+            $ref: '#/components/schemas/Error'
           examples:
             UnauthorizedError:
               value:
                 error:
                   code: 1000
-                  message: Invalid or missing API key
+                  status: 'Rejected'
+                  message: 'Invalid or missing API key'
+                  traceId: '1-6838be96-74c62f8e2804352739e63476'
+                  timestamp: '2025-05-29T20:07:50.4723483Z'
+                  errorDetails: []
 
     SuccessfulWebhookAcknowledgement:
       description: Successful acknowledgement of a webhook event. The response should be a 200 OK status with an empty body.
