@@ -1184,22 +1184,8 @@ components:
           description: Array of transactions for the current page
           items:
             allOf:
-              - $ref: '#/components/schemas/TransactionResponseObject'
-              - type: object
-                properties:
-                  timestamp:
-                    type: string
-                    format: date-time
-                    description: Transaction timestamp in UTC
-                    example: '2025-05-27T18:49:31Z'
-                  type:
-                    type: string
-                    enum: [Sale, Auth, Capture, Refund, TokenAdd, TokenUpdate, TokenRemove]
-                    description: Type of transaction
-                    example: 'Sale'
-                required:
-                  - timestamp
-                  - type
+              $ref: '#/components/schemas/TransactionResponseObject'
+
           example:
             - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
               timestamp: '2025-05-27T18:49:31Z'
@@ -1234,6 +1220,16 @@ components:
           type: string
           description: Unique ID for this transaction.
           example: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+        timestamp:
+          type: string
+          format: date-time
+          description: Transaction timestamp in UTC
+          example: '2025-05-27T18:49:31Z'
+        type:
+          type: string
+          enum: [Sale, Auth, Capture, Refund]
+          description: Type of transaction
+          example: 'Sale'
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
