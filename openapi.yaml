@@ -1486,6 +1486,30 @@ components:
           description: A list of all transaction responses received during the $0 authorization verification of the card.
           items:
             $ref: '#/components/schemas/TransactionResponse'
+      example:
+        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        paymentMethod:
+          id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+          type: 'Physical'
+          currency: 'USD'
+          description: 'Main Store Terminal'
+        referenceId: 'ref_add_card_12345'
+        resultCode: 0
+        resultText: 'Card successfully tokenized'
+        transactionResponses:
+          - responseCode: 1
+            authCode: '000AAA'
+            paymentMethod:
+              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+              type: 'Token'
+              currency: 'USD'
+              description: "Token for John Doe's Visa"
+              cardType: 'VISA'
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
+            cardType: 'VISA'
+            accountType: 'Credit'
+            hostResponseText: 'APPROVED 00'
 
     CardOnFileVirtualAddResponse:
       type: object
@@ -1808,32 +1832,7 @@ components:
             type: 'token.created'
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          allOf:
-            - $ref: '#/components/schemas/CardOnFileAddResponse'
-          example:
-            id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
-            paymentMethod:
-              id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-              type: 'Physical'
-              currency: 'USD'
-              description: 'Main Store Terminal'
-            referenceId: 'ref_add_card_12345'
-            resultCode: 0
-            resultText: 'Card successfully tokenized'
-            transactionResponses:
-              - responseCode: 1
-                authCode: '000AAA'
-                paymentMethod:
-                  id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                  type: 'Token'
-                  currency: 'USD'
-                  description: "Token for John Doe's Visa"
-                  cardType: 'VISA'
-                  maskedCardNumber: '************0011'
-                  cardExpDate: '1225'
-                cardType: 'VISA'
-                accountType: 'Credit'
-                hostResponseText: 'APPROVED 00'
+          $ref: '#/components/schemas/CardOnFileAddResponse'
       required:
         - event
         - originalResponse
