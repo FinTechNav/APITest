@@ -1631,7 +1631,45 @@ components:
             type: 'sale.completed'
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          $ref: '#/components/schemas/TransactionResponseObject'
+          allOf:
+            - $ref: '#/components/schemas/TransactionResponseObject'
+          example:
+            id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+            timestamp: '2025-05-27T18:49:31Z'
+            type: 'Sale'
+            paymentMethod:
+              id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+              type: 'Physical'
+              currency: 'USD'
+              description: 'Main Store Terminal'
+            invoiceNumber: 'inv_12345678'
+            orderNumber: 'order_number_1234'
+            referenceId: 'ref_s192i49i'
+            resultCode: 0
+            resultText: 'Successful transaction request'
+            requestedAmount: 1000
+            approvedAmount: 1000
+            balanceAmount: 0
+            transactionResponses:
+              - responseCode: 1
+                authCode: '000AAA'
+                amountApproved: 1000
+                approvedAmountBreakdown:
+                  amountGoodsAndServices: 900
+                  tax: 100
+                  cashBack: 0
+                  tip: 0
+                paymentMethod:
+                  id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                  type: 'Token'
+                  currency: 'USD'
+                  description: "Token for John Doe's Visa"
+                  cardType: 'VISA'
+                  maskedCardNumber: '************0011'
+                  cardExpDate: '1225'
+                cardType: 'VISA'
+                accountType: 'Credit'
+                hostResponseText: 'APPROVED 00'
       required:
         - event
         - originalResponse
@@ -1656,6 +1694,8 @@ components:
             - $ref: '#/components/schemas/TransactionResponseObject'
           example:
             id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+            timestamp: '2025-05-27T18:49:31Z'
+            type: 'Auth'
             paymentMethod:
               id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
               type: 'Physical'
@@ -1696,7 +1736,27 @@ components:
             type: 'capture.completed'
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          $ref: '#/components/schemas/CaptureResponse'
+          allOf:
+            - $ref: '#/components/schemas/CaptureResponse'
+          example:
+            id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+            timestamp: '2025-05-27T18:49:31Z'
+            type: 'Capture'
+            referenceId: 'ref_s192i49i'
+            paymentMethod:
+              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+              type: 'Token'
+              currency: 'USD'
+              description: "Token for John Doe's Visa"
+              cardType: 'VISA'
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
+            invoiceNumber: 'inv_12345678'
+            orderNumber: 'order_number_1234'
+            resultCode: 0
+            resultText: 'Successful transaction request'
+            requestedAmount: 1000
+            approvedAmount: 1000
       required:
         - event
         - originalResponse
@@ -1717,7 +1777,27 @@ components:
             type: 'refund.completed'
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          $ref: '#/components/schemas/RefundResponse'
+          allOf:
+            - $ref: '#/components/schemas/RefundResponse'
+          example:
+            id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+            timestamp: '2025-05-27T18:49:31Z'
+            type: 'Refund'
+            referenceId: 'ref_s192i49i'
+            paymentMethod:
+              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+              type: 'Token'
+              currency: 'USD'
+              description: "Token for John Doe's Visa"
+              cardType: 'VISA'
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
+            invoiceNumber: 'ref_inv_12345678'
+            orderNumber: 'ref_order_1234'
+            resultCode: 0
+            resultText: 'Successful transaction request'
+            requestedAmount: 1000
+            approvedAmount: 1000
       required:
         - event
         - originalResponse
@@ -1738,7 +1818,32 @@ components:
             type: 'token.created'
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          $ref: '#/components/schemas/CardOnFileAddResponse'
+          allOf:
+            - $ref: '#/components/schemas/CardOnFileAddResponse'
+          example:
+            id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+            paymentMethod:
+              id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+              type: 'Physical'
+              currency: 'USD'
+              description: 'Main Store Terminal'
+            referenceId: 'ref_add_card_12345'
+            resultCode: 0
+            resultText: 'Card successfully tokenized'
+            transactionResponses:
+              - responseCode: 1
+                authCode: '000AAA'
+                paymentMethod:
+                  id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                  type: 'Token'
+                  currency: 'USD'
+                  description: "Token for John Doe's Visa"
+                  cardType: 'VISA'
+                  maskedCardNumber: '************0011'
+                  cardExpDate: '1225'
+                cardType: 'VISA'
+                accountType: 'Credit'
+                hostResponseText: 'APPROVED 00'
       required:
         - event
         - originalResponse
@@ -1758,9 +1863,22 @@ components:
             id: 'evt_01JS21X856RR8R69GV5F17XK9C'
             type: 'token.updated'
             timestamp: '2025-04-16T14:30:00Z'
-
         originalResponse:
-          $ref: '#/components/schemas/CardOnFileUpdateResponse'
+          allOf:
+            - $ref: '#/components/schemas/CardOnFileUpdateResponse'
+          example:
+            id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+            paymentMethod:
+              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+              type: 'Token'
+              currency: 'USD'
+              description: "Token for John Doe's Visa"
+              cardType: 'VISA'
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
+            referenceId: 'ref_update_card_12345'
+            resultCode: 0
+            resultText: 'Card successfully updated'
       required:
         - event
         - originalResponse
@@ -1781,7 +1899,21 @@ components:
             type: 'token.removed'
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          $ref: '#/components/schemas/CardOnFileRemoveResponse'
+          allOf:
+            - $ref: '#/components/schemas/CardOnFileRemoveResponse'
+          example:
+            id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+            paymentMethod:
+              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+              type: 'Token'
+              currency: 'USD'
+              description: "Token for John Doe's Visa"
+              cardType: 'VISA'
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
+            referenceId: 'ref_remove_card_12345'
+            resultCode: 0
+            resultText: 'Card successfully removed'
       required:
         - event
         - originalResponse
@@ -1809,7 +1941,22 @@ components:
               type: 'sale.completed'
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              $ref: '#/components/examples/SaleCardPresentResponse/value'
+              id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+              timestamp: '2025-05-27T18:49:31Z'
+              type: 'Sale'
+              paymentMethod:
+                id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                type: 'Physical'
+                currency: 'USD'
+                description: 'Main Store Terminal'
+              invoiceNumber: 'inv_12345678'
+              orderNumber: 'order_number_1234'
+              referenceId: 'ref_s192i49i'
+              resultCode: 0
+              resultText: 'Successful transaction request'
+              requestedAmount: 1000
+              approvedAmount: 1000
+              balanceAmount: 0
 
     AuthCompletedWebhook:
       description: The request body for the `auth.completed` webhook event.
@@ -1823,7 +1970,16 @@ components:
               type: 'auth.completed'
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              $ref: '#/components/examples/AuthCardPresentResponse/value'
+              id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+              timestamp: '2025-05-27T18:49:31Z'
+              type: 'Auth'
+              paymentMethod:
+                id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                type: 'Physical'
+                currency: 'USD'
+                description: 'Main Store Terminal'
+              resultCode: 0
+              resultText: 'Successful transaction request'
 
     CaptureCompletedWebhook:
       description: The request body for the `capture.completed` webhook event.
@@ -1837,7 +1993,11 @@ components:
               type: 'capture.completed'
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              $ref: '#/components/examples/CaptureResponse/value'
+              id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              timestamp: '2025-05-27T18:49:31Z'
+              type: 'Capture'
+              resultCode: 0
+              resultText: 'Successful transaction request'
 
     RefundCompletedWebhook:
       description: The request body for the `refund.completed` webhook event.
@@ -1851,7 +2011,11 @@ components:
               type: 'refund.completed'
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              $ref: '#/components/examples/RefundResponse/value'
+              id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              timestamp: '2025-05-27T18:49:31Z'
+              type: 'Refund'
+              resultCode: 0
+              resultText: 'Successful transaction request'
 
     TokenCreatedWebhook:
       description: The request body for the `token.created` webhook event.
@@ -1865,7 +2029,9 @@ components:
               type: 'token.created'
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              $ref: '#/components/examples/CreateTokenCardPresentResponse/value'
+              id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              resultCode: 0
+              resultText: 'Card successfully tokenized'
 
     TokenUpdatedWebhook:
       description: The request body for the `token.updated` webhook event.
@@ -1879,7 +2045,9 @@ components:
               type: 'token.updated'
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              $ref: '#/components/examples/UpdateTokenResponse/value'
+              id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              resultCode: 0
+              resultText: 'Card successfully updated'
 
     TokenRemovedWebhook:
       description: The request body for the `token.removed` webhook event.
@@ -1893,7 +2061,9 @@ components:
               type: 'token.removed'
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              $ref: '#/components/examples/RemoveTokenResponse/value'
+              id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              resultCode: 0
+              resultText: 'Card successfully removed'
 
   responses:
     UnauthorizedError:
