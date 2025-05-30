@@ -88,8 +88,7 @@ tags:
     description: Endpoints for creating, updating and removing tokenized payment methods
   - name: Payment Methods
     description: Endpoints for managing payment methods
-  - name: Transaction Retrieval
-    description: Endpoints for retrieving transaction details
+
   - name: Transaction Notifications
     description: |
       Our webhooks provide real-time notifications for completed transaction and token events. You can configure webhooks to receive notifications for specific events, such as when a sale transaction is completed or a token is created. Each event type is separate, so you can choose to subscribe to only the events you want to receive notifications for. See the individual endpoint documentation for more details about when each event is triggered.
@@ -2665,247 +2664,6 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
-  /transactions:
-    get:
-      operationId: getTransactions
-      summary: List Transactions
-      description: |
-        Returns a paginated list of transactions for the authenticated merchant.
-
-        ### Filtering and Sorting
-
-        You can filter and sort the results using query parameters:
-
-        #### Available Filter/Sort Fields:
-        - `id` - Transaction ID
-        - `timestamp` - Transaction timestamp (UTC)
-        - `referenceId` - Reference ID
-        - `orderNumber` - Order number
-        - `invoiceNumber` - Invoice number
-        - `type` - Transaction type (Sale, Auth, Capture, Refund, TokenAdd, TokenUpdate, TokenRemove)
-        - `amount` - Transaction amount
-
-        #### Filter Operators:
-
-        | Operator | Meaning |
-        |----------|---------|
-        | `==` | Equals |
-        | `!=` | Not equals |
-        | `>` | Greater than |
-        | `<` | Less than |
-        | `>=` | Greater than or equal to |
-        | `<=` | Less than or equal to |
-        | `@=` | Contains |
-        | `_=` | Starts with |
-        | `_-=` | Ends with |
-        | `!@=` | Does not Contains |
-        | `!_=` | Does not Starts with |
-        | `!_-=` | Does not Ends with |
-        | `@=*` | Case-insensitive string Contains |
-        | `_=*` | Case-insensitive string Starts with |
-        | `_-=*` | Case-insensitive string Ends with |
-        | `==*` | Case-insensitive string Equals |
-        | `!=*` | Case-insensitive string Not equals |
-        | `!@=*` | Case-insensitive string does not Contains |
-        | `!_=*` | Case-insensitive string does not Starts with |
-
-        #### Special Filter Syntax:
-        - Use `|` (pipe) for OR conditions: `type==Sale|Capture`
-        - Use `-` prefix for descending sort: `sorts=-timestamp`
-
-        #### Examples:
-        - Filter by timestamp range: `?filters=timestamp>=2025-05-21T01:00:00,timestamp<2025-05-22T01:00:00`
-        - Filter by type with OR: `?filters=type==Sale|Capture`
-        - Sort by timestamp descending: `?sorts=-timestamp`
-        - Combined: `?filters=timestamp>=2025-05-27T04:00:00.000Z,type==Sale|Capture&sorts=-timestamp`
-
-        **Note:** All transaction timestamps are in UTC.
-      tags:
-        - Transaction Retrieval
-      parameters:
-        - name: filters
-          in: query
-          required: false
-          description: |
-            Filter criteria in the format: field==value,field!=value
-            Multiple filters can be separated by commas. Use | for OR conditions within a field.
-            Available fields: id, timestamp, referenceId, orderNumber, invoiceNumber, type, amount
-          schema:
-            type: string
-          example: 'timestamp>=2025-05-21T01:00:00,type==Sale|Capture'
-        - name: sorts
-          in: query
-          required: false
-          description: |
-            Sort criteria as comma-separated field names. Use - prefix for descending order.
-            Available fields: id, timestamp, referenceId, orderNumber, invoiceNumber, type, amount
-          schema:
-            type: string
-          example: '-timestamp,type'
-        - name: page
-          in: query
-          required: false
-          description: |
-            Page number to retrieve (starts at 1). 
-            For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
-          example: 1
-        - name: pageSize
-          in: query
-          required: false
-          description: |
-            Number of records per page.
-            For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 10
-          example: 10
-      responses:
-        '200':
-          description: A successful paginated response containing transactions
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionsListResponse'
-              examples:
-                timestampRange:
-                  summary: Transactions within timestamp range (UTC)
-                  value:
-                    totalCount: 2
-                    page: 1
-                    pageSize: 10
-                    totalPages: 1
-                    hasNextPage: false
-                    hasPreviousPage: false
-                    items:
-                      - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
-                        timestamp: '2025-05-22T17:00:50Z'
-                        type: 'Sale'
-                        resultCode: 0
-                        resultText: 'APPROVED'
-                        referenceId: 'ref_s192i49i'
-                        orderNumber: 'order_number_1234'
-                        invoiceNumber: 'inv_12345678'
-                        requestedAmount: 1000
-                        approvedAmount: 1000
-                        balanceAmount: 0
-                        paymentMethod:
-                          id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                          type: 'Virtual'
-                          currency: 'USD'
-                          description: 'Online Checkout Iframe'
-                        transactionResponses:
-                          - authCode: '111890'
-                            cardType: 'VISA'
-                            accountType: 'Credit'
-                            maskedCardNumber: '4****1111'
-                            last4: '1111'
-                            responseCode: 1
-                            hostResponseText: 'APPROVED'
-                            amountApproved: 1000
-                            avsResult: 'Y'
-                            cvvResult: 'M'
-                      - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
-                        timestamp: '2025-05-22T19:22:47Z'
-                        type: 'Sale'
-                        resultCode: 0
-                        resultText: 'APPROVED'
-                        referenceId: 'ref_s192i49i'
-                        orderNumber: 'order_number_1234'
-                        invoiceNumber: 'inv_12345678'
-                        requestedAmount: 1000
-                        approvedAmount: 1000
-                        balanceAmount: 0
-                        paymentMethod:
-                          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                          type: 'Token'
-                          currency: 'USD'
-                          description: "Token for John Doe's Visa"
-                        transactionResponses:
-                          - authCode: '111048'
-                            cardType: 'VISA'
-                            accountType: 'Credit'
-                            maskedCardNumber: '4****1111'
-                            last4: '1111'
-                            responseCode: 1
-                            hostResponseText: 'APPROVED'
-                            amountApproved: 1000
-                            avsResult: 'Y'
-                            cvvResult: 'M'
-                saleAndCapture:
-                  summary: Sale and Capture transactions with descending timestamp sort
-                  value:
-                    totalCount: 2
-                    page: 1
-                    pageSize: 10
-                    totalPages: 1
-                    hasNextPage: false
-                    hasPreviousPage: false
-                    items:
-                      - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
-                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
-                        resultCode: 0
-                        resultText: 'APPROVED'
-                        referenceId: 'ref_s192i49i'
-                        orderNumber: ''
-                        invoiceNumber: ''
-                        timestamp: '2025-05-27T18:59:31Z'
-                        type: 'Capture'
-                        requestedAmount: 450
-                        approvedAmount: 450
-                        balanceAmount: 0
-                        paymentMethod:
-                          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                          type: 'Token'
-                          currency: 'USD'
-                          description: "Token for John Doe's Visa"
-                        transactionResponses:
-                          - authCode: '111688'
-                            cardType: 'VISA'
-                            maskedCardNumber: '4****5297'
-                            last4: '5297'
-                            accountType: 'Credit'
-                            responseCode: 1
-                            hostResponseText: 'APPROVED'
-                            amountApproved: 450
-                            avsResult: 'Y'
-                            cvvResult: 'M'
-                      - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
-                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
-                        resultCode: 0
-                        resultText: 'APPROVED'
-                        referenceId: 'ref_s192i49i'
-                        orderNumber: 'order_number_1234'
-                        invoiceNumber: 'inv_12345678'
-                        timestamp: '2025-05-27T18:49:31Z'
-                        type: 'Sale'
-                        requestedAmount: 1000
-                        approvedAmount: 1000
-                        balanceAmount: 0
-                        paymentMethod:
-                          id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                          type: 'Virtual'
-                          currency: 'USD'
-                          description: 'Online Checkout Iframe'
-                        transactionResponses:
-                          - authCode: '111890'
-                            cardType: 'VISA'
-                            accountType: 'Credit'
-                            maskedCardNumber: '4****1111'
-                            last4: '1111'
-                            responseCode: 1
-                            hostResponseText: 'APPROVED'
-                            amountApproved: 1000
-                            avsResult: 'Y'
-                            cvvResult: 'M'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-
   /payment-methods/physical:
     post:
       operationId: createCardPresentToken
@@ -3156,6 +2914,247 @@ paths:
                     field: 'id'
                     message: 'Request validation failed'
                     details: "'Id' must not be empty."
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /transactions:
+    get:
+      operationId: getTransactions
+      summary: List Transactions
+      description: |
+        Returns a paginated list of transactions for the authenticated merchant.
+
+        ### Filtering and Sorting
+
+        You can filter and sort the results using query parameters:
+
+        #### Available Filter/Sort Fields:
+        - `id` - Transaction ID
+        - `timestamp` - Transaction timestamp (UTC)
+        - `referenceId` - Reference ID
+        - `orderNumber` - Order number
+        - `invoiceNumber` - Invoice number
+        - `type` - Transaction type (Sale, Auth, Capture, Refund, TokenAdd, TokenUpdate, TokenRemove)
+        - `amount` - Transaction amount
+
+        #### Filter Operators:
+
+        | Operator | Meaning |
+        |----------|---------|
+        | `==` | Equals |
+        | `!=` | Not equals |
+        | `>` | Greater than |
+        | `<` | Less than |
+        | `>=` | Greater than or equal to |
+        | `<=` | Less than or equal to |
+        | `@=` | Contains |
+        | `_=` | Starts with |
+        | `_-=` | Ends with |
+        | `!@=` | Does not Contains |
+        | `!_=` | Does not Starts with |
+        | `!_-=` | Does not Ends with |
+        | `@=*` | Case-insensitive string Contains |
+        | `_=*` | Case-insensitive string Starts with |
+        | `_-=*` | Case-insensitive string Ends with |
+        | `==*` | Case-insensitive string Equals |
+        | `!=*` | Case-insensitive string Not equals |
+        | `!@=*` | Case-insensitive string does not Contains |
+        | `!_=*` | Case-insensitive string does not Starts with |
+
+        #### Special Filter Syntax:
+        - Use `|` (pipe) for OR conditions: `type==Sale|Capture`
+        - Use `-` prefix for descending sort: `sorts=-timestamp`
+
+        #### Examples:
+        - Filter by timestamp range: `?filters=timestamp>=2025-05-21T01:00:00,timestamp<2025-05-22T01:00:00`
+        - Filter by type with OR: `?filters=type==Sale|Capture`
+        - Sort by timestamp descending: `?sorts=-timestamp`
+        - Combined: `?filters=timestamp>=2025-05-27T04:00:00.000Z,type==Sale|Capture&sorts=-timestamp`
+
+        **Note:** All transaction timestamps are in UTC.
+      tags:
+        - Transactions
+      parameters:
+        - name: filters
+          in: query
+          required: false
+          description: |
+            Filter criteria in the format: field==value,field!=value
+            Multiple filters can be separated by commas. Use | for OR conditions within a field.
+            Available fields: id, timestamp, referenceId, orderNumber, invoiceNumber, type, amount
+          schema:
+            type: string
+          example: 'timestamp>=2025-05-21T01:00:00,type==Sale|Capture'
+        - name: sorts
+          in: query
+          required: false
+          description: |
+            Sort criteria as comma-separated field names. Use - prefix for descending order.
+            Available fields: id, timestamp, referenceId, orderNumber, invoiceNumber, type, amount
+          schema:
+            type: string
+          example: '-timestamp,type'
+        - name: page
+          in: query
+          required: false
+          description: |
+            Page number to retrieve (starts at 1). 
+            For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: pageSize
+          in: query
+          required: false
+          description: |
+            Number of records per page.
+            For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          example: 10
+      responses:
+        '200':
+          description: A successful paginated response containing transactions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsListResponse'
+              examples:
+                timestampRange:
+                  summary: Transactions within timestamp range (UTC)
+                  value:
+                    totalCount: 2
+                    page: 1
+                    pageSize: 10
+                    totalPages: 1
+                    hasNextPage: false
+                    hasPreviousPage: false
+                    items:
+                      - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
+                        timestamp: '2025-05-22T17:00:50Z'
+                        type: 'Sale'
+                        resultCode: 0
+                        resultText: 'APPROVED'
+                        referenceId: 'ref_s192i49i'
+                        orderNumber: 'order_number_1234'
+                        invoiceNumber: 'inv_12345678'
+                        requestedAmount: 1000
+                        approvedAmount: 1000
+                        balanceAmount: 0
+                        paymentMethod:
+                          id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                          type: 'Virtual'
+                          currency: 'USD'
+                          description: 'Online Checkout Iframe'
+                        transactionResponses:
+                          - authCode: '111890'
+                            cardType: 'VISA'
+                            accountType: 'Credit'
+                            maskedCardNumber: '4****1111'
+                            last4: '1111'
+                            responseCode: 1
+                            hostResponseText: 'APPROVED'
+                            amountApproved: 1000
+                            avsResult: 'Y'
+                            cvvResult: 'M'
+                      - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
+                        timestamp: '2025-05-22T19:22:47Z'
+                        type: 'Sale'
+                        resultCode: 0
+                        resultText: 'APPROVED'
+                        referenceId: 'ref_s192i49i'
+                        orderNumber: 'order_number_1234'
+                        invoiceNumber: 'inv_12345678'
+                        requestedAmount: 1000
+                        approvedAmount: 1000
+                        balanceAmount: 0
+                        paymentMethod:
+                          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                          type: 'Token'
+                          currency: 'USD'
+                          description: "Token for John Doe's Visa"
+                        transactionResponses:
+                          - authCode: '111048'
+                            cardType: 'VISA'
+                            accountType: 'Credit'
+                            maskedCardNumber: '4****1111'
+                            last4: '1111'
+                            responseCode: 1
+                            hostResponseText: 'APPROVED'
+                            amountApproved: 1000
+                            avsResult: 'Y'
+                            cvvResult: 'M'
+                saleAndCapture:
+                  summary: Sale and Capture transactions with descending timestamp sort
+                  value:
+                    totalCount: 2
+                    page: 1
+                    pageSize: 10
+                    totalPages: 1
+                    hasNextPage: false
+                    hasPreviousPage: false
+                    items:
+                      - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
+                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
+                        resultCode: 0
+                        resultText: 'APPROVED'
+                        referenceId: 'ref_s192i49i'
+                        orderNumber: ''
+                        invoiceNumber: ''
+                        timestamp: '2025-05-27T18:59:31Z'
+                        type: 'Capture'
+                        requestedAmount: 450
+                        approvedAmount: 450
+                        balanceAmount: 0
+                        paymentMethod:
+                          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                          type: 'Token'
+                          currency: 'USD'
+                          description: "Token for John Doe's Visa"
+                        transactionResponses:
+                          - authCode: '111688'
+                            cardType: 'VISA'
+                            maskedCardNumber: '4****5297'
+                            last4: '5297'
+                            accountType: 'Credit'
+                            responseCode: 1
+                            hostResponseText: 'APPROVED'
+                            amountApproved: 450
+                            avsResult: 'Y'
+                            cvvResult: 'M'
+                      - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
+                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
+                        resultCode: 0
+                        resultText: 'APPROVED'
+                        referenceId: 'ref_s192i49i'
+                        orderNumber: 'order_number_1234'
+                        invoiceNumber: 'inv_12345678'
+                        timestamp: '2025-05-27T18:49:31Z'
+                        type: 'Sale'
+                        requestedAmount: 1000
+                        approvedAmount: 1000
+                        balanceAmount: 0
+                        paymentMethod:
+                          id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                          type: 'Virtual'
+                          currency: 'USD'
+                          description: 'Online Checkout Iframe'
+                        transactionResponses:
+                          - authCode: '111890'
+                            cardType: 'VISA'
+                            accountType: 'Credit'
+                            maskedCardNumber: '4****1111'
+                            last4: '1111'
+                            responseCode: 1
+                            hostResponseText: 'APPROVED'
+                            amountApproved: 1000
+                            avsResult: 'Y'
+                            cvvResult: 'M'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
