@@ -3104,7 +3104,7 @@ paths:
         - `referenceId` - Reference ID
         - `orderNumber` - Order number
         - `invoiceNumber` - Invoice number
-        - `type` - Transaction type (Sale, Auth, Capture, Refund, TokenAdd, TokenUpdate, TokenRemove)
+        - `type` - Transaction type (Sale, Refund, Void, Auth, Capture)
         - `amount` - Transaction amount
 
         #### Filter Operators:
