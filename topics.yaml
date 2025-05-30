@@ -240,7 +240,7 @@
           <li>Processing errors</li>
         </ul>
         <div style="margin-top: 15px;"></div>
-        When processing errors occur or transaction status is uncertain, use the <a href="#operation-gettransactions"><code>GET /transactions</code></a> (List Transactions) endpoint to verify the final transaction outcome before retrying or taking corrective action.
+        When processing errors occur or transaction status is uncertain, use the <code>GET /transactions</code> (List Transactions) endpoint to verify the final transaction outcome before retrying or taking corrective action.
         </div>
 
     ## Implementation Best Practices
