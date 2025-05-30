@@ -2933,7 +2933,7 @@ paths:
                 successfulResponse:
                   summary: A successful response for a Card Not Present tokenization transaction.
                   value:
-                    id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+                    id: 'ifr_01J2F0ZJ2JW5B63CJFPXRGAB1S'
                     paymentMethod:
                       id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
                       type: 'Virtual'
@@ -3472,7 +3472,7 @@ paths:
                 successfulResponse:
                   summary: A successful response for a Card Not Present sale transaction.
                   value:
-                    id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    id: 'ifr_01J2F0EKHC7HY2R93C8ENBD1FG'
                     paymentMethod:
                       id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
                       type: 'Virtual'
@@ -3713,7 +3713,7 @@ paths:
                 successfulResponse:
                   summary: A successful response for a Card Not Present authorization transaction.
                   value:
-                    id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    id: 'ifr_01J2F0EKHC7HY2R93C8ENBD1FG'
                     paymentMethod:
                       id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
                       type: 'Virtual'
@@ -4057,7 +4057,7 @@ paths:
                 successfulResponse:
                   summary: A successful response for a Card Not Present unreferenced refund transaction.
                   value:
-                    id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    id: 'ifr_01J2F0EKHC7HY2R93C8ENBD1FG'
                     timestamp: '2025-05-27T18:49:31Z'
                     type: 'Refund'
                     paymentMethod:
