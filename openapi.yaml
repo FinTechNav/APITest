@@ -1187,8 +1187,8 @@ components:
                 currency: 'USD'
                 description: 'Online Checkout Iframe'
               referenceId: 'ref_s192i49i'
-              orderNumber: ''
-              invoiceNumber: ''
+              orderNumber: 'order_number_1234'
+              invoiceNumber: 'inv_12345678'
               resultCode: 0
               resultText: 'APPROVED'
               requestedAmount: 0
@@ -3729,8 +3729,8 @@ paths:
                         resultCode: 0
                         resultText: 'APPROVED'
                         referenceId: 'ref_s192i49i'
-                        orderNumber: ''
-                        invoiceNumber: ''
+                        orderNumber: 'order_number_1234'
+                        invoiceNumber: 'inv_12345678'
                         timestamp: '2025-05-27T18:59:31Z'
                         type: 'Capture'
                         requestedAmount: 450
