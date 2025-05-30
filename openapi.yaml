@@ -3226,12 +3226,19 @@ paths:
                             cardType: 'VISA'
                             accountType: 'Credit'
                             maskedCardNumber: '4****1111'
-                            last4: '1111'
                             responseCode: 1
                             hostResponseText: 'APPROVED'
                             amountApproved: 1000
                             avsResult: 'Y'
                             cvvResult: 'M'
+                            paymentMethod:
+                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                              type: 'Token'
+                              currency: 'USD'
+                              description: "Token for John Doe's Visa"
+                              cardType: 'VISA'
+                              maskedCardNumber: '************0011'
+                              cardExpDate: '1225'
                       - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
                         timestamp: '2025-05-22T19:22:47Z'
                         type: 'Sale'
@@ -3253,12 +3260,19 @@ paths:
                             cardType: 'VISA'
                             accountType: 'Credit'
                             maskedCardNumber: '4****1111'
-                            last4: '1111'
                             responseCode: 1
                             hostResponseText: 'APPROVED'
                             amountApproved: 1000
                             avsResult: 'Y'
                             cvvResult: 'M'
+                            paymentMethod:
+                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                              type: 'Token'
+                              currency: 'USD'
+                              description: "Token for John Doe's Visa"
+                              cardType: 'VISA'
+                              maskedCardNumber: '************0011'
+                              cardExpDate: '1225'
                 saleAndCapture:
                   summary: Sale and Capture transactions with descending timestamp sort
                   value:
@@ -3270,7 +3284,6 @@ paths:
                     hasPreviousPage: false
                     items:
                       - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
-                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
                         resultCode: 0
                         resultText: 'APPROVED'
                         referenceId: 'ref_s192i49i'
@@ -3290,15 +3303,21 @@ paths:
                           - authCode: '111688'
                             cardType: 'VISA'
                             maskedCardNumber: '4****5297'
-                            last4: '5297'
                             accountType: 'Credit'
                             responseCode: 1
                             hostResponseText: 'APPROVED'
                             amountApproved: 450
                             avsResult: 'Y'
                             cvvResult: 'M'
+                            paymentMethod:
+                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                              type: 'Token'
+                              currency: 'USD'
+                              description: "Token for John Doe's Visa"
+                              cardType: 'VISA'
+                              maskedCardNumber: '************0011'
+                              cardExpDate: '1225'
                       - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
-                        merchantId: 'mer_01JVAYEP1MC8DM1CJMD000001'
                         resultCode: 0
                         resultText: 'APPROVED'
                         referenceId: 'ref_s192i49i'
@@ -3319,12 +3338,19 @@ paths:
                             cardType: 'VISA'
                             accountType: 'Credit'
                             maskedCardNumber: '4****1111'
-                            last4: '1111'
                             responseCode: 1
                             hostResponseText: 'APPROVED'
                             amountApproved: 1000
                             avsResult: 'Y'
                             cvvResult: 'M'
+                            paymentMethod:
+                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                              type: 'Token'
+                              currency: 'USD'
+                              description: "Token for John Doe's Visa"
+                              cardType: 'VISA'
+                              maskedCardNumber: '************0011'
+                              cardExpDate: '1225'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
