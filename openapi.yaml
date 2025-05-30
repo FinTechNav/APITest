@@ -2991,6 +2991,8 @@ components:
       description: A successful response for a Card Present unreferenced refund transaction.
       value:
         id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        timestamp: '2025-05-27T18:49:31Z'
+        type: 'Refund'
         referenceId: 'ref_s192i49i'
         paymentMethod:
           id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
