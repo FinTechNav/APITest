@@ -1821,184 +1821,18 @@ components:
       description: Represents the webhook triggered when a card is tokenized and stored as a payment method.
       properties:
         event:
-          type: object
-          properties:
-            id:
-              type: string
-              description: Unique ID for this webhook event.
-              example: 'evt_01JS21X856RR8R69GV5F17XK9C'
-            type:
-              type: string
-              description: The type of event that occurred.
-              example: 'token.created'
-            timestamp:
-              type: string
-              format: date-time
-              description: The time when the event was triggered (UTC).
-              example: '2025-04-16T14:30:00Z'
-          required:
-            - id
-            - type
-            - timestamp
-        originalResponse:
-          type: object
-          description: Represents the response to a physical card tokenization request.
-          properties:
-            id:
-              type: string
-              description: Unique ID for this card tokenization transaction.
-              example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
-            paymentMethod:
-              type: object
-              description: The payment method used for card tokenization.
+          allOf:
+            - $ref: '#/components/schemas/WebhookEvent'
+            - type: object
               properties:
-                id:
-                  type: string
-                  example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
                 type:
-                  type: string
-                  enum: [Physical, Virtual, Token]
-                  example: 'Physical'
-                currency:
-                  type: string
-                  enum: [USD, CAD]
-                  example: 'USD'
-                description:
-                  type: string
-                  example: 'Main Store Terminal'
-              required:
-                - id
-                - type
-                - currency
-            referenceId:
-              type: string
-              maxLength: 100
-              description: The reference ID for this transaction.
-              example: 'ref_add_card_12345'
-            resultCode:
-              type: number
-              enum:
-                [
-                  0,
-                  1003,
-                  1005,
-                  3000,
-                  3002,
-                  3005,
-                  3006,
-                  3009,
-                  3010,
-                  3011,
-                  3012,
-                  3013,
-                  3014,
-                  3020,
-                  9998,
-                  9999,
-                ]
-              example: 0
-            resultText:
-              type: string
-              description: A message describing the result code in more detail.
-              example: 'Card successfully tokenized'
-            transactionResponses:
-              type: array
-              description: A list of all transaction responses received during the $0 authorization verification of the card.
-              items:
-                type: object
-                properties:
-                  responseCode:
-                    type: number
-                    enum:
-                      [0, 1, 2, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 50, 51, 52, 53, 54, 55, 56]
-                    example: 1
-                  authCode:
-                    type: string
-                    description: The authorization code provided by the card issuer.
-                    example: '000AAA'
-                  paymentMethod:
-                    type: object
-                    description: The tokenized card that was created.
-                    properties:
-                      id:
-                        type: string
-                        example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                      type:
-                        type: string
-                        enum: [Physical, Virtual, Token]
-                        example: 'Token'
-                      currency:
-                        type: string
-                        enum: [USD, CAD]
-                        example: 'USD'
-                      description:
-                        type: string
-                        example: "Token for John Doe's Visa"
-                      cardType:
-                        type: string
-                        enum:
-                          [
-                            UNKNOWN,
-                            DEBIT,
-                            VISA,
-                            MASTERCARD,
-                            AMEX,
-                            DINERS,
-                            DISCOVER,
-                            JCB,
-                            UNIONPAY,
-                            MAESTRO,
-                            GIFT,
-                            CASH,
-                            EBT,
-                            OTHER,
-                          ]
-                        example: 'VISA'
-                      maskedCardNumber:
-                        type: string
-                        description: The masked card number.
-                        example: '************0011'
-                      cardExpDate:
-                        type: string
-                        description: The expiration date of the card in MMYY format.
-                        example: '1225'
-                    required:
-                      - id
-                      - type
-                      - currency
-                  cardType:
-                    type: string
-                    enum:
-                      [
-                        UNKNOWN,
-                        DEBIT,
-                        VISA,
-                        MASTERCARD,
-                        AMEX,
-                        DINERS,
-                        DISCOVER,
-                        JCB,
-                        UNIONPAY,
-                        MAESTRO,
-                        GIFT,
-                        CASH,
-                        EBT,
-                        OTHER,
-                      ]
-                    example: 'VISA'
-                  accountType:
-                    type: string
-                    description: The account type of the card.
-                    example: 'Credit'
-                  hostResponseText:
-                    type: string
-                    description: A meaningful text explaining the response code from the host.
-                    example: 'APPROVED 00'
-          required:
-            - id
-            - paymentMethod
-            - resultCode
-            - resultText
+                  example: 'token.created'
+          example:
+            id: 'evt_01JS21X856RR8R69GV5F17XK9C'
+            type: 'token.created'
+            timestamp: '2025-04-16T14:30:00Z'
+        originalResponse:
+          $ref: '#/components/schemas/CardOnFileAddResponse'
       required:
         - event
         - originalResponse
@@ -2185,8 +2019,28 @@ components:
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
               id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              paymentMethod:
+                id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                type: 'Physical'
+                currency: 'USD'
+                description: 'Main Store Terminal'
+              referenceId: 'ref_add_card_12345'
               resultCode: 0
               resultText: 'Card successfully tokenized'
+              transactionResponses:
+                - responseCode: 1
+                  authCode: '000AAA'
+                  paymentMethod:
+                    id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                    type: 'Token'
+                    currency: 'USD'
+                    description: "Token for John Doe's Visa"
+                    cardType: 'VISA'
+                    maskedCardNumber: '************0011'
+                    cardExpDate: '1225'
+                  cardType: 'VISA'
+                  accountType: 'Credit'
+                  hostResponseText: 'APPROVED 00'
 
     TokenUpdatedWebhook:
       description: The request body for the `token.updated` webhook event.
