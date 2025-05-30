@@ -58,6 +58,10 @@ info:
 
     Each payment method includes details such as its ID, type (physical or virtual), currency, description, and whether it's set as a default. This information helps you determine which payment method to use for different transaction scenarios.
 
+    #### Transaction Retrieval
+
+    The API provides transaction retrieval capabilities that allow you to query and check the status of transactions when processing errors occur. This feature is essential for handling scenarios where API responses are not received due to network timeouts, webhooks fail to deliver, or when a transaction returns an "Interrupted" status indicating unknown final state. When you call the [`GET /transactions`](#operation-gettransactions) (List Transactions) endpoint, the API returns a paginated list of transactions for your account, including sales, authorizations, captures, refunds, and token operations. The retrieval endpoints support comprehensive filtering and sorting options, enabling you to search by transaction ID, reference ID, timestamp ranges, transaction types, and amounts to quickly locate specific transactions or identify processing issues. This ensures you can verify transaction outcomes and prevent duplicate charges when system interruptions occur, maintaining accurate transaction records and customer billing.
+
     ### Support
 
     For technical assistance, please contact our support team at [support@integratedcommerce.io](mailto:support@integratedcommerce.io).

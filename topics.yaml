@@ -231,15 +231,17 @@
 
     ## Error Handling
 
-    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-    Your implementation should handle various response statuses, including:
-    <ul style="padding-left: 40px;">
-      <li>Successful payments (resultCode = 0)</li>
-      <li>Declined transactions</li>
-      <li>Expired sessions</li>
-      <li>Processing errors</li>
-    </ul>
-    </div>
+        <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+        Your implementation should handle various response statuses, including:
+        <ul style="padding-left: 40px;">
+          <li>Successful payments (resultCode = 0)</li>
+          <li>Declined transactions</li>
+          <li>Expired sessions</li>
+          <li>Processing errors</li>
+        </ul>
+        <div style="margin-top: 15px;"></div>
+        When processing errors occur or transaction status is uncertain, use the <a href="#operation-gettransactions"><code>GET /transactions</code></a> (List Transactions) endpoint to verify the final transaction outcome before retrying or taking corrective action.
+        </div>
 
     ## Implementation Best Practices
 
