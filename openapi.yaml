@@ -181,17 +181,7 @@ components:
 
         ### Error Responses
 
-        If authentication fails, you will receive a `401 Unauthorized` response:
-
-        ```json
-        {
-          "error": {
-            "code": "1000",
-            "status:" "Rejected",
-            "message": "Invalid API key"
-          }
-        }
-        ```
+        If authentication fails because of an invalid or missing API key, you will receive a `401 Unauthorized` response. Check the response message for more details.
 
         ## Rate Limiting
 
