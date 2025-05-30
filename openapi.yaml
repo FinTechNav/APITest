@@ -2075,13 +2075,12 @@ components:
           examples:
             UnauthorizedError:
               value:
-                error:
-                  code: 1000
-                  status: 'Rejected'
-                  message: 'Invalid or missing API key'
-                  traceId: '1-6838be96-74c62f8e2804352739e63476'
-                  timestamp: '2025-05-29T20:07:50.4723483Z'
-                  errorDetails: []
+                code: 1000
+                status: 'Rejected'
+                message: 'Invalid or missing API key'
+                traceId: '1-6838be96-74c62f8e2804352739e63476'
+                timestamp: '2025-05-29T20:07:50.4723483Z'
+                errorDetails: []
 
     SuccessfulWebhookAcknowledgement:
       description: Successful acknowledgement of a webhook event. The response should be a 200 OK status with an empty body.
