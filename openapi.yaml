@@ -3224,7 +3224,6 @@ paths:
                           - authCode: '111890'
                             cardType: 'VISA'
                             accountType: 'Credit'
-                            maskedCardNumber: '4****1111'
                             responseCode: 1
                             hostResponseText: 'APPROVED'
                             amountApproved: 1000
@@ -3236,7 +3235,7 @@ paths:
                               currency: 'USD'
                               description: "Token for John Doe's Visa"
                               cardType: 'VISA'
-                              maskedCardNumber: '************0011'
+                              maskedCardNumber: '4****1111'
                               cardExpDate: '1225'
                       - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
                         timestamp: '2025-05-22T19:22:47Z'
@@ -3258,7 +3257,6 @@ paths:
                           - authCode: '111048'
                             cardType: 'VISA'
                             accountType: 'Credit'
-                            maskedCardNumber: '4****1111'
                             responseCode: 1
                             hostResponseText: 'APPROVED'
                             amountApproved: 1000
@@ -3270,7 +3268,7 @@ paths:
                               currency: 'USD'
                               description: "Token for John Doe's Visa"
                               cardType: 'VISA'
-                              maskedCardNumber: '************0011'
+                              maskedCardNumber: '4****1111'
                               cardExpDate: '1225'
                 saleAndCapture:
                   summary: Sale and Capture transactions with descending timestamp sort
