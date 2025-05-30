@@ -1946,6 +1946,28 @@ components:
               requestedAmount: 1000
               approvedAmount: 1000
               balanceAmount: 0
+              transactionResponses:
+                - responseCode: 1
+                  authCode: '000AAA'
+                  amountApproved: 1000
+                  approvedAmountBreakdown:
+                    amountGoodsAndServices: 900
+                    tax: 100
+                    cashBack: 0
+                    tip: 0
+                  paymentMethod:
+                    id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                    type: 'Token'
+                    currency: 'USD'
+                    description: "Token for John Doe's Visa"
+                    cardType: 'VISA'
+                    maskedCardNumber: '************0011'
+                    cardExpDate: '1225'
+                  cardType: 'VISA'
+                  avsResult: 'Y'
+                  cvvResult: 'M'
+                  accountType: 'Credit'
+                  hostResponseText: 'APPROVED 00'
 
     AuthCompletedWebhook:
       description: The request body for the `auth.completed` webhook event.
