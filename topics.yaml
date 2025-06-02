@@ -9,7 +9,7 @@
     ## How It Works
 
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
-    1. <strong>Initiate Session</strong>: Your backend server makes a POST request to our API (e.g., <code>/payment-methods/virtual</code>, <code>/transactions/virtual-sale</code>, etc.) with your transaction details. You can include a <code>returnUrl</code> parameter to control where customers are redirected after completing payment, tokenizing a card, etc. The <code>returnUrl</code> is typically used to direct customers to order confirmation pages, receipt pages, or to grant immediate access to purchased digital content after successful payment.<br><br>
+    1. <strong>Initiate Session</strong>: Your backend server makes a POST request to our API (e.g., <code>/payment-methods/virtual</code>, <code>/transactions/virtual-sale</code>, etc.) with your transaction details. You can include a <code>returnUrl</code> parameter to control where customers are redirected after completing payment, tokenizing a card, etc. The <code>returnUrl</code> is typically used to direct customers to order confirmation pages, receipt pages, or to grant immediate access to purchased digital content after successful payment. You can also include a <code>useJavaScriptCallback</code> flag to have the iframe post a message to the parent page with the transaction response.<br><br>
 
     2. <strong>Receive Session URL</strong>: Our API returns a short-lived, unique iframe URL specific to this transaction, along with a session ID and expiration timestamp.<br><br>
 
@@ -19,10 +19,11 @@
 
     5. <strong>Payment Processing</strong>: When the customer submits the form, we process the payment in our secure environment.<br><br>
 
-    6. <strong>Flow Completion</strong>: The flow completes differently depending on whether you included a <code>returnUrl</code> parameter in your initial request:
+    6. <strong>Flow Completion</strong>: The flow completes differently depending on whether the <code>returnUrl</code> or <code>useJavaScriptCallback</code> parameters were included in your initial request:
       <ul style="padding-left: 40px;">
-        <li><strong>Without returnUrl</strong>: The customer sees either a success or error screen directly within the iframe based on the transaction outcome.</li>
+        <li><strong>With useJavaScriptCallback</strong>: The iframe sends the transaction response to your parent page, and you can direct the rest of the customer experience based on the transaction outcome.</li>
         <li><strong>With returnUrl</strong>: The customer is redirected back to the URL you specified, without seeing our success/error screens. The URL will include the transaction result parameters detailed in the Transaction Result Parameters section below, allowing your page to display appropriate messaging and update your systems.</li>
+        <li><strong>Without either option</strong>: The customer sees either a success or error screen directly within the iframe based on the transaction outcome.</li>
       </ul>
       <br>
 
@@ -39,17 +40,17 @@
         <li>Card number, expiration date, and security code</li>
         <li>Billing address details</li>
       </ul>
-      
+
       <div style="margin-top: 15px;"></div>
       <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
-      
+
       <div style="margin-bottom: 30px;">
         <img src="https://static.integratedcommerce.io/docs/hpf.png" alt="Hosted Payment Form Example" style="max-width: 100%; height: auto;" />
         <small style="display: block; margin-top: 5px; opacity: 0.7;">Example of the hosted payment form</small>
       </div>
-      
-      <p>When no <code>returnUrl</code> is provided, customers will see success or issue screens that provide immediate visual feedback about their transaction status.</p>
-      
+
+      <p>When no <code>returnUrl</code> is provided and the <strong>useJavaScriptCallback</strong> flag is not used, customers will see success or issue screens that provide immediate visual feedback about their transaction status.</p>
+
       <div style="display: flex; margin-bottom: 30px;">
         <div style="margin-right: 20px;">
           <img src="https://static.integratedcommerce.io/docs/success-screen.png" alt="Success Screen Example" style="max-width: 100%; height: auto;" />
@@ -60,9 +61,9 @@
           <small style="display: block; margin-top: 5px; opacity: 0.7;">Issue screen shown when payment problems occur</small>
         </div>
       </div>
-      
+
       <p>If a payment session expires or becomes invalid, customers will see the following screen:</p>
-      
+
       <div style="margin-bottom: 20px;">
         <img src="https://static.integratedcommerce.io/docs/problem-screen.png" alt="Session Expiration Screen Example" style="max-width: 60%; height: auto;" />
         <small style="display: block; margin-top: 5px; opacity: 0.7;">Session expiration screen shown when payment session times out</small>
@@ -133,6 +134,25 @@
 
     <p>These parameters allow your application to respond appropriately to transaction outcomes, update your order systems, and provide relevant feedback to customers without requiring a separate API call to check transaction status.</p>
     </div>
+
+    ## JavaScript Callback Format
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+    <p>When using the <code>useJavaScriptCallback</code> flag, the following transaction response message is passed to the parent window when the transaction is complete:</p>
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+    When using the <code>useJavaScriptCallback</code> flag, the following transaction response message is passed to the parent window when the transaction is complete:
+
+    <div style="margin-top: 15px;"></div>
+    The exact fields will depend on the transaction type, but the format is consistent with other API endpoints where transactions details are returned. The message is a JSON object with the following structure:
+    <div style="margin-top: 15px;"></div>
+
+    <code>
+    TODO:rafal@fiska.com: FILL IN EXAMPLE HERE
+
+    </code>
+
+
 
     ## Secure Payment Redirect Verification
 
@@ -248,13 +268,13 @@
     <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
       <h4 style="margin-top: 15px; font-size: 16px;">Implement Proper Origin Validation</h4>
       <p>Always verify the origin of postMessage events.</p>
-      
+
       <h4 style="margin-top: 15px; font-size: 16px;">Handle Timeouts Gracefully</h4>
       <p>Sessions expire after a short period, so provide clear messaging to users if this happens.</p>
-      
+
       <h4 style="margin-top: 15px; font-size: 16px;">Test with Our Test Cards</h4>
       <p>Use our test cards during your integration development.</p>
-      
+
       <h4 style="margin-top: 15px; font-size: 16px;">Responsive Design</h4>
       <p>Ensure your payment page layout accommodates the iframe appropriately on all devices.</p>
     </div>

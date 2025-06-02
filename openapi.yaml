@@ -58,7 +58,7 @@ info:
 
     #### Transaction Retrieval
 
-    The API provides transaction retrieval capabilities that allow you to query and check the status of transactions when processing errors occur. This feature is essential for handling scenarios where API responses are not received due to network timeouts, webhooks fail to deliver, or when a transaction returns an "Interrupted" status indicating unknown final state. 
+    The API provides transaction retrieval capabilities that allow you to query and check the status of transactions when processing errors occur. This feature is essential for handling scenarios where API responses are not received due to network timeouts, webhooks fail to deliver, or when a transaction returns an "Interrupted" status indicating unknown final state.
 
     When you call the [`GET /transactions`](#operation-gettransactions) (List Transactions) endpoint, the API returns a paginated list of transactions for your account, such as sales, authorizations, token operations, etc. The retrieval endpoint also supports comprehensive filtering and sorting options to help you locate specific transactions or identify processing issues. This ensures you can verify transaction outcomes and prevent duplicate charges when system interruptions occur, maintaining accurate transaction records and customer billing.
 
@@ -436,11 +436,11 @@ components:
       type: string
       maxLength: 100
       description: >
-        An optional custom reference ID for this transaction. Include this if you want 
-        to use your own reference system for linking transactions together (for example, 
-        when processing captures and refunds). If provided, this value must be unique per 
-        merchant. The reference ID can be used for processing captures and referenced 
-        refunds by including it in the originalReferenceId field of subsequent transactions. 
+        An optional custom reference ID for this transaction. Include this if you want
+        to use your own reference system for linking transactions together (for example,
+        when processing captures and refunds). If provided, this value must be unique per
+        merchant. The reference ID can be used for processing captures and referenced
+        refunds by including it in the originalReferenceId field of subsequent transactions.
         If not provided, a unique reference ID will be generated automatically by the system.
       example: ref_s192i49i
 
@@ -448,8 +448,8 @@ components:
       type: string
       maxLength: 100
       description: >
-        An optional custom reference ID to tag and track this token operation. 
-        If provided, this value must be unique per merchant. If not provided, 
+        An optional custom reference ID to tag and track this token operation.
+        If provided, this value must be unique per merchant. If not provided,
         a unique reference ID will be generated automatically by the system.
       example: ref_add_card_12345
 
@@ -457,19 +457,19 @@ components:
       type: string
       maxLength: 100
       description: >
-        The reference ID for this transaction. This will either be the reference ID provided 
-        in the transaction request or, if no value was provided, a value generated automatically 
-        by the system. This reference ID can be used for processing captures and referenced 
+        The reference ID for this transaction. This will either be the reference ID provided
+        in the transaction request or, if no value was provided, a value generated automatically
+        by the system. This reference ID can be used for processing captures and referenced
         refunds by including it in the originalReferenceId field of subsequent transactions.
       example: ref_s192i49i
 
     OriginalTransactionId:
       type: string
       description: >
-        The unique transaction ID of the original transaction to be captured or refunded. 
+        The unique transaction ID of the original transaction to be captured or refunded.
         This is the 'id' value returned from a previous sale, authorization, or capture transaction.
-        Use this parameter if you prefer to rely on system-generated transaction IDs rather than 
-        managing your own reference system. Either originalTransactionId or originalReferenceId 
+        Use this parameter if you prefer to rely on system-generated transaction IDs rather than
+        managing your own reference system. Either originalTransactionId or originalReferenceId
         must be provided.
       example: trx_01J2F0EKHC7HY2R93C8ENBD1FG
 
@@ -477,10 +477,10 @@ components:
       type: string
       maxLength: 100
       description: >
-        The reference ID of the original transaction to be captured or refunded. 
+        The reference ID of the original transaction to be captured or refunded.
         This should match the referenceId from a previous sale, authorization, or capture transaction
         (either a custom reference ID you provided or one that was generated automatically by the system).
-        Use this parameter if you want to link transactions using reference IDs rather than 
+        Use this parameter if you want to link transactions using reference IDs rather than
         system transaction IDs. Either originalTransactionId or originalReferenceId must be provided.
       example: ref_s192i49i
 
@@ -838,6 +838,10 @@ components:
           type: string
           description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided. The URL will include various parameters that are detailed in "Transaction Result Parameters" section of the Hosted Payment Form section. If you do not provide a returnUrl, the customer will see either a "Payment Processed Successfully" or "Payment Processing Issue" screen.
           example: https://merchant.example.com/payment-complete
+        useJavaScriptCallback:
+          type: boolean
+          description: If true, the iframe will use JavaScript to post a message to the parent window to notify the merchant's site when the iframe completed. This allows for more control over the user experience on the merchant's site. If false, the hosted payment form will redirect the user to either the provided returnUrl or a default success or error page.
+          example: true
       required:
         - amount
 
@@ -963,6 +967,10 @@ components:
           type: string
           description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided. The URL will include various parameters that are detailed in "Transaction Result Parameters" section of the Hosted Payment Form section. If you do not provide a returnUrl, the customer will see either a "Payment Processed Successfully" or "Payment Processing Issue" screen.
           example: https://merchant.example.com/refund-complete
+        useJavaScriptCallback:
+          type: boolean
+          description: If true, the iframe will use JavaScript to post a message to the parent window to notify the merchant's site when the iframe completed. This allows for more control over the user experience on the merchant's site. If false, the hosted payment form will redirect the user to either the provided returnUrl or a default success or error page.
+          example: true
       required:
         - amount
 
@@ -1005,6 +1013,10 @@ components:
           type: string
           description: Will be used to redirect user back to merchant's site after iframe completed or canceled if provided. The URL will include various parameters that are detailed in "Transaction Result Parameters" section of the Hosted Payment Form section. If you do not provide a returnUrl, the customer will see either a "Payment Processed Successfully" or "Payment Processing Issue" screen.
           example: https://merchant.example.com/payment-complete
+        useJavaScriptCallback:
+          type: boolean
+          description: If true, the iframe will use JavaScript to post a message to the parent window to notify the merchant's site when the iframe completed. This allows for more control over the user experience on the merchant's site. If false, the hosted payment form will redirect the user to either the provided returnUrl or a default success or error page.
+          example: true
 
     CardOnFileUpdateRequest:
       type: object
@@ -3152,7 +3164,7 @@ paths:
         #### Available Filter/Sort Fields:
         - `id` - Payment method ID
         - `paymentMethodType` - Type of payment method (Physical, Virtual)
-        - `currency` - Currency (USD, CAD)  
+        - `currency` - Currency (USD, CAD)
         - `description` - Payment method description
         - `ownerId` - The Merchant ID that owns this Payment Method ID
 
@@ -3210,7 +3222,7 @@ paths:
           in: query
           required: false
           description: |
-            Page number to retrieve (starts at 1). 
+            Page number to retrieve (starts at 1).
             For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
           schema:
             type: integer
@@ -3366,7 +3378,7 @@ paths:
                 value:
                   paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
                   referenceId: 'ref_add_card_12345'
-                  returnUrl: 'https://merchant.example.com/payment-complete'
+                  useJavaScriptCallback: true
       responses:
         '200':
           description: A successful Card Not Present tokenization response
@@ -3612,7 +3624,7 @@ paths:
           in: query
           required: false
           description: |
-            Page number to retrieve (starts at 1). 
+            Page number to retrieve (starts at 1).
             For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
           schema:
             type: integer
@@ -3903,7 +3915,7 @@ paths:
                   invoiceNumber: 'inv_12345678'
                   orderNumber: 'order_number_1234'
                   referenceId: 'ref_s192i49i'
-                  returnUrl: 'https://merchant.example.com/payment-complete'
+                  useJavaScriptCallback: true
       responses:
         '200':
           description: A successful Card Not Present sale response
@@ -4144,7 +4156,7 @@ paths:
                   invoiceNumber: 'inv_12345678'
                   orderNumber: 'order_number_1234'
                   referenceId: 'ref_s192i49i'
-                  returnUrl: 'https://merchant.example.com/payment-complete'
+                  useJavaScriptCallback: true
       responses:
         '200':
           description: A successful Card Not Present authorization response
@@ -4488,7 +4500,7 @@ paths:
                   invoiceNumber: 'inv_12345678'
                   orderNumber: 'order_number_1234'
                   referenceId: 'ref_s192i49i'
-                  returnUrl: 'https://merchant.example.com/payment-complete'
+                  useJavaScriptCallback: true
       responses:
         '200':
           description: A successful Card Not Present unreferenced refund response
