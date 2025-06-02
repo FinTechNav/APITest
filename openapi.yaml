@@ -1218,7 +1218,7 @@ components:
           example: '2025-05-27T18:49:31Z'
         type:
           type: string
-          enum: [Sale, Auth, Capture, Refund]
+          enum: [Sale, Auth, Capture, Refund, Void]
           description: Type of transaction
           example: 'Sale'
         paymentMethod:
@@ -1291,7 +1291,7 @@ components:
           example: '2025-05-27T18:49:31Z'
         type:
           type: string
-          enum: [Sale, Auth, Capture, Refund]
+          enum: [Sale, Auth, Capture, Refund, Void]
           description: Type of transaction
           example: 'Sale'
         paymentMethod:
@@ -1353,7 +1353,7 @@ components:
           example: '2025-05-27T18:49:31Z'
         type:
           type: string
-          enum: [Sale, Auth, Capture, Refund]
+          enum: [Sale, Auth, Capture, Refund, Void]
           description: Type of transaction
           example: 'Capture'
         paymentMethod:
@@ -1412,7 +1412,7 @@ components:
           example: '2025-05-27T18:49:31Z'
         type:
           type: string
-          enum: [Sale, Auth, Capture, Refund]
+          enum: [Sale, Auth, Capture, Refund, Void]
           description: Type of transaction
           example: 'Refund'
         paymentMethod:
