@@ -423,7 +423,7 @@ components:
           type: number
           description: The approved tax amount.
           example: 100
-        cashBack:
+        cashback:
           type: number
           description: The approved cashback amount.
           example: 0
@@ -521,7 +521,7 @@ components:
           type: number
           description: The tax amount.
           example: 100
-        cashBack:
+        cashback:
           type: number
           description: The cashback amount.
           example: 0
@@ -532,7 +532,7 @@ components:
       example:
         amountGoodsAndServices: 900
         tax: 100
-        cashBack: 0
+        cashback: 0
         tip: 0
 
     AmountToCapture:
@@ -787,7 +787,7 @@ components:
           example:
             amountGoodsAndServices: 900
             tax: 100
-            cashBack: 0
+            cashback: 0
             tip: 0
         paymentMethodId:
           type: string
@@ -1671,7 +1671,7 @@ components:
                 approvedAmountBreakdown:
                   amountGoodsAndServices: 900
                   tax: 100
-                  cashBack: 0
+                  cashback: 0
                   tip: 0
                 paymentMethod:
                   id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
@@ -1953,7 +1953,7 @@ components:
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
                     tax: 100
-                    cashBack: 0
+                    cashback: 0
                     tip: 0
                   paymentMethod:
                     id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
@@ -2084,7 +2084,7 @@ components:
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
                     tax: 100
-                    cashBack: 0
+                    cashback: 0
                     tip: 0
                   paymentMethod:
                     id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
@@ -2211,7 +2211,7 @@ components:
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
                     tax: 100
-                    cashBack: 0
+                    cashback: 0
                     tip: 0
                   paymentMethod:
                     id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
@@ -2334,7 +2334,7 @@ components:
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
                     tax: 100
-                    cashBack: 0
+                    cashback: 0
                     tip: 0
                   paymentMethod:
                     id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
@@ -2559,7 +2559,7 @@ components:
             approvedAmountBreakdown:
               amountGoodsAndServices: 900
               tax: 100
-              cashBack: 0
+              cashback: 0
               tip: 0
             paymentMethod:
               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
@@ -2681,7 +2681,7 @@ components:
             approvedAmountBreakdown:
               amountGoodsAndServices: 900
               tax: 100
-              cashBack: 0
+              cashback: 0
               tip: 0
             paymentMethod:
               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
@@ -3825,7 +3825,7 @@ paths:
                   amountBreakdown:
                     amountGoodsAndServices: 900
                     tax: 100
-                    cashBack: 0
+                    cashback: 0
                     tip: 0
                   paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
                   invoiceNumber: 'inv_12345678'
@@ -3897,7 +3897,7 @@ paths:
                   amountBreakdown:
                     amountGoodsAndServices: 900
                     tax: 100
-                    cashBack: 0
+                    cashback: 0
                     tip: 0
                   paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
                   invoiceNumber: 'inv_12345678'
@@ -3966,7 +3966,7 @@ paths:
                   amountBreakdown:
                     amountGoodsAndServices: 900
                     tax: 100
-                    cashBack: 0
+                    cashback: 0
                     tip: 0
                   paymentMethodId: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
                   invoiceNumber: 'inv_12345678'
@@ -4009,7 +4009,7 @@ paths:
                           authCode: '000AAA',
                           amountApproved: 1000,
                           approvedAmountBreakdown:
-                            { amountGoodsAndServices: 900, tax: 100, cashBack: 0, tip: 0 },
+                            { amountGoodsAndServices: 900, tax: 100, cashback: 0, tip: 0 },
                           paymentMethod:
                             {
                               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
@@ -4065,7 +4065,7 @@ paths:
                   amountBreakdown:
                     amountGoodsAndServices: 900
                     tax: 100
-                    cashBack: 0
+                    cashback: 0
                     tip: 0
                   paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
                   invoiceNumber: 'inv_12345678'
@@ -4138,7 +4138,7 @@ paths:
                   amountBreakdown:
                     amountGoodsAndServices: 900
                     tax: 100
-                    cashBack: 0
+                    cashback: 0
                     tip: 0
                   paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
                   invoiceNumber: 'inv_12345678'
@@ -4207,7 +4207,7 @@ paths:
                   amountBreakdown:
                     amountGoodsAndServices: 900
                     tax: 100
-                    cashBack: 0
+                    cashback: 0
                     tip: 0
                   paymentMethodId: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
                   invoiceNumber: 'inv_12345678'
@@ -4250,7 +4250,7 @@ paths:
                           authCode: '000AAA',
                           amountApproved: 1000,
                           approvedAmountBreakdown:
-                            { amountGoodsAndServices: 900, tax: 100, cashBack: 0, tip: 0 },
+                            { amountGoodsAndServices: 900, tax: 100, cashback: 0, tip: 0 },
                           paymentMethod:
                             {
                               id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
