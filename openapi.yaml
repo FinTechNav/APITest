@@ -467,7 +467,7 @@ components:
       type: string
       description: >
         The unique transaction ID of the original transaction to be captured or refunded.
-        This is the 'id' value returned from a previous sale, authorization, or capture transaction.
+        This is the 'id' value returned from a previous sale or capture transaction.
         Use this parameter if you prefer to rely on system-generated transaction IDs rather than
         managing your own reference system. Either originalTransactionId or originalReferenceId
         must be provided.
