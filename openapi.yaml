@@ -2528,7 +2528,7 @@ components:
               value:
                 code: 1000
                 status: 'Rejected'
-                message: 'Invalid or missing API key'
+                message: 'API key cannot be empty'
                 traceId: '1-6838be96-74c62f8e2804352739e63476'
                 timestamp: '2025-05-29T20:07:50.4723483Z'
                 errorDetails: []
