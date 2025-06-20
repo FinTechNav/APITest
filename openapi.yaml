@@ -3562,6 +3562,18 @@ paths:
         - `invoiceNumber` - Invoice number
         - `type` - Transaction type (Sale, Refund, Void, Auth, Capture)
         - `amount` - Transaction amount
+        - `status` - Transaction status (Created, Pending, Completed)
+
+        #### Transaction Status Definitions:
+
+        | Status | Description | Use Cases |
+        |--------|-------------|-----------|
+        | `Created` | Initial transaction state when created but not yet processed | • Hosted payment form sessions that haven't been completed by the customer<br>• Iframe transactions where the customer hasn't submitted payment yet<br>• Transactions that were initiated but never finalized |
+        | `Pending` | Transaction submitted and awaiting final processing results | • ACH transactions (coming soon) where settlement takes several business days<br>• Transactions under review by payment processors |
+        | `Completed` | Final transaction state with definitive outcome | • Successfully approved transactions<br>• Declined transactions<br>• Voided transactions<br>• Any transaction with a final result |
+
+        **Note:** Most card transactions move directly from `Created` to `Completed` status within seconds. The `Pending` status is primarily reserved for ACH transactions (coming soon) and other payment methods that require extended processing time.
+
 
         #### Filter Operators:
 
@@ -3594,6 +3606,7 @@ paths:
         #### Examples:
         - Filter by timestamp range: `?filters=timestamp>=2025-05-21T01:00:00,timestamp<2025-05-22T01:00:00`
         - Filter by type with OR: `?filters=type==Sale|Capture`
+        - Filter by status: `?filters=status==Completed`
         - Sort by timestamp descending: `?sorts=-timestamp`
         - Combined: `?filters=timestamp>=2025-05-27T04:00:00.000Z,type==Sale|Capture&sorts=-timestamp`
 
