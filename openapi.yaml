@@ -3566,11 +3566,11 @@ paths:
 
         #### Transaction Status Definitions:
 
-        | Status | Description | Use Cases |
-        |--------|-------------|-----------|
-        | `Created` | Initial transaction state when created but not yet processed | • Hosted payment form sessions that haven't been completed by the customer<br>• Iframe transactions where the customer hasn't submitted payment yet<br>• Transactions that were initiated but never finalized |
-        | `Pending` | Transaction submitted and awaiting final processing results | • ACH transactions (coming soon) where settlement takes several business days<br>• Transactions under review by payment processors |
-        | `Completed` | Final transaction state with definitive outcome | • Successfully approved transactions<br>• Declined transactions<br>• Voided transactions<br>• Any transaction with a final result |
+        | Status | Description |
+        |--------|-------------|
+        | `Created` | Initial transaction state when created but not yet processed. This includes hosted payment form sessions that haven't been completed by the customer, iframe transactions where the customer hasn't submitted payment yet, and transactions that were initiated but never finalized. |
+        | `Pending` | Transaction submitted and awaiting final processing results. This status is primarily used for ACH transactions (coming soon) where settlement takes several business days. |
+        | `Completed` | Final transaction state with definitive outcome. This includes successfully approved transactions, declined transactions, voided transactions, and any transaction with a final result. |
 
         **Note:** Most card transactions move directly from `Created` to `Completed` status within seconds. The `Pending` status is primarily reserved for ACH transactions (coming soon) and other payment methods that require extended processing time.
 
