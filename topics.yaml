@@ -1,0 +1,614 @@
+- title: Hosted Payment Form
+  slug: hosted-payment-form
+  description: Understand how our Hosted Payment Form (HPF) works
+  content: |
+    # Hosted Payment Form
+
+    The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Form (HPF) solution that simplifies payment collection while maintaining strong security and compliance standards.
+
+    ## How It Works
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+    1. <strong>Initiate Session</strong>: Your backend server makes a POST request to our API (e.g., <code>/payment-methods/virtual</code>, <code>/transactions/virtual-sale</code>, etc.) with your transaction details. You can include a <code>returnUrl</code> parameter to control where customers are redirected after completing payment, tokenizing a card, etc. The <code>returnUrl</code> is typically used to direct customers to order confirmation pages, receipt pages, or to grant immediate access to purchased digital content after successful payment. You can also include a <code>useJavaScriptCallback</code> flag to have the iframe post a message to the parent page with the transaction response.<br><br>
+
+    2. <strong>Receive Session URL</strong>: Our API returns a short-lived, unique iframe URL specific to this transaction, along with a session ID and expiration timestamp.<br><br>
+
+    3. <strong>Embed HPF</strong>: You embed this iframe URL in your payment page. The iframe contains a fully-styled, responsive payment form.<br><br>
+
+    4. <strong>Customer Enters Payment Info</strong>: The customer enters their payment information (card details, billing address) directly into our secure form, which is isolated from your website's environment.<br><br>
+
+    5. <strong>Payment Processing</strong>: When the customer submits the form, we process the payment in our secure environment.<br><br>
+
+    6. <strong>Flow Completion</strong>: The flow completes differently depending on which parameters were included in your initial request. See the Flow Completion section below.<br><br>
+
+    7. <strong>Webhook Notification</strong>: Regardless of the flow, your system receives a webhook notification with complete transaction details.
+
+    </div>
+
+    ## Flow Completion
+
+    <div style="margin-bottom: 20px;">
+      <p>Depending on the parameters in your initial request, the behavior at the end of the transaction flow will be different:</p>
+      <ul style="padding-left: 40px;">
+        <li><code>useJavaScriptCallback</code> set to true, and <code>returnUrl</code> provided: The iframe sends the transaction response using a JavaScript function to your parent page, and you can direct the rest of the customer experience based on the transaction outcome. The customer is redirected to the <code>returnUrl</code> provided, with transaction result parameters in the URL query string.</li>
+        <li><code>useJavaScriptCallback</code> set to true, and no <code>returnUrl</code> provided: The iframe sends the transaction response using a JavaScript function to your parent page, and you can direct the rest of the customer experience based on the transaction outcome. The customer is redirected to the default success or issue screen.</li>
+        <li><code>useJavaScriptCallback</code> omitted from the request or set to false, and <code>returnUrl</code> provided: No JavaScript function is called on the parent page. The customer is redirected to the <code>returnUrl</code> provided, with transaction result parameters in the URL query string.</li>
+        <li><code>useJavaScriptCallback</code> omitted from the request or set to false, and no <code>returnUrl</code> provided: No JavaScript function is called on the parent page. The customer is redirected to the default success or issue screen.</li>
+      </ul>
+    </div>
+
+    ## Payment Form and Response Screens
+
+    <div style="margin-bottom: 20px;">
+      <p>Our Hosted Payment Form provides a clean, professional payment interface that collects:</p>
+      <ul style="padding-left: 40px;">
+        <li>Cardholder name</li>
+        <li>Card number, expiration date, and security code</li>
+        <li>Billing address details</li>
+      </ul>
+
+      <div style="margin-top: 15px;"></div>
+      <p>The form is responsive and works on mobile, tablet, and desktop devices.</p>
+
+      <div style="margin-bottom: 30px;">
+        <img src="https://static.integratedcommerce.io/docs/hpf.png" alt="Hosted Payment Form Example" style="max-width: 100%; height: auto;" />
+        <small style="display: block; margin-top: 5px; opacity: 0.7;">Example of the hosted payment form</small>
+      </div>
+
+      <p>When no <code>returnUrl</code> is provided and the <code>useJavaScriptCallback</code> flag is not used, customers will see success or issue screens that provide immediate visual feedback about their transaction status.</p>
+
+      <div style="display: flex; margin-bottom: 30px;">
+        <div style="margin-right: 20px;">
+          <img src="https://static.integratedcommerce.io/docs/success-screen.png" alt="Success Screen Example" style="max-width: 100%; height: auto;" />
+          <small style="display: block; margin-top: 5px; opacity: 0.7;">Success screen shown after completed payment</small>
+        </div>
+        <div>
+          <img src="https://static.integratedcommerce.io/docs/issue-screen.png" alt="Issue Screen Example" style="max-width: 100%; height: auto;" />
+          <small style="display: block; margin-top: 5px; opacity: 0.7;">Issue screen shown when payment problems occur</small>
+        </div>
+      </div>
+
+      <p>If a payment session expires or becomes invalid, customers will see the following screen:</p>
+
+      <div style="margin-bottom: 20px;">
+        <img src="https://static.integratedcommerce.io/docs/problem-screen.png" alt="Session Expiration Screen Example" style="max-width: 60%; height: auto;" />
+        <small style="display: block; margin-top: 5px; opacity: 0.7;">Session expiration screen shown when payment session times out</small>
+      </div>
+    </div>
+
+    ## Transaction Result Parameters
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+    <p>When using the <code>returnUrl</code> parameter, the following information is appended to your URL when the customer is redirected back to your site:</p>
+
+    <div style="overflow-x: auto; margin-bottom: 20px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: rgba(240, 244, 248, 0.15);">
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Parameter</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">paymentMethodId</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If successful, the ID of the tokenized card that was used or created during this transaction. Example: <code>pmt_tkn_01JV...2HA</code></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">resultCode</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Transaction result status code: 0 (successful) or 9999 (issue). Example: <code>0</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">cardType</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If successful, the type of card used for this transaction. Example: <code>VISA</code></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">transactionId</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Unique identifier for the transaction. Example: <code>trx_01JV...6R</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">referenceId</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A reference ID to tag and track this transaction for reconciliation. The reference ID is also used for processing referenced refunds. Example: <code>ref_7ec1...75f</code></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">amount</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">For a successful sale or auth, the approved amount. The amount is always a positive integer in the smallest denomination of the currency (e.g., cents for USD or CAD). Example: <code>1101</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">invoiceNumber</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">An alphanumeric invoice number for this transaction if one was provided in the request. Example: <code>inv_1062...d2f</code></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">orderNumber</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">An alphanumeric order number for this transaction if one was provided in the request. Example: <code>ord_ed1a...f8</code></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">hash</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">A lowercase hex-encoded HMAC-SHA256 hash that validates the authenticity of the redirect and protects against tampering of the query string parameters. It is calculated using the concatenated <code style="font-family: monospace; background-color: rgba(135, 131, 120, 0.15); padding: 2px 4px; border-radius: 3px; font-size: 85%;">referenceId</code> and <code style="font-family: monospace; background-color: rgba(135, 131, 120, 0.15); padding: 2px 4px; border-radius: 3px; font-size: 85%;">resultCode</code> values as input and the <code style="font-family: monospace; background-color: rgba(135, 131, 120, 0.15); padding: 2px 4px; border-radius: 3px; font-size: 85%;">paymentMethodId</code> (<code>pmt_vrt_...</code>) as the secret key. This cryptographic validation ensures that redirect responses haven't been modified. Example: <code>7795ad4335...0d7ecdbce</code></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">errorMessage</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If an issue occurred, text explaining what the issue was. Example: "Transaction declined"</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">errorCode</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">If an issue occurred, a specific error code for the issue. Example: <code>1234</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>These parameters allow your application to respond appropriately to transaction outcomes, update your order systems, and provide relevant feedback to customers without requiring a separate API call to check transaction status.</p>
+    </div>
+
+    ## Secure Payment Redirect Verification
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+    When using the <code>returnUrl</code> approach, our system includes a cryptographic hash to validate the authenticity of the redirect. This protects against tampering of the query string parameters.
+    <div style="margin-top: 15px;"></div>
+
+    The verification process uses HMAC-SHA256 hashing. When we redirect customers to your return URL, we include key transaction parameters, along with the lowercase hex-encoded hash included as a <code>hash</code> query parameter in the redirect URL.
+    <div style="margin-top: 15px;"></div>
+
+    <ul style="padding-left: 40px;">
+      <li><strong>Hash input:</strong> The <code>referenceId</code> and <code>resultCode</code> values, concatenated with no spaces (<code>referenceId + resultCode</code>).</li>
+      <li><strong>Secret key:</strong> The paymentMethodId (e.g., <code>pmt_vrt_...</code>) used to create the hosted payment form session.</li>
+      <li><strong>Output format:</strong> Lowercase hex-encoded HMAC-SHA256 hash.</li>
+    </ul>
+    <div style="margin-top: 15px;"></div>
+
+    While similar to our webhook authentication method, the redirect hashing process has important differences:
+
+    <div style="margin-top: 15px;"></div>
+
+    <div style="overflow-x: auto; margin-bottom: 20px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: rgba(240, 244, 248, 0.15);">
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Feature</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Redirect Hash</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Webhook Hash</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">Input</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"><code>referenceId + resultCode</code></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Raw request body</td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">Secret</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"><code>paymentMethodId</code></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Shared secret (provided out-of-band)</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit; white-space: nowrap;">Hash location</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Query string parameter (<code>hash</code>)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">Header (<code>x-fsk-wh-chksm</code>)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    To validate the authenticity of a redirect, follow these steps:
+
+    <ol style="padding-left: 40px;">
+      <li>Extract the <code>hash</code> parameter from the returned URL parameters</li>
+      <li>Extract the <code>referenceId</code> and <code>resultCode</code> parameter values from the URL</li>
+      <li>Concatenate the two values with no spaces: <code>referenceId + resultCode</code></li>
+      <li>Use the original <code>paymentMethodId</code> used when generating the hosted payment form session (the <code>pmt_vrt_...</code> value) as the HMAC secret key</li>
+      <li>Generate the HMAC-SHA256 hash and encode the result as a lowercase hex string</li>
+      <li>Compare your generated hash with the received <code>hash</code> parameter using an exact match comparison</li>
+      <li>Only accept the redirect if the hashes match exactly</li>
+    </ol>
+    <div style="margin-top: 20px;"></div>
+
+    <p><strong>Example</strong></p>
+    <div style="margin-top: 10px;"></div>
+
+    <p>When a payment method with ID <code>pmt_vrt_01JTNZ2Z2XBNMGMG9ENY41AKRG</code> was used to create a hosted payment page session, and given the following returnUrl:</p>
+
+    <p style="word-break: break-all; font-size: 0.9em; background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; overflow-x: auto;">https://merchant.example.com/payment-complete?paymentMethodId=pmt_tkn_01JVGD11ZW2N8859Z9RSJKBPDB&resultCode=0&cardType=VISA&transactionId=trx_01JVGD0BD3D6SRW6A941CPWCJ5&referenceId=ref_238832ae&amount=1899&invoiceNumber=inv_7d7ab39d&orderNumber=ord_cead58aa&hash=7795ad43353004b2d8434af7ff5253d597ca290492eec43c714460a0d7ecdbce</p>
+
+    <p>Extract the <code>referenceId</code> and <code>resultCode</code> query string key/value pairs:</p>
+
+    <p style="background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; font-family: monospace;">
+    referenceId=ref_238832ae<br>
+    resultCode=0
+    </p>
+
+    <p>Concatenate the values only into a single string:</p>
+
+    <p style="background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; font-family: monospace; overflow-x: auto;">ref_238832ae0</p>
+
+    <p>Use the payment method ID used to create the hosted payment form session as the HMAC secret key:</p>
+
+    <p style="background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; font-family: monospace;">pmt_vrt_01JTNZ2Z2XBNMGMG9ENY41AKRG</p>
+
+    <p>Generate the HMAC-SHA256 hash, and encode the result as a lowercase hex string:</p>
+
+    <p style="background-color: rgba(240, 244, 248, 0.1); padding: 12px; border-radius: 4px; font-family: monospace;">7795ad43353004b2d8434af7ff5253d597ca290492eec43c714460a0d7ecdbce</p>
+
+    <p>The <code>hash</code> value from the query string must match <code>7795ad43353004b2d8434af7ff5253d597ca290492eec43c714460a0d7ecdbce</code>.</p>
+
+    <div style="margin-top: 20px;"></div>
+
+    Implementing this check on your server helps prevent tampering and spoofed redirect responses, and should be a standard part of your payment flow integration.
+    </div>
+
+    ## JavaScript Callback Response Parameters
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+    <p>When using <code>useJavaScriptCallback</code>, the standard transaction response object is passed to the parent window when the transaction is complete. In addition to the response fields (refer to the various <code>originalResponse</code> objects of the related webhooks), a <code>success</code> flag is also present in the response to indicate whether the transaction was successful.</p>
+
+    </div>
+    Example Successful Sale Response
+    ```
+    {
+      "success": true,
+      "id": "trx_01J2F0EKHC7HY2R93C8ENBD1FG",
+      "type": "Sale",
+      "referenceId": "ref_s192i49i",
+      "orderNumber": "order_number_1234",
+      "invoiceNumber": "inv_12345678",
+      "requestedAmount": 1000,
+      "approvedAmount": 1000,
+      "balanceAmount": 0,
+      "paymentMethod": {
+        "id": "pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS",
+        "type": "Virtual",
+        "currency": "USD",
+        "description": "Online Checkout Iframe"
+      },
+      "transactionResponses": [
+        {
+          "responseCode": 1,
+          "amountApproved": 1000,
+          "paymentMethod": {
+            "id": "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J",
+            "type": "Token",
+            "currency": "USD",
+            "cardType": "VISA",
+            "maskedCardNumber": "4****1111",
+            "cardExpDate": "1225"
+          },
+          "cardType": "VISA",
+          "accountType": "Credit",
+          "hostResponseText": "APPROVED"
+        }
+      ],
+      "resultCode": 0,
+      "resultText": "Card successfully tokenized",
+      "timestamp": "2025-06-02T23:56:18.2102020Z"
+    }
+    ```
+    Example Failed Transaction Response
+    ```
+    {
+      "success": false,
+      "id": "trx_01J2F0EKHC7HY2R93C8ENBD1FG",
+      "referenceId": "ref_s192i49i",
+      "orderNumber": "order_number_1234",
+      "invoiceNumber": "inv_12345678",
+      "type": "Sale",
+      "resultCode": 9999,
+      "resultText": "Transaction declined",
+      "errorMessage": "Transaction declined",
+      "errorCode": "-1"
+    }
+
+    ```
+    Example Session Error Response
+    ```
+    {
+      "success": false,
+      "type": "Tokenize",
+      "resultCode": 9999,
+      "resultText": "Failed to retrieve session data",
+      "errorMessage": "Failed to retrieve session data",
+      "errorCode": "3201"
+    }
+    ```
+    The exact fields returned will depend on the transaction type and whether the transaction was successful or encountered an error. The message is a JSON object that provides complete transaction details, allowing your application to handle the response appropriately without requiring additional API calls.
+
+    ## Error Handling
+
+        <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+        Your implementation should handle various response statuses, including:
+        <ul style="padding-left: 40px;">
+          <li>Successful payments (resultCode = 0)</li>
+          <li>Declined transactions</li>
+          <li>Expired sessions</li>
+          <li>Processing errors</li>
+        </ul>
+        <div style="margin-top: 15px;"></div>
+        When processing errors occur or transaction status is uncertain, use the <code>GET /transactions</code> (List Transactions) endpoint to verify the final transaction outcome before retrying or taking corrective action.
+        </div>
+
+    ## Implementation Best Practices
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+      <h4 style="margin-top: 15px; font-size: 16px;">Implement Proper Origin Validation</h4>
+      <p>Always validate that postMessage events come from our trusted domain to prevent malicious scripts from sending fake transaction results.</p>
+
+      <h4 style="margin-top: 15px; font-size: 16px;">Handle Timeouts Gracefully</h4>
+      <p>Sessions expire after a short period, so provide clear messaging to users if this happens.</p>
+
+      <h4 style="margin-top: 15px; font-size: 16px;">Test with Our Test Cards</h4>
+      <p>Use our test cards during your integration development.</p>
+
+      <h4 style="margin-top: 15px; font-size: 16px;">Responsive Design</h4>
+      <p>Ensure your payment page layout accommodates the iframe appropriately on all devices.</p>
+    </div>
+
+- title: Test Cards
+  slug: test-cards
+  description: Test cards for integration testing
+  content: |
+    # Test Cards
+
+    ## Physical Test Cards for Card Present Transactions
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+    <p>For in-person payment terminal testing, physical EMV and contactless test cards are essential for Card Present integration. These specialized cards contain real chips, magnetic stripes, and contactless antennas that simulate actual card behavior, allowing you to thoroughly test terminal workflows and payment scenarios before going live.</p>
+
+    <p>If you already have a set of B2 test cards for EMV and contactless testing, you are all set for Card Present testing. If you don't have physical test cards, please contact <a href="mailto:support@integratedcommerce.io">support@integratedcommerce.io</a> to request a set of test cards.</p>
+    </div>
+
+    ## Virtual Test Cards for Card Not Present Transactions
+
+    The following test cards can be used for online payment testing (Card Not Present transactions) in your development environment.
+
+    <div style="overflow-x: auto; margin-bottom: 20px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: rgba(240, 244, 248, 0.15);">
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">VISA</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">MASTERCARD</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">AMEX</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DISCOVER</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">RESULT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4761344136141390</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5101081046006034</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375510513169537</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6509821665351005</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4761201381475297</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5101084411423750</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375510288656924</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6221267465440274</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4159129252458086</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333304500657872</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375510379996452</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6500217278165735</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4123407439043051</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333308664112277</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375510082116984</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6522231777286524</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4001888687412469</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5550345228382224</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6523077546008353</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4444493318246892</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5550347471347813</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6011494585241663</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000996174334475 (1)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">2222755234426838</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000287447386587 (2)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">2221004483162815</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333608104136723 (1)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #4ade80;">Approved</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="padding-left: 20px; border-left: 3px solid #0969da; margin-bottom: 20px;">
+    (1) Returns partial approval<br>
+    (2) debit card
+    </div>
+
+    <div style="overflow-x: auto; margin-bottom: 20px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: rgba(240, 244, 248, 0.15);">
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">VISA</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">MASTERCARD</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">AMEX</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">DISCOVER</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">RESULT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4008370896662369 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333418445863914 (Russian Federation)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375521501910816</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Decline</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5001638548736201 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Decline</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4021937195658141 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5118081410264525 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Soft Decline - Authentication is Advised</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4217641329972469 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5109486948867999 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Soft Decline - Authentication is Advised</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000128449498204 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333423768173347 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375522679892992</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">External Error in Processing</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5100976565928800 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">External Error in Processing</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000135814550378 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333435197139699 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375523500980436</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Acquirer Validation</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000157454627969 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333452804487502 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375525991062202</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Lost/Stolen</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000164166749263 (India)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333463046218753 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375526064276158 (Germany)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6011206770448741</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Do Not Honor</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000173946194872 (India)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333475572200849 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375527639875136 (Ireland)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">6504855645720348</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Insufficient Funds</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4008384424370890 (UK)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Insufficient Funds</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000189336416410 (India)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333482348715142 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375528929838107 (Ireland)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Exceeds Withdrawal Limit</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000196948974975 (India)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333498929343773 (South Korea)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375529856696120 (Ireland)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Exceeds Withdrawal Frequency</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000203016321921 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333502383316074 (Puerto Rico)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375530796593260</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Invalid Transaction</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000212384978055 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333518577223892 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375531494255517 (Indonesia)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Format Error</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000229544877670 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333527145351713 (Costa Rica)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375532604034750</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Issuer or Switch Inoperative</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000234977370839 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333532915594096 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375533558061005 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Timeout/Retry</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000247422310226 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333540337444022 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375534876707683 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Expired Card</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000254588011960 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333554636535091 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375535264614027 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Transaction Not Permitted To Cardholder</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000269084739575 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333562868563707 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375536629108788 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Transaction Not Permitted on Terminal</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">4000273652260030 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333578626428553 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375537795464104 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Restricted Card</span></td>
+          </tr>
+          <tr style="background-color: rgba(240, 244, 248, 0.05);">
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">N/A</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">5333583123003909 (US)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;">375538733297606 (Greece)</td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2); color: inherit;"></td>
+            <td style="padding: 10px; border: 1px solid rgba(225, 228, 232, 0.2);"><span style="color: #f87171;">Invalid CVV</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
