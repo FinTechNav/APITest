@@ -594,7 +594,7 @@ components:
     ResultText:
       type: string
       description: A message describing the result code in more detail.
-      example: Successful transaction request
+      example: APPROVED
     PaymentMethodDetails:
       type: object
       description: The payment method used for this transaction.
@@ -1584,7 +1584,7 @@ components:
           description: Main Store Terminal
         referenceId: ref_add_card_12345
         resultCode: 0
-        resultText: Card successfully tokenized
+        resultText: APPROVED
         requestedAmount: 0
         approvedAmount: 0
         transactionResponses:
@@ -1754,7 +1754,7 @@ components:
             orderNumber: order_number_1234
             referenceId: ref_s192i49i
             resultCode: 0
-            resultText: Successful transaction request
+            resultText: APPROVED
             requestedAmount: 1000
             approvedAmount: 1000
             balanceAmount: 0
@@ -1813,7 +1813,7 @@ components:
             orderNumber: order_number_1234
             referenceId: ref_s192i49i
             resultCode: 0
-            resultText: Successful transaction request
+            resultText: APPROVED
             requestedAmount: 1000
             approvedAmount: 1000
             balanceAmount: 0
@@ -1862,7 +1862,7 @@ components:
             invoiceNumber: inv_12345678
             orderNumber: order_number_1234
             resultCode: 0
-            resultText: Successful transaction request
+            resultText: APPROVED
             requestedAmount: 1000
             approvedAmount: 1000
       required:
@@ -1903,7 +1903,7 @@ components:
             invoiceNumber: ref_inv_12345678
             orderNumber: ref_order_1234
             resultCode: 0
-            resultText: Successful transaction request
+            resultText: APPROVED
             requestedAmount: 1000
             approvedAmount: 1000
       required:
@@ -2032,7 +2032,7 @@ components:
               orderNumber: order_number_1234
               referenceId: ref_s192i49i
               resultCode: 0
-              resultText: Successful transaction request
+              resultText: APPROVED
               requestedAmount: 1000
               approvedAmount: 1000
               balanceAmount: 0
@@ -2163,7 +2163,7 @@ components:
               orderNumber: order_number_1234
               referenceId: ref_s192i49i
               resultCode: 0
-              resultText: Successful transaction request
+              resultText: APPROVED
               requestedAmount: 1000
               approvedAmount: 1000
               balanceAmount: 0
@@ -2291,7 +2291,7 @@ components:
               orderNumber: order_number_1234
               referenceId: ref_s192i49i
               resultCode: 0
-              resultText: Successful transaction request
+              resultText: APPROVED
               requestedAmount: 1000
               approvedAmount: 1000
               transactionResponses:
@@ -2414,7 +2414,7 @@ components:
               orderNumber: ref_order_1234
               referenceId: ref_s192i49i
               resultCode: 0
-              resultText: Successful transaction request
+              resultText: APPROVED
               requestedAmount: 1000
               approvedAmount: 1000
               transactionResponses:
@@ -2530,7 +2530,7 @@ components:
                 description: Main Store Terminal
               referenceId: ref_add_card_12345
               resultCode: 0
-              resultText: Card successfully tokenized
+              resultText: APPROVED
               requestedAmount: 0
               approvedAmount: 0
               transactionResponses:
@@ -2641,7 +2641,7 @@ components:
         orderNumber: order_number_1234
         referenceId: ref_s192i49i
         resultCode: 0
-        resultText: Successful transaction request
+        resultText: APPROVED
         requestedAmount: 1000
         approvedAmount: 1000
         balanceAmount: 0
@@ -2761,7 +2761,7 @@ components:
         orderNumber: order_number_1234
         referenceId: ref_s192i49i
         resultCode: 0
-        resultText: Successful transaction request
+        resultText: APPROVED
         requestedAmount: 1000
         approvedAmount: 1000
         balanceAmount: 0
@@ -2878,7 +2878,7 @@ components:
         invoiceNumber: inv_12345678
         orderNumber: order_number_1234
         resultCode: 0
-        resultText: Successful transaction request
+        resultText: APPROVED
         requestedAmount: 1000
         approvedAmount: 1000
         transactionResponses:
@@ -2985,7 +2985,7 @@ components:
         invoiceNumber: ref_inv_12345678
         orderNumber: ref_order_1234
         resultCode: 0
-        resultText: Successful transaction request
+        resultText: APPROVED
         requestedAmount: 1000
         approvedAmount: 1000
         transactionResponses:
@@ -3087,7 +3087,7 @@ components:
         invoiceNumber: inv_12345678
         orderNumber: order_number_1234
         resultCode: 0
-        resultText: Successful transaction request
+        resultText: APPROVED
         requestedAmount: 1000
         approvedAmount: 1000
         receipt:
@@ -3169,7 +3169,7 @@ components:
           description: Main Store Terminal
         referenceId: ref_add_card_12345
         resultCode: 0
-        resultText: Card successfully tokenized
+        resultText: APPROVED
         transactionResponses:
           - responseCode: 1
             authCode: 000AAA
@@ -4087,7 +4087,7 @@ paths:
                     orderNumber: order_number_1234
                     referenceId: ref_s192i49i
                     resultCode: 0
-                    resultText: Successful transaction request
+                    resultText: APPROVED
                     requestedAmount: 1000
                     approvedAmount: 1000
                     balanceAmount: 0
@@ -4322,7 +4322,7 @@ paths:
                     orderNumber: order_number_1234
                     referenceId: ref_s192i49i
                     resultCode: 0
-                    resultText: Successful transaction request
+                    resultText: APPROVED
                     requestedAmount: 1000
                     approvedAmount: 1000
                     balanceAmount: 0
