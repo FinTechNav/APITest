@@ -4,7 +4,7 @@ info:
   description: |
     ### Introduction
 
-    The Integrated Commerce Omni-Channel Payment API is a RESTful API that provides a unified interface for processing payments across multiple channels. This API enables developers to integrate payment processing capabilities into their applications with a single set of endpoints, simplifying implementation and reducing development time.
+    Test - The Integrated Commerce Omni-Channel Payment API is a RESTful API that provides a unified interface for processing payments across multiple channels. This API enables developers to integrate payment processing capabilities into their applications with a single set of endpoints, simplifying implementation and reducing development time.
 
     The API supports integration in both the United States and Canada, using USD and CAD currencies.
 
@@ -41,8 +41,8 @@ info:
     #### Webhooks
 
     Real-time notifications via webhooks for:
-    - Transaction events ([sales](#operation-post-SaleCompleted), [authorizations](#operation-post-AuthCompleted), [captures](#operation-post-CaptureCompleted), [refunds](#operation-post-RefundCompleted))
-    - Token operations ([creation](#operation-post-TokenCreated), [updates](#operation-post-TokenUpdated), [deletion](#operation-post-TokenRemoved))
+    - Transaction events ([sales](#operation-webhooksalecompleted), [authorizations](#operation-webhookauthcompleted), [captures](#operation-webhookcapturecompleted), [refunds](#operation-webhookrefundcompleted))
+    - Token operations ([creation](#operation-webhooktokencreated), [updates](#operation-webhooktokenupdated), [deletion](#operation-webhooktokenremoved))
 
     #### Payment Methods
 
@@ -65,22 +65,17 @@ info:
     ### Support
 
     For technical assistance, please contact our support team at [support@integratedcommerce.io](mailto:support@integratedcommerce.io).
-
-  version: 2025.06.02
+  version: 2025.06.23
   contact:
     name: Integrated Commerce Support
     url: https://docs.omni.integratedcommerce.io
     email: support@integratedcommerce.io
-
 servers:
   - url: https://api.omni.integratedcommerce.io/v1
-
 security:
   - ApiKeyHeader: []
-
 x-topics:
   $ref: './topics.yaml'
-
 tags:
   - name: Transactions
     description: Endpoints for processing transactions
@@ -88,7 +83,6 @@ tags:
     description: Endpoints for creating, updating and removing tokenized payment methods
   - name: Payment Methods
     description: Endpoints for managing payment methods
-
   - name: Transaction Notifications
     description: |
       Our webhooks provide real-time notifications for completed transaction and token events. You can configure webhooks to receive notifications for specific events, such as when a sale transaction is completed or a token is created. Each event type is separate, so you can choose to subscribe to only the events you want to receive notifications for. See the individual endpoint documentation for more details about when each event is triggered.
@@ -98,10 +92,10 @@ tags:
       Our system will attempt to deliver event notifications to your configured destination multiple times. When a notification request fails to deliver, the system will retry failed requests with an exponential backoff strategy. If the request continues to fail after multiple attempts, the event will be marked as failed and will not be retried again.
 
       You can subscribe to receive notifications for the following transaction events:
-      - [`sale.completed`](#operation-post-SaleCompleted)
-      - [`auth.completed`](#operation-post-AuthCompleted)
-      - [`capture.completed`](#operation-post-CaptureCompleted)
-      - [`refund.completed`](#operation-post-RefundCompleted)
+      - [`sale.completed`](#operation-webhooksalecompleted)
+      - [`auth.completed`](#operation-webhookauthcompleted)
+      - [`capture.completed`](#operation-webhookcapturecompleted)
+      - [`refund.completed`](#operation-webhookrefundcompleted)
 
       See the [Token Notifications](#webhook-token-notifications) section for available token notifications.
 
@@ -138,20 +132,18 @@ tags:
       ```
 
       The value in the `x-fsk-wh-chksm` header must match this hash exactly.
-
   - name: Token Notifications
     description: |
       In addition to [transaction notifications](#webhook-transaction-notifications), you can also subscribe to receive notifications for the following token events:
 
-      - [`token.created`](#operation-post-TokenCreated)
-      - [`token.updated`](#operation-post-TokenUpdated)
-      - [`token.removed`](#operation-post-TokenRemoved)
+      - [`token.created`](#operation-webhooktokencreated)
+      - [`token.updated`](#operation-webhooktokenupdated)
+      - [`token.removed`](#operation-webhooktokenremoved)
 
       The same rules as [transaction notifications](#topic-webhook-configuration) apply:
 
       - The request body will contain a JSON payload with the details of the event
       - The header request sent to your configured webhook URL will contain a `x-fsk-wh-chksm` header with the SHA-256 checksum calculated from the request body and shared secret
-
 components:
   securitySchemes:
     ApiKeyHeader:
@@ -192,12 +184,31 @@ components:
         - `X-RateLimit-Reset`: Unix timestamp when the rate limit will reset (UTC)
 
         When you exceed the rate limit, you will receive a `429 Too Many Requests` response.
-
   schemas:
     ResponseCode:
       type: number
-      enum: [0, 1, 2, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 50, 51, 52, 53, 54, 55, 56]
-      description: >
+      enum:
+        - 0
+        - 1
+        - 2
+        - 10
+        - 11
+        - 14
+        - 15
+        - 16
+        - 17
+        - 18
+        - 19
+        - 20
+        - 21
+        - 50
+        - 51
+        - 52
+        - 53
+        - 54
+        - 55
+        - 56
+      description: |
         Response codes:
          * `0` - UNKNOWN
          * `1` - APPROVED - Transaction was approved
@@ -221,27 +232,24 @@ components:
          * `54` - CANCELLED - Cancelled by the user or merchant.
          * `55` - USER_CANCELLED - Specific to scenarios where the user cancels the transaction.
          * `56` - TIMED_OUT_ON_USER_INPUT - Failed to complete the transaction in time.
-
     CardType:
       type: string
       enum:
-        [
-          UNKNOWN,
-          DEBIT,
-          VISA,
-          MASTERCARD,
-          AMEX,
-          DINERS,
-          DISCOVER,
-          JCB,
-          UNIONPAY,
-          MAESTRO,
-          GIFT,
-          CASH,
-          EBT,
-          OTHER,
-        ]
-      description: >
+        - UNKNOWN
+        - DEBIT
+        - VISA
+        - MASTERCARD
+        - AMEX
+        - DINERS
+        - DISCOVER
+        - JCB
+        - UNIONPAY
+        - MAESTRO
+        - GIFT
+        - CASH
+        - EBT
+        - OTHER
+      description: |
         The type of card used for this transaction:
          * `UNKNOWN` - The card type is unknown
          * `DEBIT` - Debit Card
@@ -257,11 +265,15 @@ components:
          * `CASH` - All-cash Transaction
          * `EBT` - Electronic Benefits Transfer Card
          * `OTHER` - Other tender types
-
     CVVResult:
       type: string
-      enum: [M, N, P, S, U]
-      description: >
+      enum:
+        - M
+        - N
+        - P
+        - S
+        - U
+      description: |
         The CVV verification result. Typically returned on Card Not Present transactions.
          * `M` - CVV Match
          * `N` - CVV No Match
@@ -270,11 +282,21 @@ components:
          * `U` - User is unregistered
 
         NOTE: Transactions can still be authorized if the CVV responses are no match or failure. CVV responses are for merchant information only, and usually do not influence the overall Authorization result. This can vary based on the Issuing Bank.
-
     AVSResult:
       type: string
-      enum: [A, E, N, R, S, U, G, W, X, Y, Z]
-      description: >
+      enum:
+        - A
+        - E
+        - N
+        - R
+        - S
+        - U
+        - G
+        - W
+        - X
+        - Y
+        - Z
+      description: |
         The AVS (Address Verification Service) result. Typically returned on Card Not Present transactions.
          * `A` - Address matches, ZIP does not. The first five numerical characters contained in the address match those stored at the VIC or issuer's center. However, the ZIP code does not match.
          * `E` - Ineligible transaction.
@@ -289,7 +311,6 @@ components:
          * `Z` - Five-digit ZIP matches, address does not. The five-digit Postal ZIP code matches that stored at the VIC or card issuer's centre.
 
         NOTE: Transactions can still be authorized if the AVS responses are no match or failure. AVS responses are for merchant information only, and usually do not influence the overall Authorization result. This can vary based on the Issuing Bank.
-
     ErrorDetail:
       type: object
       description: Represents a validation error that occurred during the request.
@@ -309,13 +330,12 @@ components:
         details:
           type: string
           description: Additional details about the error
-          example: 'The Amount field must be a positive number between 1 and 999999999.'
+          example: The Amount field must be a positive number between 1 and 999999999.
       example:
         code: 2000
-        field: 'Amount'
-        message: 'Request validation failed'
-        details: 'The Amount field must be a positive number between 1 and 999999999.'
-
+        field: Amount
+        message: Request validation failed
+        details: The Amount field must be a positive number between 1 and 999999999.
     Receipt:
       type: object
       description: The receipt associated with this transaction.  Returned for Card Present transactions.
@@ -326,91 +346,88 @@ components:
             type: string
           description: The receipt lines.
           example:
-            [
-              '     Test Merchant      ',
-              '      300 S Wacker      ',
-              '         Loop,          ',
-              '                        ',
-              '                        ',
-              'TERM #          11000367',
-              'RECORD #         0656191',
-              'HOST INVOICE #    000038',
-              'HOST SEQ #    1720656191',
-              'MERCH INVOICE.  fgj24344',
-              '------------------------',
-              'CARD    ************0011',
-              'VISA             Contact',
-              '07/10/2024      20:03:05',
-              '------------------------',
-              'Purchase       CAD $1.00',
-              'Tip            CAD $0.00',
-              'Cashback       CAD $0.00',
-              '       ',
-              'TOTAL          CAD $1.00',
-              '------------------------',
-              'AUTH#:794697       B:171',
-              '          Sale          ',
-              '      APPROVED 00       ',
-              '       THANK YOU        ',
-              '                        ',
-              '      Visa Credit       ',
-              'AID:      A0000000031010',
-              'TC:     43F4ACF64B07551A',
-              'TVR:          8000008000',
-              'TSI:                7800',
-              '  Retain this copy for  ',
-              '  statement validation ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '     MERCHANT COPY      ',
-              '     Test Merchant      ',
-              '      300 S Wacker      ',
-              '         Loop,          ',
-              '                        ',
-              '                        ',
-              'TERM #          11000367',
-              'RECORD #         0656191',
-              'HOST INVOICE #    000038',
-              'HOST SEQ #    1720656191',
-              'MERCH INVOICE.  fgj24344',
-              '------------------------',
-              'CARD    ************0011',
-              'VISA             Contact',
-              '07/10/2024      20:03:05',
-              '------------------------',
-              'Purchase       CAD $1.00',
-              'Tip            CAD $0.00',
-              'Cashback       CAD $0.00',
-              '       ',
-              'TOTAL          CAD $1.00',
-              '------------------------',
-              'AUTH#:794697       B:171',
-              '          Sale          ',
-              '      APPROVED 00       ',
-              '       THANK YOU        ',
-              '                        ',
-              '      Visa Credit       ',
-              'AID:      A0000000031010',
-              'TC:     43F4ACF64B07551A',
-              'TVR:          8000008000',
-              'TSI:                7800',
-              '  Retain this copy for  ',
-              '  statement validation ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '     CUSTOMER COPY      ',
-            ]
-
+            - '     Test Merchant      '
+            - '      300 S Wacker      '
+            - '         Loop,          '
+            - '                        '
+            - '                        '
+            - 'TERM #          11000367'
+            - 'RECORD #         0656191'
+            - 'HOST INVOICE #    000038'
+            - 'HOST SEQ #    1720656191'
+            - MERCH INVOICE.  fgj24344
+            - '------------------------'
+            - CARD    ************0011
+            - VISA             Contact
+            - 07/10/2024      20:03:05
+            - '------------------------'
+            - Purchase       CAD $1.00
+            - Tip            CAD $0.00
+            - Cashback       CAD $0.00
+            - '       '
+            - TOTAL          CAD $1.00
+            - '------------------------'
+            - AUTH#:794697       B:171
+            - '          Sale          '
+            - '      APPROVED 00       '
+            - '       THANK YOU        '
+            - '                        '
+            - '      Visa Credit       '
+            - 'AID:      A0000000031010'
+            - 'TC:     43F4ACF64B07551A'
+            - 'TVR:          8000008000'
+            - 'TSI:                7800'
+            - '  Retain this copy for  '
+            - '  statement validation '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '     MERCHANT COPY      '
+            - '     Test Merchant      '
+            - '      300 S Wacker      '
+            - '         Loop,          '
+            - '                        '
+            - '                        '
+            - 'TERM #          11000367'
+            - 'RECORD #         0656191'
+            - 'HOST INVOICE #    000038'
+            - 'HOST SEQ #    1720656191'
+            - MERCH INVOICE.  fgj24344
+            - '------------------------'
+            - CARD    ************0011
+            - VISA             Contact
+            - 07/10/2024      20:03:05
+            - '------------------------'
+            - Purchase       CAD $1.00
+            - Tip            CAD $0.00
+            - Cashback       CAD $0.00
+            - '       '
+            - TOTAL          CAD $1.00
+            - '------------------------'
+            - AUTH#:794697       B:171
+            - '          Sale          '
+            - '      APPROVED 00       '
+            - '       THANK YOU        '
+            - '                        '
+            - '      Visa Credit       '
+            - 'AID:      A0000000031010'
+            - 'TC:     43F4ACF64B07551A'
+            - 'TVR:          8000008000'
+            - 'TSI:                7800'
+            - '  Retain this copy for  '
+            - '  statement validation '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '     CUSTOMER COPY      '
     ApprovedAmountBreakdown:
       type: object
       description: A breakdown of approvedAmount, where each amounts approved on the payment terminal are returned separately.
@@ -431,84 +448,55 @@ components:
           type: number
           description: The approved tip amount.
           example: 0
-
     ReferenceIdForTransactions:
       type: string
       maxLength: 100
-      description: >
-        An optional custom reference ID for this transaction. Include this if you want
-        to use your own reference system for linking transactions together (for example,
-        when processing captures and refunds). If provided, this value must be unique per
-        merchant. The reference ID can be used for processing captures and referenced
-        refunds by including it in the originalReferenceId field of subsequent transactions.
-        If not provided, a unique reference ID will be generated automatically by the system.
+      description: |
+        An optional custom reference ID for this transaction. Include this if you want to use your own reference system for linking transactions together (for example, when processing captures and refunds). If provided, this value must be unique per merchant. The reference ID can be used for processing captures and referenced refunds by including it in the originalReferenceId field of subsequent transactions. If not provided, a unique reference ID will be generated automatically by the system.
       example: ref_s192i49i
-
     ReferenceIdForTokens:
       type: string
       maxLength: 100
-      description: >
-        An optional custom reference ID to tag and track this token operation.
-        If provided, this value must be unique per merchant. If not provided,
-        a unique reference ID will be generated automatically by the system.
+      description: |
+        An optional custom reference ID to tag and track this token operation. If provided, this value must be unique per merchant. If not provided, a unique reference ID will be generated automatically by the system.
       example: ref_add_card_12345
-
     ReferenceIdForResponse:
       type: string
       maxLength: 100
-      description: >
-        The reference ID for this transaction. This will either be the reference ID provided
-        in the transaction request or, if no value was provided, a value generated automatically
-        by the system. This reference ID can be used for processing captures and referenced
-        refunds by including it in the originalReferenceId field of subsequent transactions.
+      description: |
+        The reference ID for this transaction. This will either be the reference ID provided in the transaction request or, if no value was provided, a value generated automatically by the system. This reference ID can be used for processing captures and referenced refunds by including it in the originalReferenceId field of subsequent transactions.
       example: ref_s192i49i
-
     OriginalTransactionId:
       type: string
-      description: >
-        The unique transaction ID of the original transaction to be captured or refunded.
-        This is the 'id' value returned from a previous sale or capture transaction.
-        Use this parameter if you prefer to rely on system-generated transaction IDs rather than
-        managing your own reference system. Either originalTransactionId or originalReferenceId
-        must be provided.
+      description: |
+        The unique transaction ID of the original transaction to be captured or refunded. This is the 'id' value returned from a previous sale or capture transaction. Use this parameter if you prefer to rely on system-generated transaction IDs rather than managing your own reference system. Either originalTransactionId or originalReferenceId must be provided.
       example: trx_01J2F0EKHC7HY2R93C8ENBD1FG
-
     OriginalReferenceId:
       type: string
       maxLength: 100
-      description: >
-        The reference ID of the original transaction to be captured or refunded.
-        This should match the referenceId from a previous sale, authorization, or capture transaction
-        (either a custom reference ID you provided or one that was generated automatically by the system).
-        Use this parameter if you want to link transactions using reference IDs rather than
-        system transaction IDs. Either originalTransactionId or originalReferenceId must be provided.
+      description: |
+        The reference ID of the original transaction to be captured or refunded. This should match the referenceId from a previous sale, authorization, or capture transaction (either a custom reference ID you provided or one that was generated automatically by the system). Use this parameter if you want to link transactions using reference IDs rather than system transaction IDs. Either originalTransactionId or originalReferenceId must be provided.
       example: ref_s192i49i
-
     InvoiceNumber:
       type: string
       maxLength: 100
-      description: >
-        An optional alphanumeric invoice number for this transaction.
-        If provided, the same value will be populated in the response.
+      description: |
+        An optional alphanumeric invoice number for this transaction. If provided, the same value will be populated in the response.
       example: inv_12345678
-
     OrderNumber:
       type: string
       maxLength: 100
-      description: >
-        An optional alphanumeric order number for this transaction.
-        If provided, the same value will be populated in the response.
+      description: |
+        An optional alphanumeric order number for this transaction. If provided, the same value will be populated in the response.
       example: order_number_1234
-
     Amount:
       type: number
       format: uint32
       minimum: 1
       maximum: 999999999
-      description: >
+      description: |
         The total transaction amount. This is the full amount that will be processed in the transaction. Transaction amounts are positive integers representing the amount in its smallest denomination of the configured currency (e.g. cents for USD or CAD).
       example: 1000
-
     AmountBreakdown:
       type: object
       description: Optional fields to specify the portion of the total transaction amount that represents goods/services, tax, cashback and/or tip. These values are for reporting purposes only and will not be added to the Amount field. These amount are represented as a positive integer in the smallest denomination of the configured currency (e.g. cents for USD or CAD).
@@ -534,25 +522,22 @@ components:
         tax: 100
         cashback: 0
         tip: 0
-
     AmountToCapture:
       type: number
       format: uint32
       minimum: 1
       maximum: 999999999
-      description: >
+      description: |
         The amount to capture. Must be less than or equal to the original authorization amount. If not specified, the full authorized amount will be captured. If you have already performed partial captures on this authorization, you must provide an explicit amount or an error will be returned.
       example: 1000
-
     AmountToRefund:
       type: number
       format: uint32
       minimum: 1
       maximum: 999999999
-      description: >
+      description: |
         The requested amount to refund or void. If not specified, the full transaction amount will be refunded or voided. For partial refunds, must be less than the original transaction amount. If you have already performed partial refunds on this transaction, you must provide an explicit amount or an error will be returned.
       example: 1000
-
     AmountToRefundUnreferenced:
       type: number
       format: uint32
@@ -560,28 +545,25 @@ components:
       maximum: 999999999
       description: The requested amount to refund.
       example: 1000
-
     ResultCode:
       type: number
       enum:
-        [
-          0,
-          1003,
-          1005,
-          3000,
-          3002,
-          3005,
-          3006,
-          3009,
-          3010,
-          3011,
-          3012,
-          3013,
-          3014,
-          3020,
-          9998,
-          9999,
-        ]
+        - 0
+        - 1003
+        - 1005
+        - 3000
+        - 3002
+        - 3005
+        - 3006
+        - 3009
+        - 3010
+        - 3011
+        - 3012
+        - 3013
+        - 3014
+        - 3020
+        - 9998
+        - 9999
       description: |
         Result codes:
         * `0` - Successful transaction request. (Check each transactionResponse's responseCode to determine if a transaction was approved or declined, card was tokenized, etc.)
@@ -600,12 +582,11 @@ components:
         * `3020` - An unsupported transaction result was received.
         * `9998` - The system is not ready to process a transaction.
         * `9999` - An unknown error has occurred. If available, an auxiliary error code will be provided in the message.
-
+      Example: 0
     ResultText:
       type: string
       description: A message describing the result code in more detail.
-      example: 'Successful transaction request'
-
+      example: Successful transaction request
     PaymentMethodDetails:
       type: object
       description: The payment method used for this transaction.
@@ -613,45 +594,48 @@ components:
         id:
           type: string
           description: The unique identifier of the payment method. This ID has a prefix that makes it human-readable (pmt_trm_* for physical terminals, pmt_vrt_* for virtual terminals, pmt_tkn_* for tokenized cards), but applications should always use the `type` field to determine the payment method type rather than parsing this ID.
-          example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+          example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
         type:
           type: string
-          enum: [Physical, Virtual, Token]
+          enum:
+            - Physical
+            - Virtual
+            - Token
           description: |
             The type of payment method:
             - `Physical` - A physical payment terminal for Card Present transactions
             - `Virtual` - A hosted payment form/iframe for Card Not Present transactions
             - `Token` - A tokenized card for card-on-file transactions
-          example: 'Token'
+          example: Token
         currency:
           type: string
-          enum: [USD, CAD]
+          enum:
+            - USD
+            - CAD
           description: The currency of the payment method.
-          example: 'USD'
+          example: USD
         description:
           type: string
           description: A human-readable name for the payment method.
-          example: "Token for John Doe's Visa"
+          example: Token for John Doe's Visa
         cardType:
           type: string
           enum:
-            [
-              UNKNOWN,
-              DEBIT,
-              VISA,
-              MASTERCARD,
-              AMEX,
-              DINERS,
-              DISCOVER,
-              JCB,
-              UNIONPAY,
-              MAESTRO,
-              GIFT,
-              CASH,
-              EBT,
-              OTHER,
-            ]
-          description: >
+            - UNKNOWN
+            - DEBIT
+            - VISA
+            - MASTERCARD
+            - AMEX
+            - DINERS
+            - DISCOVER
+            - JCB
+            - UNIONPAY
+            - MAESTRO
+            - GIFT
+            - CASH
+            - EBT
+            - OTHER
+          description: |
             The type of card used for this transaction:
              * `UNKNOWN` - The card type is unknown
              * `DEBIT` - Debit Card
@@ -667,7 +651,7 @@ components:
              * `CASH` - All-cash Transaction
              * `EBT` - Electronic Benefits Transfer Card
              * `OTHER` - Other tender types
-          example: 'VISA'
+          example: VISA
         maskedCardNumber:
           type: string
           description: The masked card number. The format may vary (e.g. ************0011, 4****0011, etc.)
@@ -680,7 +664,6 @@ components:
         - id
         - type
         - currency
-
     TransactionResponse:
       type: object
       description: A single Sale Transaction may result in multiple Responses.
@@ -715,18 +698,21 @@ components:
         hostResponseText:
           type: string
           description: A meaningful text explaining the response code from the host.
-          example: 'APPROVED 00'
+          example: APPROVED 00
         receipt:
           $ref: '#/components/schemas/Receipt'
-
     Error:
       type: object
       description: Represents an error that occurred during the request.
       properties:
         code:
           type: number
-          enum: [1000, 2000, 3000, 9000]
-          description: >
+          enum:
+            - 1000
+            - 2000
+            - 3000
+            - 9000
+          description: |
             Numeric error code. These are grouped into ranges for easier identification and troubleshooting.
 
              * `1000` - AuthenticationGenericError
@@ -736,15 +722,18 @@ components:
           example: 2000
         status:
           type: string
-          enum: [Completed, Rejected, Interrupted, Unknown]
-          description: >
+          enum:
+            - Completed
+            - Rejected
+            - Interrupted
+            - Unknown
+          description: |
             Execution status of the request sent to the payment gateway.
 
              * Completed - The request completed successfully.
              * Rejected - The request was rejected by the payment gateway. No action or side effects occurred. The transaction can safely be retried.
              * Interrupted - The request was interrupted, and the final status is unknown. Possible side effects may have occurred (e.g., a Sale (Token) that returns Interrupted might still charge the customer, even if an error is returned). Additional checks are required before retrying the transaction.
              * Unknown
-
           example: Rejected
         message:
           type: string
@@ -753,7 +742,7 @@ components:
         traceId:
           type: string
           description: Unique trace identifier for tracking and debugging this request.
-          example: '1-6838bcce-5c0074e82ac7170d4f990d87'
+          example: 1-6838bcce-5c0074e82ac7170d4f990d87
         timestamp:
           type: string
           format: date-time
@@ -765,16 +754,15 @@ components:
             $ref: '#/components/schemas/ErrorDetail'
       example:
         code: 2000
-        status: 'Rejected'
-        message: 'One or more validation errors occurred.'
-        traceId: '1-6838bcce-5c0074e82ac7170d4f990d87'
+        status: Rejected
+        message: One or more validation errors occurred.
+        traceId: 1-6838bcce-5c0074e82ac7170d4f990d87
         timestamp: '2025-05-29T20:00:15.5752808Z'
         errorDetails:
           - code: 2000
-            field: 'Amount'
-            message: 'Request validation failed'
-            details: 'The Amount field must be a positive number between 1 and 999999999.'
-
+            field: Amount
+            message: Request validation failed
+            details: The Amount field must be a positive number between 1 and 999999999.
     CardPresentRequest:
       type: object
       description: Represents the request to process a Card Present transaction using a physical payment terminal.
@@ -808,7 +796,6 @@ components:
           $ref: '#/components/schemas/ReferenceIdForTransactions'
       required:
         - amount
-
     CardNotPresentRequest:
       type: object
       description: Represents the request to process a Card Not Present transaction using a hosted payment form/iframe.
@@ -840,11 +827,10 @@ components:
           example: https://merchant.example.com/payment-complete
         useJavaScriptCallback:
           type: boolean
-          description: If true, the iframe will use JavaScript to post a message to the parent window to notify the merchant's site when the iframe completed. This allows for more control over the user experience on the merchant's site. If false, the hosted payment form will redirect the user to either the provided returnUrl or a default success or error page.
+          description: At the end of the transaction flow, the user is always redirected to either the returnUrl (if provided), or a default success or issue page. In addition, if useJavaScriptCallback is set to true, the iframe will use JavaScript to post a message to the parent window to notify the merchant's site when the iframe completed. This allows for more control over the user experience on the merchant's site.
           example: true
       required:
         - amount
-
     CardOnFileRequest:
       type: object
       description: Represents the request to process a Card On File transaction using a tokenized card.
@@ -870,7 +856,6 @@ components:
       required:
         - amount
         - paymentMethodId
-
     CaptureRequest:
       type: object
       description: Represents the request to capture a previously authorized transaction.
@@ -888,11 +873,12 @@ components:
         orderNumber:
           $ref: '#/components/schemas/OrderNumber'
       oneOf:
-        - title: 'Capture using Transaction ID'
-          required: [originalTransactionId]
-        - title: 'Capture using Reference ID'
-          required: [originalReferenceId]
-
+        - title: Capture using Transaction ID
+          required:
+            - originalTransactionId
+        - title: Capture using Reference ID
+          required:
+            - originalReferenceId
     RefundRequest:
       type: object
       description: Represents the request to refund or void a previously completed transaction.
@@ -910,11 +896,12 @@ components:
         orderNumber:
           $ref: '#/components/schemas/OrderNumber'
       oneOf:
-        - title: 'Refund using Transaction ID'
-          required: [originalTransactionId]
-        - title: 'Refund using Reference ID'
-          required: [originalReferenceId]
-
+        - title: Refund using Transaction ID
+          required:
+            - originalTransactionId
+        - title: Refund using Reference ID
+          required:
+            - originalReferenceId
     UnreferencedPhysicalRefundRequest:
       type: object
       description: Represents the request to process a Card Present unreferenced refund without a matching completed sale or capture transaction.
@@ -940,7 +927,6 @@ components:
           $ref: '#/components/schemas/ReferenceIdForTransactions'
       required:
         - amount
-
     UnreferencedVirtualRefundRequest:
       type: object
       description: Represents the request to process a Card Not Present unreferenced refund without a matching completed sale or capture transaction.
@@ -969,11 +955,10 @@ components:
           example: https://merchant.example.com/refund-complete
         useJavaScriptCallback:
           type: boolean
-          description: If true, the iframe will use JavaScript to post a message to the parent window to notify the merchant's site when the iframe completed. This allows for more control over the user experience on the merchant's site. If false, the hosted payment form will redirect the user to either the provided returnUrl or a default success or error page.
+          description: At the end of the transaction flow, the user is always redirected to either the returnUrl (if provided), or a default success or issue page. In addition, if useJavaScriptCallback is set to true, the iframe will use JavaScript to post a message to the parent window to notify the merchant's site when the iframe completed. This allows for more control over the user experience on the merchant's site.
           example: true
       required:
         - amount
-
     CardOnFileAddRequest:
       type: object
       description: Represents the request to tokenize a card using a physical terminal.
@@ -991,7 +976,6 @@ components:
           example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForTokens'
-
     CardOnFileVirtualAddRequest:
       type: object
       description: Represents the request to tokenize a card using a hosted payment form / iframe.
@@ -1015,9 +999,8 @@ components:
           example: https://merchant.example.com/payment-complete
         useJavaScriptCallback:
           type: boolean
-          description: If true, the iframe will use JavaScript to post a message to the parent window to notify the merchant's site when the iframe completed. This allows for more control over the user experience on the merchant's site. If false, the hosted payment form will redirect the user to either the provided returnUrl or a default success or error page.
+          description: At the end of the transaction flow, the user is always redirected to either the returnUrl (if provided), or a default success or issue page. In addition, if useJavaScriptCallback is set to true, the iframe will use JavaScript to post a message to the parent window to notify the merchant's site when the iframe completed. This allows for more control over the user experience on the merchant's site.
           example: true
-
     CardOnFileUpdateRequest:
       type: object
       description: Represents the request to update a previously tokenized card.
@@ -1030,7 +1013,6 @@ components:
           example: '1225'
       required:
         - cardExpDate
-
     CNPVirtualResponse:
       type: object
       description: Represents the response to a Card Not Present sale or authorization using a hosted payment form / iframe.
@@ -1038,7 +1020,7 @@ components:
         id:
           type: string
           description: Unique ID for this transaction.
-          example: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+          example: trx_01J2F0EKHC7HY2R93C8ENBD1FG
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1046,12 +1028,12 @@ components:
               description: The payment method used for this Card Not Present transaction.
               properties:
                 id:
-                  example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                  example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
           example:
-            id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-            type: 'Virtual'
-            currency: 'USD'
-            description: 'Online Checkout Iframe'
+            id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+            type: Virtual
+            currency: USD
+            description: Online Checkout Iframe
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -1065,11 +1047,11 @@ components:
         sessionId:
           type: string
           description: Session ID for the iframe transaction.
-          example: 'ses_01JSFAMY0AGW27QKP30C727512'
+          example: ses_01JSFAMY0AGW27QKP30C727512
         iframeUrl:
           type: string
           description: URL for the iframe to collect payment information, or null if iframe could not be created due to invalid credentials, etc.
-          example: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+          example: https://hpf.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512
         expirationTimestamp:
           type: string
           format: date-time
@@ -1077,10 +1059,13 @@ components:
           example: '2025-04-17T14:19:03Z'
         status:
           type: string
-          enum: [Pending, Completed, Expired, Error]
+          enum:
+            - Pending
+            - Completed
+            - Expired
+            - Error
           description: Status of the iframe session. When created, this will always be pending. The status values will be updated as the customer goes through the iframe process.
-          example: 'Pending'
-
+          example: Pending
     PaymentMethodsListResponse:
       type: object
       description: Paginated response containing payment methods
@@ -1119,34 +1104,38 @@ components:
                 type: string
                 description: |
                   The payment method ID. Physical terminals will be prefixed with `pmt_trm_` and virtual terminals will be prefixed with `pmt_vrt_`.
-                example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
               type:
                 type: string
-                enum: [Physical, Virtual]
-                example: 'Physical'
+                enum:
+                  - Physical
+                  - Virtual
+                example: Physical
               currency:
                 type: string
-                enum: [USD, CAD]
-                example: 'USD'
+                enum:
+                  - USD
+                  - CAD
+                example: USD
               description:
                 type: string
                 maxLength: 1000
                 description: A human-readable name for the payment method
-                example: 'Main Store Terminal'
+                example: Main Store Terminal
             required:
               - id
               - type
               - currency
               - description
           example:
-            - id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-              type: 'Physical'
-              currency: 'USD'
-              description: 'Main Store Terminal'
-            - id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-              type: 'Virtual'
-              currency: 'USD'
-              description: 'Online Checkout Iframe'
+            - id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+              type: Physical
+              currency: USD
+              description: Main Store Terminal
+            - id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+              type: Virtual
+              currency: USD
+              description: Online Checkout Iframe
       required:
         - totalCount
         - page
@@ -1155,7 +1144,6 @@ components:
         - hasNextPage
         - hasPreviousPage
         - items
-
     TransactionsListResponse:
       type: object
       description: Paginated response containing transactions
@@ -1190,19 +1178,19 @@ components:
           items:
             $ref: '#/components/schemas/TransactionResponseObject'
           example:
-            - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
+            - id: trx_01JWBPE27KHY2K4J7A13ATQ786
               timestamp: '2025-05-27T18:49:31Z'
-              type: 'Auth'
+              type: Auth
               paymentMethod:
-                id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                type: 'Virtual'
-                currency: 'USD'
-                description: 'Online Checkout Iframe'
-              referenceId: 'ref_s192i49i'
-              orderNumber: 'order_number_1234'
-              invoiceNumber: 'inv_12345678'
+                id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                type: Virtual
+                currency: USD
+                description: Online Checkout Iframe
+              referenceId: ref_s192i49i
+              orderNumber: order_number_1234
+              invoiceNumber: inv_12345678
               resultCode: 0
-              resultText: 'APPROVED'
+              resultText: APPROVED
               requestedAmount: 0
               approvedAmount: 0
               balanceAmount: 0
@@ -1214,7 +1202,6 @@ components:
         - hasNextPage
         - hasPreviousPage
         - items
-
     TransactionResponseObject:
       type: object
       description: Represents the response to a sale or authorization transaction.
@@ -1222,7 +1209,7 @@ components:
         id:
           type: string
           description: Unique ID for this transaction.
-          example: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+          example: trx_01J2F0EKHC7HY2R93C8ENBD1FG
         timestamp:
           type: string
           format: date-time
@@ -1230,9 +1217,22 @@ components:
           example: '2025-05-27T18:49:31Z'
         type:
           type: string
-          enum: [Sale, Auth, Capture, Refund, Void]
+          enum:
+            - Sale
+            - Auth
+            - Capture
+            - Refund
+            - Void
           description: Type of transaction
-          example: 'Sale'
+          example: Sale
+        status:
+          type: string
+          enum:
+            - Created
+            - Completed
+            - Pending
+          description: The current status of the transaction
+          example: Completed
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1247,7 +1247,7 @@ components:
                 If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
               properties:
                 id:
-                  example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                  example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -1286,8 +1286,7 @@ components:
                           If a new card was tokenized during the transaction, the tokenized card ID and details will be returned (`pmt_tkn_*`). This value should be stored in your system if you wish to use it for subsequent Card On File transactions.
                         properties:
                           id:
-                            example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-
+                            example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
     CNPTransactionResponse:
       type: object
       description: Represents the response to a Card Not Present sale or authorization using a previously tokenized card.
@@ -1295,7 +1294,7 @@ components:
         id:
           type: string
           description: Unique ID for this transaction.
-          example: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+          example: trx_01J2F0EKHC7HY2R93C8ENBD1FG
         timestamp:
           type: string
           format: date-time
@@ -1303,9 +1302,22 @@ components:
           example: '2025-05-27T18:49:31Z'
         type:
           type: string
-          enum: [Sale, Auth, Capture, Refund, Void]
+          enum:
+            - Sale
+            - Auth
+            - Capture
+            - Refund
+            - Void
           description: Type of transaction
-          example: 'Sale'
+          example: Sale
+        status:
+          type: string
+          enum:
+            - Created
+            - Completed
+            - Pending
+          description: The current status of the transaction
+          example: Completed
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1313,13 +1325,13 @@ components:
               description: The payment method used for this transaction.
               properties:
                 id:
-                  example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                  example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
           example:
-            id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-            type: 'Token'
-            currency: 'USD'
-            description: "Token for John Doe's Visa"
-            cardType: 'VISA'
+            id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+            type: Token
+            currency: USD
+            description: Token for John Doe's Visa
+            cardType: VISA
             maskedCardNumber: '************0011'
             cardExpDate: '1225'
         invoiceNumber:
@@ -1349,7 +1361,6 @@ components:
           description: A list of all transaction responses received during the transaction. In most cases, there will be only one response.
           items:
             $ref: '#/components/schemas/TransactionResponse'
-
     CaptureResponse:
       type: object
       description: Represents the response to a capture request.
@@ -1357,7 +1368,7 @@ components:
         id:
           type: string
           description: Unique ID for this capture transaction.
-          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+          example: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         timestamp:
           type: string
           format: date-time
@@ -1365,9 +1376,22 @@ components:
           example: '2025-05-27T18:49:31Z'
         type:
           type: string
-          enum: [Sale, Auth, Capture, Refund, Void]
+          enum:
+            - Sale
+            - Auth
+            - Capture
+            - Refund
+            - Void
           description: Type of transaction
-          example: 'Capture'
+          example: Capture
+        status:
+          type: string
+          enum:
+            - Created
+            - Completed
+            - Pending
+          description: The current status of the transaction
+          example: Completed
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1375,7 +1399,7 @@ components:
               description: The payment method used for this transaction.
               properties:
                 id:
-                  example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                  example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -1408,7 +1432,6 @@ components:
               properties:
                 lines:
                   description: The receipt lines.
-
     RefundResponse:
       type: object
       description: Represents the response to a refund request.
@@ -1416,7 +1439,7 @@ components:
         id:
           type: string
           description: Unique ID for this refund transaction.
-          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+          example: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         timestamp:
           type: string
           format: date-time
@@ -1424,9 +1447,22 @@ components:
           example: '2025-05-27T18:49:31Z'
         type:
           type: string
-          enum: [Sale, Auth, Capture, Refund, Void]
+          enum:
+            - Sale
+            - Auth
+            - Capture
+            - Refund
+            - Void
           description: Type of transaction
-          example: 'Refund'
+          example: Refund
+        status:
+          type: string
+          enum:
+            - Created
+            - Completed
+            - Pending
+          description: The current status of the transaction
+          example: Completed
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1434,7 +1470,7 @@ components:
               description: The payment method used for this transaction.
               properties:
                 id:
-                  example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                  example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -1467,7 +1503,6 @@ components:
               properties:
                 lines:
                   description: The receipt lines.
-
     CardOnFileAddResponse:
       type: object
       description: Represents the response to a physical card tokenization request.
@@ -1475,7 +1510,30 @@ components:
         id:
           type: string
           description: Unique ID for this card tokenization transaction.
-          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+          example: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
+        timestamp:
+          type: string
+          format: date-time
+          description: Transaction timestamp in UTC
+          example: '2025-05-27T18:49:31Z'
+        type:
+          type: string
+          enum:
+            - Sale
+            - Auth
+            - Capture
+            - Refund
+            - Void
+          description: Type of transaction
+          example: Auth
+        status:
+          type: string
+          enum:
+            - Completed
+            - Pending
+            - Created
+          description: The current status of the transaction
+          example: Completed
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1486,43 +1544,58 @@ components:
                 Example format: `pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J`
               properties:
                 id:
-                  example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                  example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
         resultCode:
           $ref: '#/components/schemas/ResultCode'
         resultText:
           $ref: '#/components/schemas/ResultText'
+        requestedAmount:
+          type: number
+          description: The amount sent in the transaction request. Will be 0 for token creation.
+          example: 0
+        approvedAmount:
+          type: number
+          description: The amount approved. Will be 0 for token creation.
+          example: 0
         transactionResponses:
           type: array
           description: A list of all transaction responses received during the $0 authorization verification of the card.
           items:
             $ref: '#/components/schemas/TransactionResponse'
       example:
-        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
+        timestamp: '2025-05-27T18:49:31Z'
+        type: Auth
+        status: Completed
         paymentMethod:
-          id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-          type: 'Physical'
-          currency: 'USD'
-          description: 'Main Store Terminal'
-        referenceId: 'ref_add_card_12345'
+          id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+          type: Physical
+          currency: USD
+          description: Main Store Terminal
+        referenceId: ref_add_card_12345
         resultCode: 0
-        resultText: 'Card successfully tokenized'
+        resultText: Card successfully tokenized
+        requestedAmount: 0
+        approvedAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: '000AAA'
+            authCode: 000AAA
+            amountApproved: 0
             paymentMethod:
-              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'Token'
-              currency: 'USD'
-              description: "Token for John Doe's Visa"
-              cardType: 'VISA'
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            cardType: 'VISA'
-            accountType: 'Credit'
-            hostResponseText: 'APPROVED 00'
-
+            cardType: VISA
+            avsResult: Y
+            cvvResult: M
+            accountType: Credit
+            hostResponseText: APPROVED 00
     CardOnFileVirtualAddResponse:
       type: object
       description: Represents the response to a hosted payment form / iframe card tokenization request.
@@ -1530,7 +1603,7 @@ components:
         id:
           type: string
           description: Unique ID for this card tokenization transaction.
-          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+          example: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1538,12 +1611,12 @@ components:
               description: The payment method used for this transaction.
               properties:
                 id:
-                  example: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
+                  example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
           example:
-            id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-            type: 'Virtual'
-            currency: 'USD'
-            description: 'Online Checkout Iframe'
+            id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+            type: Virtual
+            currency: USD
+            description: Online Checkout Iframe
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
         requestedAmount:
@@ -1553,11 +1626,11 @@ components:
         sessionId:
           type: string
           description: Session ID for the iframe transaction.
-          example: 'ses_01JSFAMY0AGW27QKP30C727512'
+          example: ses_01JSFAMY0AGW27QKP30C727512
         iframeUrl:
           type: string
           description: URL for the iframe to collect payment information, or null if iframe could not be created due to invalid credentials, etc.
-          example: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+          example: https://hpf.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512
         expirationTimestamp:
           type: string
           format: date-time
@@ -1565,10 +1638,13 @@ components:
           example: '2025-04-17T14:19:03Z'
         status:
           type: string
-          enum: [Pending, Completed, Expired, Error]
+          enum:
+            - Pending
+            - Completed
+            - Expired
+            - Error
           description: Status of the iframe session. When created, this will always be pending. The status values will be updated as the customer goes through the iframe process.
-          example: 'Pending'
-
+          example: Pending
     CardOnFileUpdateResponse:
       type: object
       description: Represents the response to a tokenized card update request.
@@ -1576,7 +1652,7 @@ components:
         id:
           type: string
           description: Unique ID for this card update transaction.
-          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+          example: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1584,14 +1660,13 @@ components:
               description: The tokenized card that was updated.
               properties:
                 id:
-                  example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                  example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
         resultCode:
           $ref: '#/components/schemas/ResultCode'
         resultText:
           $ref: '#/components/schemas/ResultText'
-
     CardOnFileRemoveResponse:
       type: object
       description: Represents the response to a tokenized card removal request.
@@ -1599,7 +1674,7 @@ components:
         id:
           type: string
           description: Unique ID for this card removal transaction.
-          example: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+          example: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1607,14 +1682,13 @@ components:
               description: The tokenized card that was removed.
               properties:
                 id:
-                  example: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
+                  example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
         resultCode:
           $ref: '#/components/schemas/ResultCode'
         resultText:
           $ref: '#/components/schemas/ResultText'
-
     WebhookEvent:
       type: object
       description: Webhook event details.
@@ -1622,11 +1696,11 @@ components:
         id:
           type: string
           description: Unique ID for this webhook event.
-          example: 'evt_01JS21X856RR8R69GV5F17XK9C'
+          example: evt_01JS21X856RR8R69GV5F17XK9C
         type:
           type: string
           description: The type of event that occurred.
-          example: 'event.completed'
+          example: event.completed
         timestamp:
           type: string
           format: date-time
@@ -1637,10 +1711,9 @@ components:
         - type
         - timestamp
       example:
-        id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-        type: 'sale.completed'
+        id: evt_01JS21X856RR8R69GV5F17XK9C
+        type: sale.completed
         timestamp: '2025-04-16T14:30:00Z'
-
     SaleCompletedWebhook:
       type: object
       description: Represents the webhook triggered when a financial transaction is processed and completed.
@@ -1651,34 +1724,35 @@ components:
             - type: object
               properties:
                 type:
-                  example: 'sale.completed'
+                  example: sale.completed
           example:
-            id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-            type: 'sale.completed'
+            id: evt_01JS21X856RR8R69GV5F17XK9C
+            type: sale.completed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           allOf:
             - $ref: '#/components/schemas/TransactionResponseObject'
           example:
-            id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+            id: trx_01J2F0EKHC7HY2R93C8ENBD1FG
             timestamp: '2025-05-27T18:49:31Z'
-            type: 'Sale'
+            type: Sale
+            status: Completed
             paymentMethod:
-              id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-              type: 'Physical'
-              currency: 'USD'
-              description: 'Main Store Terminal'
-            invoiceNumber: 'inv_12345678'
-            orderNumber: 'order_number_1234'
-            referenceId: 'ref_s192i49i'
+              id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+              type: Physical
+              currency: USD
+              description: Main Store Terminal
+            invoiceNumber: inv_12345678
+            orderNumber: order_number_1234
+            referenceId: ref_s192i49i
             resultCode: 0
-            resultText: 'Successful transaction request'
+            resultText: Successful transaction request
             requestedAmount: 1000
             approvedAmount: 1000
             balanceAmount: 0
             transactionResponses:
               - responseCode: 1
-                authCode: '000AAA'
+                authCode: 000AAA
                 amountApproved: 1000
                 approvedAmountBreakdown:
                   amountGoodsAndServices: 900
@@ -1686,20 +1760,19 @@ components:
                   cashback: 0
                   tip: 0
                 paymentMethod:
-                  id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                  type: 'Token'
-                  currency: 'USD'
-                  description: "Token for John Doe's Visa"
-                  cardType: 'VISA'
+                  id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                  type: Token
+                  currency: USD
+                  description: Token for John Doe's Visa
+                  cardType: VISA
                   maskedCardNumber: '************0011'
                   cardExpDate: '1225'
-                cardType: 'VISA'
-                accountType: 'Credit'
-                hostResponseText: 'APPROVED 00'
+                cardType: VISA
+                accountType: Credit
+                hostResponseText: APPROVED 00
       required:
         - event
         - originalResponse
-
     AuthCompletedWebhook:
       type: object
       description: Represents the webhook triggered when a transaction authorization is completed.
@@ -1710,42 +1783,42 @@ components:
             - type: object
               properties:
                 type:
-                  example: 'auth.completed'
+                  example: auth.completed
           example:
-            id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-            type: 'auth.completed'
+            id: evt_01JS21X856RR8R69GV5F17XK9C
+            type: auth.completed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           allOf:
             - $ref: '#/components/schemas/TransactionResponseObject'
           example:
-            id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+            id: trx_01J2F0EKHC7HY2R93C8ENBD1FG
             timestamp: '2025-05-27T18:49:31Z'
-            type: 'Auth'
+            type: Auth
+            status: Completed
             paymentMethod:
-              id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-              type: 'Physical'
-              currency: 'USD'
-              description: 'Main Store Terminal'
-            invoiceNumber: 'inv_12345678'
-            orderNumber: 'order_number_1234'
-            referenceId: 'ref_s192i49i'
+              id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+              type: Physical
+              currency: USD
+              description: Main Store Terminal
+            invoiceNumber: inv_12345678
+            orderNumber: order_number_1234
+            referenceId: ref_s192i49i
             resultCode: 0
-            resultText: 'Successful transaction request'
+            resultText: Successful transaction request
             requestedAmount: 1000
             approvedAmount: 1000
             balanceAmount: 0
             transactionResponses:
               - responseCode: 1
-                authCode: '000AAA'
+                authCode: 000AAA
                 amountApproved: 1000
-                cardType: 'VISA'
-                accountType: 'Credit'
-                hostResponseText: 'APPROVED 00'
+                cardType: VISA
+                accountType: Credit
+                hostResponseText: APPROVED 00
       required:
         - event
         - originalResponse
-
     CaptureCompletedWebhook:
       type: object
       description: Represents the webhook triggered when a transaction capture for a previously authorized transaction is completed.
@@ -1756,37 +1829,37 @@ components:
             - type: object
               properties:
                 type:
-                  example: 'capture.completed'
+                  example: capture.completed
           example:
-            id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-            type: 'capture.completed'
+            id: evt_01JS21X856RR8R69GV5F17XK9C
+            type: capture.completed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           allOf:
             - $ref: '#/components/schemas/CaptureResponse'
           example:
-            id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+            id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
             timestamp: '2025-05-27T18:49:31Z'
-            type: 'Capture'
-            referenceId: 'ref_s192i49i'
+            type: Capture
+            status: Completed
+            referenceId: ref_s192i49i
             paymentMethod:
-              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'Token'
-              currency: 'USD'
-              description: "Token for John Doe's Visa"
-              cardType: 'VISA'
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            invoiceNumber: 'inv_12345678'
-            orderNumber: 'order_number_1234'
+            invoiceNumber: inv_12345678
+            orderNumber: order_number_1234
             resultCode: 0
-            resultText: 'Successful transaction request'
+            resultText: Successful transaction request
             requestedAmount: 1000
             approvedAmount: 1000
       required:
         - event
         - originalResponse
-
     RefundCompletedWebhook:
       type: object
       description: Represents the webhook triggered when a transaction void or refund for a previously completed transaction is completed.
@@ -1797,37 +1870,37 @@ components:
             - type: object
               properties:
                 type:
-                  example: 'refund.completed'
+                  example: refund.completed
           example:
-            id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-            type: 'refund.completed'
+            id: evt_01JS21X856RR8R69GV5F17XK9C
+            type: refund.completed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           allOf:
             - $ref: '#/components/schemas/RefundResponse'
           example:
-            id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+            id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
             timestamp: '2025-05-27T18:49:31Z'
-            type: 'Refund'
-            referenceId: 'ref_s192i49i'
+            type: Refund
+            status: Completed
+            referenceId: ref_s192i49i
             paymentMethod:
-              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'Token'
-              currency: 'USD'
-              description: "Token for John Doe's Visa"
-              cardType: 'VISA'
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            invoiceNumber: 'ref_inv_12345678'
-            orderNumber: 'ref_order_1234'
+            invoiceNumber: ref_inv_12345678
+            orderNumber: ref_order_1234
             resultCode: 0
-            resultText: 'Successful transaction request'
+            resultText: Successful transaction request
             requestedAmount: 1000
             approvedAmount: 1000
       required:
         - event
         - originalResponse
-
     TokenCreatedWebhook:
       type: object
       description: Represents the webhook triggered when a card is tokenized and stored as a payment method.
@@ -1838,17 +1911,16 @@ components:
             - type: object
               properties:
                 type:
-                  example: 'token.created'
+                  example: token.created
           example:
-            id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-            type: 'token.created'
+            id: evt_01JS21X856RR8R69GV5F17XK9C
+            type: token.created
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           $ref: '#/components/schemas/CardOnFileAddResponse'
       required:
         - event
         - originalResponse
-
     TokenUpdatedWebhook:
       type: object
       description: Represents the webhook triggered when an expiration date for a previously tokenized card is updated.
@@ -1859,31 +1931,30 @@ components:
             - type: object
               properties:
                 type:
-                  example: 'token.updated'
+                  example: token.updated
           example:
-            id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-            type: 'token.updated'
+            id: evt_01JS21X856RR8R69GV5F17XK9C
+            type: token.updated
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           allOf:
             - $ref: '#/components/schemas/CardOnFileUpdateResponse'
           example:
-            id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+            id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
             paymentMethod:
-              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'Token'
-              currency: 'USD'
-              description: "Token for John Doe's Visa"
-              cardType: 'VISA'
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            referenceId: 'ref_update_card_12345'
+            referenceId: ref_update_card_12345
             resultCode: 0
-            resultText: 'Card successfully updated'
+            resultText: Card successfully updated
       required:
         - event
         - originalResponse
-
     TokenRemovedWebhook:
       type: object
       description: Represents the webhook triggered when a previously tokenized card is removed from the system.
@@ -1894,41 +1965,39 @@ components:
             - type: object
               properties:
                 type:
-                  example: 'token.removed'
+                  example: token.removed
           example:
-            id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-            type: 'token.removed'
+            id: evt_01JS21X856RR8R69GV5F17XK9C
+            type: token.removed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
           allOf:
             - $ref: '#/components/schemas/CardOnFileRemoveResponse'
           example:
-            id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+            id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
             paymentMethod:
-              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'Token'
-              currency: 'USD'
-              description: "Token for John Doe's Visa"
-              cardType: 'VISA'
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            referenceId: 'ref_remove_card_12345'
+            referenceId: ref_remove_card_12345
             resultCode: 0
-            resultText: 'Card successfully removed'
+            resultText: Card successfully removed
       required:
         - event
         - originalResponse
-
   parameters:
     WebhookSignatureHeader:
       name: x-fsk-wh-chksm
       in: header
       description: The SHA-256 hash signature of the webhook payload, encoded in base64.
-      example: 'OU6bkK1/nScyy8fA+3QTZj1i3xaVMmAarTEnvogFFTA='
+      example: OU6bkK1/nScyy8fA+3QTZj1i3xaVMmAarTEnvogFFTA=
       required: true
       schema:
         type: string
-
   requestBodies:
     SaleCompletedWebhook:
       description: The request body for the `sale.completed` webhook event.
@@ -1938,29 +2007,30 @@ components:
             $ref: '#/components/schemas/SaleCompletedWebhook'
           example:
             event:
-              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-              type: 'sale.completed'
+              id: evt_01JS21X856RR8R69GV5F17XK9C
+              type: sale.completed
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+              id: trx_01J2F0EKHC7HY2R93C8ENBD1FG
               timestamp: '2025-05-27T18:49:31Z'
-              type: 'Sale'
+              type: Sale
+              status: Completed
               paymentMethod:
-                id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-                type: 'Physical'
-                currency: 'USD'
-                description: 'Main Store Terminal'
-              invoiceNumber: 'inv_12345678'
-              orderNumber: 'order_number_1234'
-              referenceId: 'ref_s192i49i'
+                id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                type: Physical
+                currency: USD
+                description: Main Store Terminal
+              invoiceNumber: inv_12345678
+              orderNumber: order_number_1234
+              referenceId: ref_s192i49i
               resultCode: 0
-              resultText: 'Successful transaction request'
+              resultText: Successful transaction request
               requestedAmount: 1000
               approvedAmount: 1000
               balanceAmount: 0
               transactionResponses:
                 - responseCode: 1
-                  authCode: '000AAA'
+                  authCode: 000AAA
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -1968,18 +2038,18 @@ components:
                     cashback: 0
                     tip: 0
                   paymentMethod:
-                    id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                    type: 'Token'
-                    currency: 'USD'
-                    description: "Token for John Doe's Visa"
-                    cardType: 'VISA'
+                    id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                    type: Token
+                    currency: USD
+                    description: Token for John Doe's Visa
+                    cardType: VISA
                     maskedCardNumber: '************0011'
                     cardExpDate: '1225'
-                  cardType: 'VISA'
-                  avsResult: 'Y'
-                  cvvResult: 'M'
-                  accountType: 'Credit'
-                  hostResponseText: 'APPROVED 00'
+                  cardType: VISA
+                  avsResult: Y
+                  cvvResult: M
+                  accountType: Credit
+                  hostResponseText: APPROVED 00
                   receipt:
                     lines:
                       - '     Test Merchant      '
@@ -1991,19 +2061,19 @@ components:
                       - 'RECORD #         0656191'
                       - 'HOST INVOICE #    000038'
                       - 'HOST SEQ #    1720656191'
-                      - 'MERCH INVOICE.  fgj24344'
+                      - MERCH INVOICE.  fgj24344
                       - '------------------------'
-                      - 'CARD    ************0011'
-                      - 'VISA             Contact'
-                      - '07/10/2024      20:03:05'
+                      - CARD    ************0011
+                      - VISA             Contact
+                      - 07/10/2024      20:03:05
                       - '------------------------'
-                      - 'Purchase      USD $10.00'
-                      - 'Tip           USD  $0.00'
-                      - 'Cashback      USD  $0.00'
+                      - Purchase      USD $10.00
+                      - Tip           USD  $0.00
+                      - Cashback      USD  $0.00
                       - '                        '
-                      - 'TOTAL         USD $10.00'
+                      - TOTAL         USD $10.00
                       - '------------------------'
-                      - 'AUTH#:000AAA       B:171'
+                      - AUTH#:000AAA       B:171
                       - '          Sale          '
                       - '      APPROVED 00       '
                       - '       THANK YOU        '
@@ -2030,19 +2100,19 @@ components:
                       - 'RECORD #         0656191'
                       - 'HOST INVOICE #    000038'
                       - 'HOST SEQ #    1720656191'
-                      - 'MERCH INVOICE.  fgj24344'
+                      - MERCH INVOICE.  fgj24344
                       - '------------------------'
-                      - 'CARD    ************0011'
-                      - 'VISA             Contact'
-                      - '07/10/2024      20:03:05'
+                      - CARD    ************0011
+                      - VISA             Contact
+                      - 07/10/2024      20:03:05
                       - '------------------------'
-                      - 'Purchase      USD $10.00'
-                      - 'Tip           USD  $0.00'
-                      - 'Cashback      USD  $0.00'
+                      - Purchase      USD $10.00
+                      - Tip           USD  $0.00
+                      - Cashback      USD  $0.00
                       - '                        '
-                      - 'TOTAL         USD $10.00'
+                      - TOTAL         USD $10.00
                       - '------------------------'
-                      - 'AUTH#:000AAA       B:171'
+                      - AUTH#:000AAA       B:171
                       - '          Sale          '
                       - '      APPROVED 00       '
                       - '       THANK YOU        '
@@ -2060,7 +2130,6 @@ components:
                       - '                        '
                       - '                        '
                       - '     CUSTOMER COPY      '
-
     AuthCompletedWebhook:
       description: The request body for the `auth.completed` webhook event.
       content:
@@ -2069,29 +2138,30 @@ components:
             $ref: '#/components/schemas/AuthCompletedWebhook'
           example:
             event:
-              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-              type: 'auth.completed'
+              id: evt_01JS21X856RR8R69GV5F17XK9C
+              type: auth.completed
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+              id: trx_01J2F0EKHC7HY2R93C8ENBD1FG
               timestamp: '2025-05-27T18:49:31Z'
-              type: 'Auth'
+              type: Auth
+              status: Completed
               paymentMethod:
-                id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-                type: 'Physical'
-                currency: 'USD'
-                description: 'Main Store Terminal'
-              invoiceNumber: 'inv_12345678'
-              orderNumber: 'order_number_1234'
-              referenceId: 'ref_s192i49i'
+                id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                type: Physical
+                currency: USD
+                description: Main Store Terminal
+              invoiceNumber: inv_12345678
+              orderNumber: order_number_1234
+              referenceId: ref_s192i49i
               resultCode: 0
-              resultText: 'Successful transaction request'
+              resultText: Successful transaction request
               requestedAmount: 1000
               approvedAmount: 1000
               balanceAmount: 0
               transactionResponses:
                 - responseCode: 1
-                  authCode: '000AAA'
+                  authCode: 000AAA
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -2099,18 +2169,18 @@ components:
                     cashback: 0
                     tip: 0
                   paymentMethod:
-                    id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                    type: 'Token'
-                    currency: 'USD'
-                    description: "Token for John Doe's Visa"
-                    cardType: 'VISA'
+                    id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                    type: Token
+                    currency: USD
+                    description: Token for John Doe's Visa
+                    cardType: VISA
                     maskedCardNumber: '************0011'
                     cardExpDate: '1225'
-                  cardType: 'VISA'
-                  avsResult: 'Y'
-                  cvvResult: 'M'
-                  accountType: 'Credit'
-                  hostResponseText: 'APPROVED 00'
+                  cardType: VISA
+                  avsResult: Y
+                  cvvResult: M
+                  accountType: Credit
+                  hostResponseText: APPROVED 00
                   receipt:
                     lines:
                       - '     Test Merchant      '
@@ -2122,14 +2192,14 @@ components:
                       - 'RECORD #         0656191'
                       - 'HOST INVOICE #    000038'
                       - 'HOST SEQ #    1720656191'
-                      - 'MERCH INVOICE.  fgj24344'
+                      - MERCH INVOICE.  fgj24344
                       - '------------------------'
-                      - 'CARD    ************0011'
-                      - 'VISA             Contact'
-                      - '07/10/2024      20:03:05'
+                      - CARD    ************0011
+                      - VISA             Contact
+                      - 07/10/2024      20:03:05
                       - '------------------------'
                       - '        PRE AUTH        '
-                      - 'TOTAL         USD $10.00'
+                      - TOTAL         USD $10.00
                       - '------------------------'
                       - 'AUTH#:000AAA            '
                       - '                        '
@@ -2158,14 +2228,14 @@ components:
                       - 'RECORD #         0656191'
                       - 'HOST INVOICE #    000038'
                       - 'HOST SEQ #    1720656191'
-                      - 'MERCH INVOICE.  fgj24344'
+                      - MERCH INVOICE.  fgj24344
                       - '------------------------'
-                      - 'CARD    ************0011'
-                      - 'VISA             Contact'
-                      - '07/10/2024      20:03:05'
+                      - CARD    ************0011
+                      - VISA             Contact
+                      - 07/10/2024      20:03:05
                       - '------------------------'
                       - '        PRE AUTH        '
-                      - 'TOTAL         USD $10.00'
+                      - TOTAL         USD $10.00
                       - '------------------------'
                       - 'AUTH#:000AAA            '
                       - '                        '
@@ -2185,7 +2255,6 @@ components:
                       - '                        '
                       - '                        '
                       - '     CUSTOMER COPY      '
-
     CaptureCompletedWebhook:
       description: The request body for the `capture.completed` webhook event.
       content:
@@ -2194,31 +2263,32 @@ components:
             $ref: '#/components/schemas/CaptureCompletedWebhook'
           example:
             event:
-              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-              type: 'capture.completed'
+              id: evt_01JS21X856RR8R69GV5F17XK9C
+              type: capture.completed
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
               timestamp: '2025-05-27T18:49:31Z'
-              type: 'Capture'
+              type: Capture
+              status: Completed
               paymentMethod:
-                id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                type: 'Token'
-                currency: 'USD'
-                description: "Token for John Doe's Visa"
-                cardType: 'VISA'
+                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                type: Token
+                currency: USD
+                description: Token for John Doe's Visa
+                cardType: VISA
                 maskedCardNumber: '************0011'
                 cardExpDate: '1225'
-              invoiceNumber: 'inv_12345678'
-              orderNumber: 'order_number_1234'
-              referenceId: 'ref_s192i49i'
+              invoiceNumber: inv_12345678
+              orderNumber: order_number_1234
+              referenceId: ref_s192i49i
               resultCode: 0
-              resultText: 'Successful transaction request'
+              resultText: Successful transaction request
               requestedAmount: 1000
               approvedAmount: 1000
               transactionResponses:
                 - responseCode: 1
-                  authCode: '000AAA'
+                  authCode: 000AAA
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -2226,18 +2296,18 @@ components:
                     cashback: 0
                     tip: 0
                   paymentMethod:
-                    id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                    type: 'Token'
-                    currency: 'USD'
-                    description: "Token for John Doe's Visa"
-                    cardType: 'VISA'
+                    id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                    type: Token
+                    currency: USD
+                    description: Token for John Doe's Visa
+                    cardType: VISA
                     maskedCardNumber: '************0011'
                     cardExpDate: '1225'
-                  cardType: 'VISA'
-                  avsResult: 'Y'
-                  cvvResult: 'M'
-                  accountType: 'Credit'
-                  hostResponseText: 'APPROVED 00'
+                  cardType: VISA
+                  avsResult: Y
+                  cvvResult: M
+                  accountType: Credit
+                  hostResponseText: APPROVED 00
               receipt:
                 lines:
                   - '     Test Merchant      '
@@ -2249,18 +2319,18 @@ components:
                   - 'RECORD #         0656191'
                   - 'HOST INVOICE #    000038'
                   - 'HOST SEQ #    1720656191'
-                  - 'MERCH INVOICE.  fgj24344'
+                  - MERCH INVOICE.  fgj24344
                   - '------------------------'
-                  - 'CARD    ************0011'
-                  - 'VISA             Contact'
-                  - '07/10/2024      20:03:05'
+                  - CARD    ************0011
+                  - VISA             Contact
+                  - 07/10/2024      20:03:05
                   - '------------------------'
                   - '                        '
                   - '   PRE AUTH COMPLETE    '
                   - '                        '
-                  - 'TOTAL         USD $10.00'
+                  - TOTAL         USD $10.00
                   - '------------------------'
-                  - 'AUTH#:000AAA       B:171'
+                  - AUTH#:000AAA       B:171
                   - '                        '
                   - '      APPROVED 00       '
                   - '       THANK YOU        '
@@ -2283,18 +2353,18 @@ components:
                   - 'RECORD #         0656191'
                   - 'HOST INVOICE #    000038'
                   - 'HOST SEQ #    1720656191'
-                  - 'MERCH INVOICE.  fgj24344'
+                  - MERCH INVOICE.  fgj24344
                   - '------------------------'
-                  - 'CARD    ************0011'
-                  - 'VISA             Contact'
-                  - '07/10/2024      20:03:05'
+                  - CARD    ************0011
+                  - VISA             Contact
+                  - 07/10/2024      20:03:05
                   - '------------------------'
                   - '                        '
                   - '   PRE AUTH COMPLETE    '
                   - '                        '
-                  - 'TOTAL         USD $10.00'
+                  - TOTAL         USD $10.00
                   - '------------------------'
-                  - 'AUTH#:000AAA       B:171'
+                  - AUTH#:000AAA       B:171
                   - '                        '
                   - '      APPROVED 00       '
                   - '       THANK YOU        '
@@ -2308,7 +2378,6 @@ components:
                   - '                        '
                   - '                        '
                   - '     CUSTOMER COPY      '
-
     RefundCompletedWebhook:
       description: The request body for the `refund.completed` webhook event.
       content:
@@ -2317,31 +2386,32 @@ components:
             $ref: '#/components/schemas/RefundCompletedWebhook'
           example:
             event:
-              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-              type: 'refund.completed'
+              id: evt_01JS21X856RR8R69GV5F17XK9C
+              type: refund.completed
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
               timestamp: '2025-05-27T18:49:31Z'
-              type: 'Refund'
+              type: Refund
+              status: Completed
               paymentMethod:
-                id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                type: 'Token'
-                currency: 'USD'
-                description: "Token for John Doe's Visa"
-                cardType: 'VISA'
+                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                type: Token
+                currency: USD
+                description: Token for John Doe's Visa
+                cardType: VISA
                 maskedCardNumber: '************0011'
                 cardExpDate: '1225'
-              invoiceNumber: 'ref_inv_12345678'
-              orderNumber: 'ref_order_1234'
-              referenceId: 'ref_s192i49i'
+              invoiceNumber: ref_inv_12345678
+              orderNumber: ref_order_1234
+              referenceId: ref_s192i49i
               resultCode: 0
-              resultText: 'Successful transaction request'
+              resultText: Successful transaction request
               requestedAmount: 1000
               approvedAmount: 1000
               transactionResponses:
                 - responseCode: 1
-                  authCode: '000AAA'
+                  authCode: 000AAA
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -2349,18 +2419,18 @@ components:
                     cashback: 0
                     tip: 0
                   paymentMethod:
-                    id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                    type: 'Token'
-                    currency: 'USD'
-                    description: "Token for John Doe's Visa"
-                    cardType: 'VISA'
+                    id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                    type: Token
+                    currency: USD
+                    description: Token for John Doe's Visa
+                    cardType: VISA
                     maskedCardNumber: '************0011'
                     cardExpDate: '1225'
-                  cardType: 'VISA'
-                  avsResult: 'Y'
-                  cvvResult: 'M'
-                  accountType: 'Credit'
-                  hostResponseText: 'APPROVED 00'
+                  cardType: VISA
+                  avsResult: Y
+                  cvvResult: M
+                  accountType: Credit
+                  hostResponseText: APPROVED 00
               receipt:
                 lines:
                   - '     Test Merchant      '
@@ -2372,17 +2442,17 @@ components:
                   - 'RECORD #         0656191'
                   - 'HOST INVOICE #    000038'
                   - 'HOST SEQ #    1720656191'
-                  - 'MERCH INVOICE.  fgj24344'
+                  - MERCH INVOICE.  fgj24344
                   - '------------------------'
-                  - 'CARD    ************0011'
-                  - 'VISA             Contact'
-                  - '07/10/2024      20:03:05'
+                  - CARD    ************0011
+                  - VISA             Contact
+                  - 07/10/2024      20:03:05
                   - '------------------------'
                   - '       VOID SALE        '
                   - '                        '
-                  - 'TOTAL         USD $10.00'
+                  - TOTAL         USD $10.00
                   - '------------------------'
-                  - 'AUTH#:000AAA       B:171'
+                  - AUTH#:000AAA       B:171
                   - '                        '
                   - '      APPROVED 00       '
                   - '       THANK YOU        '
@@ -2405,17 +2475,17 @@ components:
                   - 'RECORD #         0656191'
                   - 'HOST INVOICE #    000038'
                   - 'HOST SEQ #    1720656191'
-                  - 'MERCH INVOICE.  fgj24344'
+                  - MERCH INVOICE.  fgj24344
                   - '------------------------'
-                  - 'CARD    ************0011'
-                  - 'VISA             Contact'
-                  - '07/10/2024      20:03:05'
+                  - CARD    ************0011
+                  - VISA             Contact
+                  - 07/10/2024      20:03:05
                   - '------------------------'
                   - '       VOID SALE        '
                   - '                        '
-                  - 'TOTAL         USD $10.00'
+                  - TOTAL         USD $10.00
                   - '------------------------'
-                  - 'AUTH#:000AAA       B:171'
+                  - AUTH#:000AAA       B:171
                   - '                        '
                   - '      APPROVED 00       '
                   - '       THANK YOU        '
@@ -2429,7 +2499,6 @@ components:
                   - '                        '
                   - '                        '
                   - '     CUSTOMER COPY      '
-
     TokenCreatedWebhook:
       description: The request body for the `token.created` webhook event.
       content:
@@ -2438,34 +2507,41 @@ components:
             $ref: '#/components/schemas/TokenCreatedWebhook'
           example:
             event:
-              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-              type: 'token.created'
+              id: evt_01JS21X856RR8R69GV5F17XK9C
+              type: token.created
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
+              timestamp: '2025-05-27T18:49:31Z'
+              type: Auth
+              status: Completed
               paymentMethod:
-                id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-                type: 'Physical'
-                currency: 'USD'
-                description: 'Main Store Terminal'
-              referenceId: 'ref_add_card_12345'
+                id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                type: Physical
+                currency: USD
+                description: Main Store Terminal
+              referenceId: ref_add_card_12345
               resultCode: 0
-              resultText: 'Card successfully tokenized'
+              resultText: Card successfully tokenized
+              requestedAmount: 0
+              approvedAmount: 0
               transactionResponses:
                 - responseCode: 1
-                  authCode: '000AAA'
+                  authCode: 000AAA
+                  amountApproved: 0
                   paymentMethod:
-                    id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                    type: 'Token'
-                    currency: 'USD'
-                    description: "Token for John Doe's Visa"
-                    cardType: 'VISA'
+                    id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                    type: Token
+                    currency: USD
+                    description: Token for John Doe's Visa
+                    cardType: VISA
                     maskedCardNumber: '************0011'
                     cardExpDate: '1225'
-                  cardType: 'VISA'
-                  accountType: 'Credit'
-                  hostResponseText: 'APPROVED 00'
-
+                  cardType: VISA
+                  avsResult: Y
+                  cvvResult: M
+                  accountType: Credit
+                  hostResponseText: APPROVED 00
     TokenUpdatedWebhook:
       description: The request body for the `token.updated` webhook event.
       content:
@@ -2474,23 +2550,22 @@ components:
             $ref: '#/components/schemas/TokenUpdatedWebhook'
           example:
             event:
-              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-              type: 'token.updated'
+              id: evt_01JS21X856RR8R69GV5F17XK9C
+              type: token.updated
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
               paymentMethod:
-                id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                type: 'Token'
-                currency: 'USD'
-                description: "Token for John Doe's Visa"
-                cardType: 'VISA'
+                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                type: Token
+                currency: USD
+                description: Token for John Doe's Visa
+                cardType: VISA
                 maskedCardNumber: '************0011'
                 cardExpDate: '1225'
-              referenceId: 'ref_update_card_12345'
+              referenceId: ref_update_card_12345
               resultCode: 0
-              resultText: 'Card successfully updated'
-
+              resultText: Card successfully updated
     TokenRemovedWebhook:
       description: The request body for the `token.removed` webhook event.
       content:
@@ -2499,23 +2574,22 @@ components:
             $ref: '#/components/schemas/TokenRemovedWebhook'
           example:
             event:
-              id: 'evt_01JS21X856RR8R69GV5F17XK9C'
-              type: 'token.removed'
+              id: evt_01JS21X856RR8R69GV5F17XK9C
+              type: token.removed
               timestamp: '2025-04-16T14:30:00Z'
             originalResponse:
-              id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+              id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
               paymentMethod:
-                id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                type: 'Token'
-                currency: 'USD'
-                description: "Token for John Doe's Visa"
-                cardType: 'VISA'
+                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                type: Token
+                currency: USD
+                description: Token for John Doe's Visa
+                cardType: VISA
                 maskedCardNumber: '************0011'
                 cardExpDate: '1225'
-              referenceId: 'ref_remove_card_12345'
+              referenceId: ref_remove_card_12345
               resultCode: 0
-              resultText: 'Card successfully removed'
-
+              resultText: Card successfully removed
   responses:
     UnauthorizedError:
       description: Unauthorized response due to an invalid or missing API key.
@@ -2527,12 +2601,11 @@ components:
             UnauthorizedError:
               value:
                 code: 1000
-                status: 'Rejected'
-                message: 'API key cannot be empty'
-                traceId: '1-6838be96-74c62f8e2804352739e63476'
+                status: Rejected
+                message: API key cannot be empty
+                traceId: 1-6838be96-74c62f8e2804352739e63476
                 timestamp: '2025-05-29T20:07:50.4723483Z'
                 errorDetails: []
-
     SuccessfulWebhookAcknowledgement:
       description: Successful acknowledgement of a webhook event. The response should be a 200 OK status with an empty body.
       content:
@@ -2543,30 +2616,30 @@ components:
           examples:
             SuccessfulWebhookResponse:
               value: {}
-
   examples:
     SaleCardPresentResponse:
       description: A successful response for a Card Present sale transaction.
       value:
-        id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+        id: trx_01J2F0EKHC7HY2R93C8ENBD1FG
         timestamp: '2025-05-27T18:49:31Z'
-        type: 'Sale'
+        type: Sale
+        status: Completed
         paymentMethod:
-          id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-          type: 'Physical'
-          currency: 'USD'
-          description: 'Main Store Terminal'
-        invoiceNumber: 'inv_12345678'
-        orderNumber: 'order_number_1234'
-        referenceId: 'ref_s192i49i'
+          id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+          type: Physical
+          currency: USD
+          description: Main Store Terminal
+        invoiceNumber: inv_12345678
+        orderNumber: order_number_1234
+        referenceId: ref_s192i49i
         resultCode: 0
-        resultText: 'Successful transaction request'
+        resultText: Successful transaction request
         requestedAmount: 1000
         approvedAmount: 1000
         balanceAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: '000AAA'
+            authCode: 000AAA
             amountApproved: 1000
             approvedAmountBreakdown:
               amountGoodsAndServices: 900
@@ -2574,121 +2647,119 @@ components:
               cashback: 0
               tip: 0
             paymentMethod:
-              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'Token'
-              currency: 'USD'
-              description: "Token for John Doe's Visa"
-              cardType: 'VISA'
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            cardType: 'VISA'
-            accountType: 'Credit'
-            hostResponseText: 'APPROVED 00'
+            cardType: VISA
+            accountType: Credit
+            hostResponseText: APPROVED 00
             receipt:
               lines:
-                [
-                  '     Test Merchant      ',
-                  '      300 S Wacker      ',
-                  '         Loop,          ',
-                  '                        ',
-                  '                        ',
-                  'TERM #          11000367',
-                  'RECORD #         0656191',
-                  'HOST INVOICE #    000038',
-                  'HOST SEQ #    1720656191',
-                  'MERCH INVOICE.  fgj24344',
-                  '------------------------',
-                  'CARD    ************0011',
-                  'VISA             Contact',
-                  '07/10/2024      20:03:05',
-                  '------------------------',
-                  'Purchase      USD $10.00',
-                  'Tip           USD  $0.00',
-                  'Cashback      USD  $0.00',
-                  '                        ',
-                  'TOTAL         USD $10.00',
-                  '------------------------',
-                  'AUTH#:000AAA       B:171',
-                  '          Sale          ',
-                  '      APPROVED 00       ',
-                  '       THANK YOU        ',
-                  '                        ',
-                  '      Visa Credit       ',
-                  'AID:      A0000000031010',
-                  'TC:     43F4ACF64B07551A',
-                  'TVR:          8000008000',
-                  'TSI:                7800',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '     MERCHANT COPY      ',
-                  '     Test Merchant      ',
-                  '      300 S Wacker      ',
-                  '         Loop,          ',
-                  '                        ',
-                  '                        ',
-                  'TERM #          11000367',
-                  'RECORD #         0656191',
-                  'HOST INVOICE #    000038',
-                  'HOST SEQ #    1720656191',
-                  'MERCH INVOICE.  fgj24344',
-                  '------------------------',
-                  'CARD    ************0011',
-                  'VISA             Contact',
-                  '07/10/2024      20:03:05',
-                  '------------------------',
-                  'Purchase      USD $10.00',
-                  'Tip           USD  $0.00',
-                  'Cashback      USD  $0.00',
-                  '                        ',
-                  'TOTAL         USD $10.00',
-                  '------------------------',
-                  'AUTH#:000AAA       B:171',
-                  '          Sale          ',
-                  '      APPROVED 00       ',
-                  '       THANK YOU        ',
-                  '                        ',
-                  '      Visa Credit       ',
-                  'AID:      A0000000031010',
-                  'TC:     43F4ACF64B07551A',
-                  'TVR:          8000008000',
-                  'TSI:                7800',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '     CUSTOMER COPY      ',
-                ]
-
+                - '     Test Merchant      '
+                - '      300 S Wacker      '
+                - '         Loop,          '
+                - '                        '
+                - '                        '
+                - 'TERM #          11000367'
+                - 'RECORD #         0656191'
+                - 'HOST INVOICE #    000038'
+                - 'HOST SEQ #    1720656191'
+                - MERCH INVOICE.  fgj24344
+                - '------------------------'
+                - CARD    ************0011
+                - VISA             Contact
+                - 07/10/2024      20:03:05
+                - '------------------------'
+                - Purchase      USD $10.00
+                - Tip           USD  $0.00
+                - Cashback      USD  $0.00
+                - '                        '
+                - TOTAL         USD $10.00
+                - '------------------------'
+                - AUTH#:000AAA       B:171
+                - '          Sale          '
+                - '      APPROVED 00       '
+                - '       THANK YOU        '
+                - '                        '
+                - '      Visa Credit       '
+                - 'AID:      A0000000031010'
+                - 'TC:     43F4ACF64B07551A'
+                - 'TVR:          8000008000'
+                - 'TSI:                7800'
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '     MERCHANT COPY      '
+                - '     Test Merchant      '
+                - '      300 S Wacker      '
+                - '         Loop,          '
+                - '                        '
+                - '                        '
+                - 'TERM #          11000367'
+                - 'RECORD #         0656191'
+                - 'HOST INVOICE #    000038'
+                - 'HOST SEQ #    1720656191'
+                - MERCH INVOICE.  fgj24344
+                - '------------------------'
+                - CARD    ************0011
+                - VISA             Contact
+                - 07/10/2024      20:03:05
+                - '------------------------'
+                - Purchase      USD $10.00
+                - Tip           USD  $0.00
+                - Cashback      USD  $0.00
+                - '                        '
+                - TOTAL         USD $10.00
+                - '------------------------'
+                - AUTH#:000AAA       B:171
+                - '          Sale          '
+                - '      APPROVED 00       '
+                - '       THANK YOU        '
+                - '                        '
+                - '      Visa Credit       '
+                - 'AID:      A0000000031010'
+                - 'TC:     43F4ACF64B07551A'
+                - 'TVR:          8000008000'
+                - 'TSI:                7800'
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '     CUSTOMER COPY      '
     AuthCardPresentResponse:
       description: A successful response for a Card Present authorization transaction.
       value:
-        id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+        id: trx_01J2F0EKHC7HY2R93C8ENBD1FG
         timestamp: '2025-05-27T18:49:31Z'
-        type: 'Auth'
+        type: Auth
+        status: Completed
         paymentMethod:
-          id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-          type: 'Physical'
-          currency: 'USD'
-          description: 'Main Store Terminal'
-        invoiceNumber: 'inv_12345678'
-        orderNumber: 'order_number_1234'
-        referenceId: 'ref_s192i49i'
+          id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+          type: Physical
+          currency: USD
+          description: Main Store Terminal
+        invoiceNumber: inv_12345678
+        orderNumber: order_number_1234
+        referenceId: ref_s192i49i
         resultCode: 0
-        resultText: 'Successful transaction request'
+        resultText: Successful transaction request
         requestedAmount: 1000
         approvedAmount: 1000
         balanceAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: '000AAA'
+            authCode: 000AAA
             amountApproved: 1000
             approvedAmountBreakdown:
               amountGoodsAndServices: 900
@@ -2696,457 +2767,445 @@ components:
               cashback: 0
               tip: 0
             paymentMethod:
-              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'Token'
-              currency: 'USD'
-              description: "Token for John Doe's Visa"
-              cardType: 'VISA'
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            cardType: 'VISA'
-            accountType: 'Credit'
-            hostResponseText: 'APPROVED 00'
+            cardType: VISA
+            accountType: Credit
+            hostResponseText: APPROVED 00
             receipt:
               lines:
-                [
-                  '     Test Merchant      ',
-                  '      300 S Wacker      ',
-                  '         Loop,          ',
-                  '                        ',
-                  '                        ',
-                  'TERM #          11000367',
-                  'RECORD #         0656191',
-                  'HOST INVOICE #    000038',
-                  'HOST SEQ #    1720656191',
-                  'MERCH INVOICE.  fgj24344',
-                  '------------------------',
-                  'CARD    ************0011',
-                  'VISA             Contact',
-                  '07/10/2024      20:03:05',
-                  '------------------------',
-                  '        PRE AUTH        ',
-                  'TOTAL         USD $10.00',
-                  '------------------------',
-                  'AUTH#:000AAA            ',
-                  '                        ',
-                  '      APPROVED 00       ',
-                  '       THANK YOU        ',
-                  '                        ',
-                  '      Visa Credit       ',
-                  'AID:      A0000000031010',
-                  'TC:     43F4ACF64B07551A',
-                  'TVR:          8000008000',
-                  'TSI:                7800',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '     MERCHANT COPY      ',
-                  '     Test Merchant      ',
-                  '      300 S Wacker      ',
-                  '         Loop,          ',
-                  '                        ',
-                  '                        ',
-                  'TERM #          11000367',
-                  'RECORD #         0656191',
-                  'HOST INVOICE #    000038',
-                  'HOST SEQ #    1720656191',
-                  'MERCH INVOICE.  fgj24344',
-                  '------------------------',
-                  'CARD    ************0011',
-                  'VISA             Contact',
-                  '07/10/2024      20:03:05',
-                  '------------------------',
-                  '        PRE AUTH        ',
-                  'TOTAL         USD $10.00',
-                  '------------------------',
-                  'AUTH#:000AAA            ',
-                  '                        ',
-                  '      APPROVED 00       ',
-                  '       THANK YOU        ',
-                  '                        ',
-                  '      Visa Credit       ',
-                  'AID:      A0000000031010',
-                  'TC:     43F4ACF64B07551A',
-                  'TVR:          8000008000',
-                  'TSI:                7800',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '                        ',
-                  '     CUSTOMER COPY      ',
-                ]
-
+                - '     Test Merchant      '
+                - '      300 S Wacker      '
+                - '         Loop,          '
+                - '                        '
+                - '                        '
+                - 'TERM #          11000367'
+                - 'RECORD #         0656191'
+                - 'HOST INVOICE #    000038'
+                - 'HOST SEQ #    1720656191'
+                - MERCH INVOICE.  fgj24344
+                - '------------------------'
+                - CARD    ************0011
+                - VISA             Contact
+                - 07/10/2024      20:03:05
+                - '------------------------'
+                - '        PRE AUTH        '
+                - TOTAL         USD $10.00
+                - '------------------------'
+                - 'AUTH#:000AAA            '
+                - '                        '
+                - '      APPROVED 00       '
+                - '       THANK YOU        '
+                - '                        '
+                - '      Visa Credit       '
+                - 'AID:      A0000000031010'
+                - 'TC:     43F4ACF64B07551A'
+                - 'TVR:          8000008000'
+                - 'TSI:                7800'
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '     MERCHANT COPY      '
+                - '     Test Merchant      '
+                - '      300 S Wacker      '
+                - '         Loop,          '
+                - '                        '
+                - '                        '
+                - 'TERM #          11000367'
+                - 'RECORD #         0656191'
+                - 'HOST INVOICE #    000038'
+                - 'HOST SEQ #    1720656191'
+                - MERCH INVOICE.  fgj24344
+                - '------------------------'
+                - CARD    ************0011
+                - VISA             Contact
+                - 07/10/2024      20:03:05
+                - '------------------------'
+                - '        PRE AUTH        '
+                - TOTAL         USD $10.00
+                - '------------------------'
+                - 'AUTH#:000AAA            '
+                - '                        '
+                - '      APPROVED 00       '
+                - '       THANK YOU        '
+                - '                        '
+                - '      Visa Credit       '
+                - 'AID:      A0000000031010'
+                - 'TC:     43F4ACF64B07551A'
+                - 'TVR:          8000008000'
+                - 'TSI:                7800'
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '     CUSTOMER COPY      '
     CaptureResponse:
       description: A successful response for a capture transaction.
       value:
-        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         timestamp: '2025-05-27T18:49:31Z'
-        type: 'Capture'
-        referenceId: 'ref_s192i49i'
+        type: Capture
+        status: Completed
+        referenceId: ref_s192i49i
         paymentMethod:
-          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-          type: 'Token'
-          currency: 'USD'
-          description: "Token for John Doe's Visa"
-          cardType: 'VISA'
+          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+          type: Token
+          currency: USD
+          description: Token for John Doe's Visa
+          cardType: VISA
           maskedCardNumber: '************0011'
           cardExpDate: '1225'
-        invoiceNumber: 'inv_12345678'
-        orderNumber: 'order_number_1234'
+        invoiceNumber: inv_12345678
+        orderNumber: order_number_1234
         resultCode: 0
-        resultText: 'Successful transaction request'
+        resultText: Successful transaction request
         requestedAmount: 1000
         approvedAmount: 1000
         transactionResponses:
           - responseCode: 1
-            authCode: '000AAA'
+            authCode: 000AAA
             amountApproved: 1000
             paymentMethod:
-              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'Token'
-              currency: 'USD'
-              description: "Token for John Doe's Visa"
-              cardType: 'VISA'
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            cardType: 'VISA'
-            accountType: 'Credit'
-            hostResponseText: 'APPROVED 00'
+            cardType: VISA
+            accountType: Credit
+            hostResponseText: APPROVED 00
         receipt:
           lines:
-            [
-              '     Test Merchant      ',
-              '      300 S Wacker      ',
-              '         Loop,          ',
-              '                        ',
-              '                        ',
-              'TERM #          11000367',
-              'RECORD #         0656191',
-              'HOST INVOICE #    000038',
-              'HOST SEQ #    1720656191',
-              'MERCH INVOICE.  fgj24344',
-              '------------------------',
-              'CARD    ************0011',
-              'VISA             Contact',
-              '07/10/2024      20:03:05',
-              '------------------------',
-              '                        ',
-              '   PRE AUTH COMPLETE    ',
-              '                        ',
-              'TOTAL         USD $10.00',
-              '------------------------',
-              'AUTH#:000AAA       B:171',
-              '                        ',
-              '      APPROVED 00       ',
-              '       THANK YOU        ',
-              '                        ',
-              '      Visa Credit       ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '     MERCHANT COPY      ',
-              '     Test Merchant      ',
-              '      300 S Wacker      ',
-              '         Loop,          ',
-              '                        ',
-              '                        ',
-              'TERM #          11000367',
-              'RECORD #         0656191',
-              'HOST INVOICE #    000038',
-              'HOST SEQ #    1720656191',
-              'MERCH INVOICE.  fgj24344',
-              '------------------------',
-              'CARD    ************0011',
-              'VISA             Contact',
-              '07/10/2024      20:03:05',
-              '------------------------',
-              '                        ',
-              '   PRE AUTH COMPLETE    ',
-              '                        ',
-              'TOTAL         USD $10.00',
-              '------------------------',
-              'AUTH#:000AAA       B:171',
-              '                        ',
-              '      APPROVED 00       ',
-              '       THANK YOU        ',
-              '                        ',
-              '      Visa Credit       ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '     CUSTOMER COPY      ',
-            ]
-
+            - '     Test Merchant      '
+            - '      300 S Wacker      '
+            - '         Loop,          '
+            - '                        '
+            - '                        '
+            - 'TERM #          11000367'
+            - 'RECORD #         0656191'
+            - 'HOST INVOICE #    000038'
+            - 'HOST SEQ #    1720656191'
+            - MERCH INVOICE.  fgj24344
+            - '------------------------'
+            - CARD    ************0011
+            - VISA             Contact
+            - 07/10/2024      20:03:05
+            - '------------------------'
+            - '                        '
+            - '   PRE AUTH COMPLETE    '
+            - '                        '
+            - TOTAL         USD $10.00
+            - '------------------------'
+            - AUTH#:000AAA       B:171
+            - '                        '
+            - '      APPROVED 00       '
+            - '       THANK YOU        '
+            - '                        '
+            - '      Visa Credit       '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '     MERCHANT COPY      '
+            - '     Test Merchant      '
+            - '      300 S Wacker      '
+            - '         Loop,          '
+            - '                        '
+            - '                        '
+            - 'TERM #          11000367'
+            - 'RECORD #         0656191'
+            - 'HOST INVOICE #    000038'
+            - 'HOST SEQ #    1720656191'
+            - MERCH INVOICE.  fgj24344
+            - '------------------------'
+            - CARD    ************0011
+            - VISA             Contact
+            - 07/10/2024      20:03:05
+            - '------------------------'
+            - '                        '
+            - '   PRE AUTH COMPLETE    '
+            - '                        '
+            - TOTAL         USD $10.00
+            - '------------------------'
+            - AUTH#:000AAA       B:171
+            - '                        '
+            - '      APPROVED 00       '
+            - '       THANK YOU        '
+            - '                        '
+            - '      Visa Credit       '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '     CUSTOMER COPY      '
     RefundResponse:
       description: A successful response for a refund transaction.
       value:
-        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         timestamp: '2025-05-27T18:49:31Z'
-        type: 'Refund'
-        referenceId: 'ref_s192i49i'
+        type: Refund
+        status: Completed
+        referenceId: ref_s192i49i
         paymentMethod:
-          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-          type: 'Token'
-          currency: 'USD'
-          description: "Token for John Doe's Visa"
-          cardType: 'VISA'
+          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+          type: Token
+          currency: USD
+          description: Token for John Doe's Visa
+          cardType: VISA
           maskedCardNumber: '************0011'
           cardExpDate: '1225'
-        invoiceNumber: 'ref_inv_12345678'
-        orderNumber: 'ref_order_1234'
+        invoiceNumber: ref_inv_12345678
+        orderNumber: ref_order_1234
         resultCode: 0
-        resultText: 'Successful transaction request'
+        resultText: Successful transaction request
         requestedAmount: 1000
         approvedAmount: 1000
         transactionResponses:
           - responseCode: 1
-            authCode: '000AAA'
+            authCode: 000AAA
             amountApproved: 1000
             paymentMethod:
-              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'Token'
-              currency: 'USD'
-              description: "Token for John Doe's Visa"
-              cardType: 'VISA'
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            cardType: 'VISA'
-            accountType: 'Credit'
-            hostResponseText: 'APPROVED 00'
+            cardType: VISA
+            accountType: Credit
+            hostResponseText: APPROVED 00
         receipt:
           lines:
-            [
-              '     Test Merchant      ',
-              '      300 S Wacker      ',
-              '         Loop,          ',
-              '                        ',
-              '                        ',
-              'TERM #          11000367',
-              'RECORD #         0656191',
-              'HOST INVOICE #    000038',
-              'HOST SEQ #    1720656191',
-              'MERCH INVOICE.  fgj24344',
-              '------------------------',
-              'CARD    ************0011',
-              'VISA             Contact',
-              '07/10/2024      20:03:05',
-              '------------------------',
-              '       VOID SALE        ',
-              '                        ',
-              'TOTAL         USD $10.00',
-              '------------------------',
-              'AUTH#:000AAA       B:171',
-              '                        ',
-              '      APPROVED 00       ',
-              '       THANK YOU        ',
-              '                        ',
-              '      Visa Credit       ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '     MERCHANT COPY      ',
-              '     Test Merchant      ',
-              '      300 S Wacker      ',
-              '         Loop,          ',
-              '                        ',
-              '                        ',
-              'TERM #          11000367',
-              'RECORD #         0656191',
-              'HOST INVOICE #    000038',
-              'HOST SEQ #    1720656191',
-              'MERCH INVOICE.  fgj24344',
-              '------------------------',
-              'CARD    ************0011',
-              'VISA             Contact',
-              '07/10/2024      20:03:05',
-              '------------------------',
-              '       VOID SALE        ',
-              '                        ',
-              'TOTAL         USD $10.00',
-              '------------------------',
-              'AUTH#:000AAA       B:171',
-              '                        ',
-              '      APPROVED 00       ',
-              '       THANK YOU        ',
-              '                        ',
-              '      Visa Credit       ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '     CUSTOMER COPY      ',
-            ]
-
+            - '     Test Merchant      '
+            - '      300 S Wacker      '
+            - '         Loop,          '
+            - '                        '
+            - '                        '
+            - 'TERM #          11000367'
+            - 'RECORD #         0656191'
+            - 'HOST INVOICE #    000038'
+            - 'HOST SEQ #    1720656191'
+            - MERCH INVOICE.  fgj24344
+            - '------------------------'
+            - CARD    ************0011
+            - VISA             Contact
+            - 07/10/2024      20:03:05
+            - '------------------------'
+            - '       VOID SALE        '
+            - '                        '
+            - TOTAL         USD $10.00
+            - '------------------------'
+            - AUTH#:000AAA       B:171
+            - '                        '
+            - '      APPROVED 00       '
+            - '       THANK YOU        '
+            - '                        '
+            - '      Visa Credit       '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '     MERCHANT COPY      '
+            - '     Test Merchant      '
+            - '      300 S Wacker      '
+            - '         Loop,          '
+            - '                        '
+            - '                        '
+            - 'TERM #          11000367'
+            - 'RECORD #         0656191'
+            - 'HOST INVOICE #    000038'
+            - 'HOST SEQ #    1720656191'
+            - MERCH INVOICE.  fgj24344
+            - '------------------------'
+            - CARD    ************0011
+            - VISA             Contact
+            - 07/10/2024      20:03:05
+            - '------------------------'
+            - '       VOID SALE        '
+            - '                        '
+            - TOTAL         USD $10.00
+            - '------------------------'
+            - AUTH#:000AAA       B:171
+            - '                        '
+            - '      APPROVED 00       '
+            - '       THANK YOU        '
+            - '                        '
+            - '      Visa Credit       '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '     CUSTOMER COPY      '
     UnreferencedRefundCardPresentResponse:
       description: A successful response for a Card Present unreferenced refund transaction.
       value:
-        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         timestamp: '2025-05-27T18:49:31Z'
-        type: 'Refund'
-        referenceId: 'ref_s192i49i'
+        type: Refund
+        status: Completed
+        referenceId: ref_s192i49i
         paymentMethod:
-          id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-          type: 'Physical'
-          currency: 'USD'
-          description: 'Main Store Terminal'
-        invoiceNumber: 'inv_12345678'
-        orderNumber: 'order_number_1234'
+          id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+          type: Physical
+          currency: USD
+          description: Main Store Terminal
+        invoiceNumber: inv_12345678
+        orderNumber: order_number_1234
         resultCode: 0
-        resultText: 'Successful transaction request'
+        resultText: Successful transaction request
         requestedAmount: 1000
         approvedAmount: 1000
         receipt:
           lines:
-            [
-              '     Test Merchant      ',
-              '      300 S Wacker      ',
-              '         Loop,          ',
-              '                        ',
-              '                        ',
-              'TERM #          11000367',
-              'RECORD #         0656191',
-              'HOST INVOICE #    000038',
-              'HOST SEQ #    1720656191',
-              'MERCH INVOICE.  fgj24344',
-              '------------------------',
-              'CARD    ************0011',
-              'VISA             Contact',
-              '07/10/2024      20:03:05',
-              '------------------------',
-              '         REFUND         ',
-              '                        ',
-              'TOTAL         USD $10.00',
-              '------------------------',
-              'AUTH#:000AAA       B:171',
-              '                        ',
-              '      APPROVED 00       ',
-              '       THANK YOU        ',
-              '                        ',
-              '      Visa Credit       ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '     MERCHANT COPY      ',
-              '     Test Merchant      ',
-              '      300 S Wacker      ',
-              '         Loop,          ',
-              '                        ',
-              '                        ',
-              'TERM #          11000367',
-              'RECORD #         0656191',
-              'HOST INVOICE #    000038',
-              'HOST SEQ #    1720656191',
-              'MERCH INVOICE.  fgj24344',
-              '------------------------',
-              'CARD    ************0011',
-              'VISA             Contact',
-              '07/10/2024      20:03:05',
-              '------------------------',
-              '         REFUND         ',
-              '                        ',
-              'TOTAL         USD $10.00',
-              '------------------------',
-              'AUTH#:000AAA       B:171',
-              '                        ',
-              '      APPROVED 00       ',
-              '       THANK YOU        ',
-              '                        ',
-              '      Visa Credit       ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '                        ',
-              '     CUSTOMER COPY      ',
-            ]
-
+            - '     Test Merchant      '
+            - '      300 S Wacker      '
+            - '         Loop,          '
+            - '                        '
+            - '                        '
+            - 'TERM #          11000367'
+            - 'RECORD #         0656191'
+            - 'HOST INVOICE #    000038'
+            - 'HOST SEQ #    1720656191'
+            - MERCH INVOICE.  fgj24344
+            - '------------------------'
+            - CARD    ************0011
+            - VISA             Contact
+            - 07/10/2024      20:03:05
+            - '------------------------'
+            - '         REFUND         '
+            - '                        '
+            - TOTAL         USD $10.00
+            - '------------------------'
+            - AUTH#:000AAA       B:171
+            - '                        '
+            - '      APPROVED 00       '
+            - '       THANK YOU        '
+            - '                        '
+            - '      Visa Credit       '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '     MERCHANT COPY      '
+            - '     Test Merchant      '
+            - '      300 S Wacker      '
+            - '         Loop,          '
+            - '                        '
+            - '                        '
+            - 'TERM #          11000367'
+            - 'RECORD #         0656191'
+            - 'HOST INVOICE #    000038'
+            - 'HOST SEQ #    1720656191'
+            - MERCH INVOICE.  fgj24344
+            - '------------------------'
+            - CARD    ************0011
+            - VISA             Contact
+            - 07/10/2024      20:03:05
+            - '------------------------'
+            - '         REFUND         '
+            - '                        '
+            - TOTAL         USD $10.00
+            - '------------------------'
+            - AUTH#:000AAA       B:171
+            - '                        '
+            - '      APPROVED 00       '
+            - '       THANK YOU        '
+            - '                        '
+            - '      Visa Credit       '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '     CUSTOMER COPY      '
     CreateTokenCardPresentResponse:
       description: A successful response for a card tokenization transaction.
       value:
-        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         paymentMethod:
-          id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-          type: 'Physical'
-          currency: 'USD'
-          description: 'Main Store Terminal'
-        referenceId: 'ref_add_card_12345'
+          id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+          type: Physical
+          currency: USD
+          description: Main Store Terminal
+        referenceId: ref_add_card_12345
         resultCode: 0
-        resultText: 'Card successfully tokenized'
+        resultText: Card successfully tokenized
         transactionResponses:
           - responseCode: 1
-            authCode: '000AAA'
+            authCode: 000AAA
             paymentMethod:
-              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-              type: 'Token'
-              currency: 'USD'
-              description: "Token for John Doe's Visa"
-              cardType: 'VISA'
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            cardType: 'VISA'
-            accountType: 'Credit'
-            hostResponseText: 'APPROVED 00'
-
+            cardType: VISA
+            accountType: Credit
+            hostResponseText: APPROVED 00
     UpdateTokenResponse:
       description: A successful response for a tokenized card update transaction.
       value:
-        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         paymentMethod:
-          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-          type: 'Token'
-          currency: 'USD'
-          description: "Token for John Doe's Visa"
-          cardType: 'VISA'
+          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+          type: Token
+          currency: USD
+          description: Token for John Doe's Visa
+          cardType: VISA
           maskedCardNumber: '************0011'
           cardExpDate: '1225'
-        referenceId: 'ref_update_card_12345'
+        referenceId: ref_update_card_12345
         resultCode: 0
-        resultText: 'Card successfully updated'
-
+        resultText: Card successfully updated
     RemoveTokenResponse:
       description: A successful response for a tokenized card removal transaction.
       value:
-        id: 'trx_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+        id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         paymentMethod:
-          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-          type: 'Token'
-          currency: 'USD'
-          description: "Token for John Doe's Visa"
-          cardType: 'VISA'
+          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+          type: Token
+          currency: USD
+          description: Token for John Doe's Visa
+          cardType: VISA
           maskedCardNumber: '************0011'
           cardExpDate: '1225'
-        referenceId: 'ref_remove_card_12345'
+        referenceId: ref_remove_card_12345
         resultCode: 0
-        resultText: 'Card successfully removed'
-
+        resultText: Card successfully removed
 paths:
   /payment-methods:
     get:
@@ -3197,7 +3256,6 @@ paths:
         - Multiple filters: `?filters=paymentMethodType==Physical,currency==USD`
         - Sort results: `?sorts=paymentMethodType,description`
         - Combined: `?filters=currency==USD&sorts=description`
-
       parameters:
         - name: filters
           in: query
@@ -3208,7 +3266,7 @@ paths:
             Available fields: id, paymentMethodType, currency, description, ownerId
           schema:
             type: string
-          example: 'paymentMethodType==Physical,currency==USD'
+          example: paymentMethodType==Physical,currency==USD
         - name: sorts
           in: query
           required: false
@@ -3217,7 +3275,7 @@ paths:
             Available fields: id, paymentMethodType, currency, description, ownerId
           schema:
             type: string
-          example: 'paymentMethodType,description'
+          example: paymentMethodType,description
         - name: page
           in: query
           required: false
@@ -3261,10 +3319,10 @@ paths:
                     hasNextPage: false
                     hasPreviousPage: false
                     items:
-                      - id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-                        type: 'Physical'
-                        currency: 'USD'
-                        description: 'Main Store Terminal'
+                      - id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                        type: Physical
+                        currency: USD
+                        description: Main Store Terminal
                 multipleResults:
                   summary: Multiple payment methods result
                   value:
@@ -3275,21 +3333,20 @@ paths:
                     hasNextPage: false
                     hasPreviousPage: false
                     items:
-                      - id: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-                        type: 'Physical'
-                        currency: 'USD'
-                        description: 'Main Store Terminal'
-                      - id: 'pmt_trm_01JRZQW7FXMG62D8HJTPK3Y5VB'
-                        type: 'Physical'
-                        currency: 'USD'
-                        description: 'Secondary Store Terminal'
-                      - id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                        type: 'Virtual'
-                        currency: 'USD'
-                        description: 'Online Checkout Iframe'
+                      - id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                        type: Physical
+                        currency: USD
+                        description: Main Store Terminal
+                      - id: pmt_trm_01JRZQW7FXMG62D8HJTPK3Y5VB
+                        type: Physical
+                        currency: USD
+                        description: Secondary Store Terminal
+                      - id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                        type: Virtual
+                        currency: USD
+                        description: Online Checkout Iframe
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /payment-methods/physical:
     post:
       operationId: createCardPresentToken
@@ -3315,8 +3372,8 @@ paths:
               cofAddRequest:
                 summary: Card On File Add request example
                 value:
-                  paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-                  referenceId: 'ref_add_card_12345'
+                  paymentMethodId: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                  referenceId: ref_add_card_12345
       responses:
         '200':
           description: A successful card tokenization response
@@ -3335,18 +3392,17 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 code: 2000
-                status: 'Rejected'
-                message: 'One or more validation errors occurred.'
-                traceId: '1-6838bcce-5c0074e82ac7170d4f990d87'
+                status: Rejected
+                message: One or more validation errors occurred.
+                traceId: 1-6838bcce-5c0074e82ac7170d4f990d87
                 timestamp: '2025-05-29T20:00:15.5752808Z'
                 errorDetails:
                   - code: 2000
-                    field: 'paymentMethodId'
-                    message: 'Request validation failed'
-                    details: "'PaymentMethodId' must not be empty."
+                    field: paymentMethodId
+                    message: Request validation failed
+                    details: '''PaymentMethodId'' must not be empty.'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /payment-methods/virtual:
     post:
       operationId: createCardNotPresentToken
@@ -3376,8 +3432,8 @@ paths:
               cofVirtualAddRequest:
                 summary: Card Not Present Token Creation request example
                 value:
-                  paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                  referenceId: 'ref_add_card_12345'
+                  paymentMethodId: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                  referenceId: ref_add_card_12345
                   useJavaScriptCallback: true
       responses:
         '200':
@@ -3390,18 +3446,18 @@ paths:
                 successfulResponse:
                   summary: A successful response for a Card Not Present tokenization transaction.
                   value:
-                    id: 'ifr_01J2F0ZJ2JW5B63CJFPXRGAB1S'
+                    id: ifr_01J2F0ZJ2JW5B63CJFPXRGAB1S
                     paymentMethod:
-                      id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                      type: 'Virtual'
-                      currency: 'USD'
-                      description: 'Online Checkout Iframe'
-                    referenceId: 'ref_add_card_12345'
+                      id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                      type: Virtual
+                      currency: USD
+                      description: Online Checkout Iframe
+                    referenceId: ref_add_card_12345
                     requestedAmount: 0
-                    sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
-                    iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                    sessionId: ses_01JSFAMY0AGW27QKP30C727512
+                    iframeUrl: https://hpf.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512
                     expirationTimestamp: '2025-04-17T14:19:03Z'
-                    status: 'Pending'
+                    status: Pending
         '400':
           description: Request Error
           content:
@@ -3410,18 +3466,17 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 code: 2000
-                status: 'Rejected'
-                message: 'One or more validation errors occurred.'
-                traceId: '1-6838bcce-5c0074e82ac7170d4f990d87'
+                status: Rejected
+                message: One or more validation errors occurred.
+                traceId: 1-6838bcce-5c0074e82ac7170d4f990d87
                 timestamp: '2025-05-29T20:00:15.5752808Z'
                 errorDetails:
                   - code: 2000
-                    field: 'paymentMethodId'
-                    message: 'Request validation failed'
-                    details: "'PaymentMethodId' must not be empty."
+                    field: paymentMethodId
+                    message: Request validation failed
+                    details: '''PaymentMethodId'' must not be empty.'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /payment-methods/token/{id}:
     put:
       operationId: updateToken
@@ -3454,7 +3509,7 @@ paths:
               cofUpdateRequest:
                 summary: Card On File Update request example
                 value:
-                  referenceId: 'ref_update_card_12345'
+                  referenceId: ref_update_card_12345
                   cardExpDate: '1225'
       responses:
         '200':
@@ -3474,18 +3529,17 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 code: 2000
-                status: 'Rejected'
-                message: 'One or more validation errors occurred.'
-                traceId: '1-6838bcce-5c0074e82ac7170d4f990d87'
+                status: Rejected
+                message: One or more validation errors occurred.
+                traceId: 1-6838bcce-5c0074e82ac7170d4f990d87
                 timestamp: '2025-05-29T20:00:15.5752808Z'
                 errorDetails:
                   - code: 2000
-                    field: 'cardExpDate'
-                    message: 'Request validation failed'
-                    details: "The length of 'CardExpDate' must be 4 characters or fewer."
+                    field: cardExpDate
+                    message: Request validation failed
+                    details: The length of 'CardExpDate' must be 4 characters or fewer.
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
     delete:
       operationId: removeToken
       summary: Remove Token
@@ -3531,18 +3585,17 @@ paths:
                 $ref: '#/components/schemas/Error'
               example:
                 code: 2000
-                status: 'Rejected'
-                message: 'One or more validation errors occurred.'
-                traceId: '1-6838bcce-5c0074e82ac7170d4f990d87'
+                status: Rejected
+                message: One or more validation errors occurred.
+                traceId: 1-6838bcce-5c0074e82ac7170d4f990d87
                 timestamp: '2025-05-29T20:00:15.5752808Z'
                 errorDetails:
                   - code: 2000
-                    field: 'id'
-                    message: 'Request validation failed'
-                    details: "'Id' must not be empty."
+                    field: id
+                    message: Request validation failed
+                    details: '''Id'' must not be empty.'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions:
     get:
       operationId: getTransactions
@@ -3562,15 +3615,15 @@ paths:
         - `invoiceNumber` - Invoice number
         - `type` - Transaction type (Sale, Refund, Void, Auth, Capture)
         - `amount` - Transaction amount
-        - `status` - Transaction status (Created, Pending, Completed)
+        - `status` - Transaction status (Created, Completed, Pending)
 
         #### Transaction Status Definitions:
 
-        **Created**: Initial transaction state when created but not yet processed. This includes hosted payment form sessions that haven't been completed by the customer, iframe transactions where the customer hasn't submitted payment yet, and transactions that were initiated but never finalized.
+        **Created**: Initial transaction state when created but not yet processed. This includes hosted payment form sessions that haven't been completed by the customer (the customer hasn't yet submitted payment) or hosted payment form sessions that were initiated but never finalized.
+
+        **Completed**: Final transaction state with definitive outcome. This includes successfully approved, declined, refunded, etc. transactions.
 
         **Pending**: Transaction submitted and awaiting final processing results. This status is primarily used for ACH transactions (coming soon) where settlement takes several business days.
-
-        **Completed**: Final transaction state with definitive outcome. This includes successfully approved transactions, declined transactions, voided transactions, and any transaction with a final result.
 
         **Note:** Most card transactions move directly from `Created` to `Completed` status within seconds. The `Pending` status is primarily reserved for ACH transactions (coming soon) and other payment methods that require extended processing time.
 
@@ -3623,7 +3676,7 @@ paths:
             Available fields: id, timestamp, referenceId, orderNumber, invoiceNumber, type, amount
           schema:
             type: string
-          example: 'timestamp>=2025-05-21T01:00:00,type==Sale|Capture'
+          example: timestamp>=2025-05-21T01:00:00,type==Sale|Capture
         - name: sorts
           in: query
           required: false
@@ -3632,7 +3685,7 @@ paths:
             Available fields: id, timestamp, referenceId, orderNumber, invoiceNumber, type, amount
           schema:
             type: string
-          example: '-timestamp,type'
+          example: -timestamp,type
         - name: page
           in: query
           required: false
@@ -3674,71 +3727,73 @@ paths:
                     hasNextPage: false
                     hasPreviousPage: false
                     items:
-                      - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
+                      - id: trx_01JWBPE27KHY2K4J7A13ATQ786
                         timestamp: '2025-05-22T17:00:50Z'
-                        type: 'Sale'
+                        type: Sale
+                        status: Completed
                         resultCode: 0
-                        resultText: 'APPROVED'
-                        referenceId: 'ref_s192i49i'
-                        orderNumber: 'order_number_1234'
-                        invoiceNumber: 'inv_12345678'
+                        resultText: APPROVED
+                        referenceId: ref_s192i49i
+                        orderNumber: order_number_1234
+                        invoiceNumber: inv_12345678
                         requestedAmount: 1000
                         approvedAmount: 1000
                         balanceAmount: 0
                         paymentMethod:
-                          id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                          type: 'Virtual'
-                          currency: 'USD'
-                          description: 'Online Checkout Iframe'
+                          id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                          type: Virtual
+                          currency: USD
+                          description: Online Checkout Iframe
                         transactionResponses:
                           - authCode: '111890'
-                            cardType: 'VISA'
-                            accountType: 'Credit'
+                            cardType: VISA
+                            accountType: Credit
                             responseCode: 1
-                            hostResponseText: 'APPROVED'
+                            hostResponseText: APPROVED
                             amountApproved: 1000
-                            avsResult: 'Y'
-                            cvvResult: 'M'
+                            avsResult: Y
+                            cvvResult: M
                             paymentMethod:
-                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                              type: 'Token'
-                              currency: 'USD'
-                              description: "Token for John Doe's Visa"
-                              cardType: 'VISA'
-                              maskedCardNumber: '4****1111'
+                              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                              type: Token
+                              currency: USD
+                              description: Token for John Doe's Visa
+                              cardType: VISA
+                              maskedCardNumber: 4****1111
                               cardExpDate: '1225'
-                      - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
+                      - id: trx_01JWBNTQ6G0MJWVADFZVYMXPBF
                         timestamp: '2025-05-22T19:22:47Z'
-                        type: 'Sale'
+                        type: Sale
+                        status: Completed
                         resultCode: 0
-                        resultText: 'APPROVED'
-                        referenceId: 'ref_s192i49i'
-                        orderNumber: 'order_number_1234'
-                        invoiceNumber: 'inv_12345678'
+                        resultText: APPROVED
+                        referenceId: ref_s192i49i
+                        orderNumber: order_number_1234
+                        invoiceNumber: inv_12345678
                         requestedAmount: 1000
                         approvedAmount: 1000
                         balanceAmount: 0
                         paymentMethod:
-                          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                          type: 'Token'
-                          currency: 'USD'
-                          description: "Token for John Doe's Visa"
+                          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                          type: Token
+                          currency: USD
+                          description: Token for John Doe's Visa
                         transactionResponses:
                           - authCode: '111048'
-                            cardType: 'VISA'
-                            accountType: 'Credit'
+                            cardType: VISA
+                            accountType: Credit
                             responseCode: 1
-                            hostResponseText: 'APPROVED'
+                            hostResponseText: APPROVED
                             amountApproved: 1000
-                            avsResult: 'Y'
-                            cvvResult: 'M'
+                            avsResult: Y
+                            cvvResult: M
                             paymentMethod:
-                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                              type: 'Token'
-                              currency: 'USD'
-                              description: "Token for John Doe's Visa"
-                              cardType: 'VISA'
-                              maskedCardNumber: '4****1111'
+                              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                              type: Token
+                              currency: USD
+                              description: Token for John Doe's Visa
+                              cardType: VISA
+                              maskedCardNumber: 4****1111
                               cardExpDate: '1225'
                 saleAndCapture:
                   summary: Sale and Capture transactions with descending timestamp sort
@@ -3750,77 +3805,78 @@ paths:
                     hasNextPage: false
                     hasPreviousPage: false
                     items:
-                      - id: 'trx_01JWBNTQ6G0MJWVADFZVYMXPBF'
+                      - id: trx_01JWBNTQ6G0MJWVADFZVYMXPBF
                         resultCode: 0
-                        resultText: 'APPROVED'
-                        referenceId: 'ref_s192i49i'
-                        orderNumber: 'order_number_1234'
-                        invoiceNumber: 'inv_12345678'
+                        resultText: APPROVED
+                        referenceId: ref_s192i49i
+                        orderNumber: order_number_1234
+                        invoiceNumber: inv_12345678
                         timestamp: '2025-05-27T18:59:31Z'
-                        type: 'Capture'
+                        type: Capture
+                        status: Completed
                         requestedAmount: 450
                         approvedAmount: 450
                         balanceAmount: 0
                         paymentMethod:
-                          id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                          type: 'Token'
-                          currency: 'USD'
-                          description: "Token for John Doe's Visa"
+                          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                          type: Token
+                          currency: USD
+                          description: Token for John Doe's Visa
                         transactionResponses:
                           - authCode: '111688'
-                            cardType: 'VISA'
-                            maskedCardNumber: '4****5297'
-                            accountType: 'Credit'
+                            cardType: VISA
+                            maskedCardNumber: 4****5297
+                            accountType: Credit
                             responseCode: 1
-                            hostResponseText: 'APPROVED'
+                            hostResponseText: APPROVED
                             amountApproved: 450
-                            avsResult: 'Y'
-                            cvvResult: 'M'
+                            avsResult: Y
+                            cvvResult: M
                             paymentMethod:
-                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                              type: 'Token'
-                              currency: 'USD'
-                              description: "Token for John Doe's Visa"
-                              cardType: 'VISA'
+                              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                              type: Token
+                              currency: USD
+                              description: Token for John Doe's Visa
+                              cardType: VISA
                               maskedCardNumber: '************0011'
                               cardExpDate: '1225'
-                      - id: 'trx_01JWBPE27KHY2K4J7A13ATQ786'
+                      - id: trx_01JWBPE27KHY2K4J7A13ATQ786
                         resultCode: 0
-                        resultText: 'APPROVED'
-                        referenceId: 'ref_s192i49i'
-                        orderNumber: 'order_number_1234'
-                        invoiceNumber: 'inv_12345678'
+                        resultText: APPROVED
+                        referenceId: ref_s192i49i
+                        orderNumber: order_number_1234
+                        invoiceNumber: inv_12345678
                         timestamp: '2025-05-27T18:49:31Z'
-                        type: 'Sale'
+                        type: Sale
+                        status: Completed
                         requestedAmount: 1000
                         approvedAmount: 1000
                         balanceAmount: 0
                         paymentMethod:
-                          id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                          type: 'Virtual'
-                          currency: 'USD'
-                          description: 'Online Checkout Iframe'
+                          id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                          type: Virtual
+                          currency: USD
+                          description: Online Checkout Iframe
                         transactionResponses:
                           - authCode: '111890'
-                            cardType: 'VISA'
-                            accountType: 'Credit'
-                            maskedCardNumber: '4****1111'
+                            cardType: VISA
+                            accountType: Credit
+                            maskedCardNumber: 4****1111
                             responseCode: 1
-                            hostResponseText: 'APPROVED'
+                            hostResponseText: APPROVED
                             amountApproved: 1000
-                            avsResult: 'Y'
-                            cvvResult: 'M'
+                            avsResult: Y
+                            cvvResult: M
                             paymentMethod:
-                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                              type: 'Token'
-                              currency: 'USD'
-                              description: "Token for John Doe's Visa"
-                              cardType: 'VISA'
+                              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                              type: Token
+                              currency: USD
+                              description: Token for John Doe's Visa
+                              cardType: VISA
                               maskedCardNumber: '************0011'
                               cardExpDate: '1225'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions/physical-sale:
     post:
       operationId: saleCardPresent
@@ -3852,10 +3908,10 @@ paths:
                     tax: 100
                     cashback: 0
                     tip: 0
-                  paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-                  invoiceNumber: 'inv_12345678'
-                  orderNumber: 'order_number_1234'
-                  referenceId: 'ref_s192i49i'
+                  paymentMethodId: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                  invoiceNumber: inv_12345678
+                  orderNumber: order_number_1234
+                  referenceId: ref_s192i49i
       responses:
         '200':
           description: A successful Card Present sale response
@@ -3876,7 +3932,7 @@ paths:
                               If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
                             properties:
                               id:
-                                example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                                example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
               examples:
                 successfulResponse:
                   $ref: '#/components/examples/SaleCardPresentResponse'
@@ -3888,7 +3944,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions/virtual-sale:
     post:
       operationId: saleCardNotPresent
@@ -3924,10 +3979,10 @@ paths:
                     tax: 100
                     cashback: 0
                     tip: 0
-                  paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                  invoiceNumber: 'inv_12345678'
-                  orderNumber: 'order_number_1234'
-                  referenceId: 'ref_s192i49i'
+                  paymentMethodId: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                  invoiceNumber: inv_12345678
+                  orderNumber: order_number_1234
+                  referenceId: ref_s192i49i
                   useJavaScriptCallback: true
       responses:
         '200':
@@ -3940,20 +3995,20 @@ paths:
                 successfulResponse:
                   summary: A successful response for a Card Not Present sale transaction.
                   value:
-                    id: 'ifr_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    id: ifr_01J2F0EKHC7HY2R93C8ENBD1FG
                     paymentMethod:
-                      id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                      type: 'Virtual'
-                      currency: 'USD'
-                      description: 'Online Checkout Iframe'
-                    invoiceNumber: 'inv_12345678'
-                    orderNumber: 'order_number_1234'
-                    referenceId: 'ref_s192i49i'
+                      id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                      type: Virtual
+                      currency: USD
+                      description: Online Checkout Iframe
+                    invoiceNumber: inv_12345678
+                    orderNumber: order_number_1234
+                    referenceId: ref_s192i49i
                     requestedAmount: 1000
-                    sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
-                    iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                    sessionId: ses_01JSFAMY0AGW27QKP30C727512
+                    iframeUrl: https://hpf.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512
                     expirationTimestamp: '2025-04-17T14:19:03Z'
-                    status: 'Pending'
+                    status: Pending
         '400':
           description: Request Error
           content:
@@ -3962,7 +4017,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions/token-sale:
     post:
       operationId: saleToken
@@ -3993,10 +4047,10 @@ paths:
                     tax: 100
                     cashback: 0
                     tip: 0
-                  paymentMethodId: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                  invoiceNumber: 'inv_12345678'
-                  orderNumber: 'order_number_1234'
-                  referenceId: 'ref_s192i49i'
+                  paymentMethodId: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                  invoiceNumber: inv_12345678
+                  orderNumber: order_number_1234
+                  referenceId: ref_s192i49i
       responses:
         '200':
           description: A successful Card On File sale response
@@ -4008,50 +4062,49 @@ paths:
                 successfulResponse:
                   summary: A successful response for a Card On File sale transaction.
                   value:
-                    id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    id: trx_01J2F0EKHC7HY2R93C8ENBD1FG
                     timestamp: '2025-05-27T18:49:31Z'
-                    type: 'Sale'
+                    type: Sale
+                    status: Completed
                     paymentMethod:
-                      id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                      type: 'Token'
-                      currency: 'USD'
-                      description: "Token for John Doe's Visa"
-                      cardType: 'VISA'
+                      id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                      type: Token
+                      status: Completed
+                      currency: USD
+                      description: Token for John Doe's Visa
+                      cardType: VISA
                       maskedCardNumber: '************0011'
                       cardExpDate: '1225'
-                    invoiceNumber: 'inv_12345678'
-                    orderNumber: 'order_number_1234'
-                    referenceId: 'ref_s192i49i'
+                    invoiceNumber: inv_12345678
+                    orderNumber: order_number_1234
+                    referenceId: ref_s192i49i
                     resultCode: 0
-                    resultText: 'Successful transaction request'
+                    resultText: Successful transaction request
                     requestedAmount: 1000
                     approvedAmount: 1000
                     balanceAmount: 0
                     transactionResponses:
-                      [
-                        {
-                          responseCode: 1,
-                          authCode: '000AAA',
-                          amountApproved: 1000,
-                          approvedAmountBreakdown:
-                            { amountGoodsAndServices: 900, tax: 100, cashback: 0, tip: 0 },
-                          paymentMethod:
-                            {
-                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
-                              type: 'Token',
-                              currency: 'USD',
-                              description: "Token for John Doe's Visa",
-                              cardType: 'VISA',
-                              maskedCardNumber: '************0011',
-                              cardExpDate: '1225',
-                            },
-                          cardType: 'VISA',
-                          avsResult: 'A',
-                          cvvResult: 'M',
-                          accountType: 'Credit',
-                          hostResponseText: 'APPROVED 00',
-                        },
-                      ]
+                      - responseCode: 1
+                        authCode: 000AAA
+                        amountApproved: 1000
+                        approvedAmountBreakdown:
+                          amountGoodsAndServices: 900
+                          tax: 100
+                          cashback: 0
+                          tip: 0
+                        paymentMethod:
+                          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                          type: Token
+                          currency: USD
+                          description: Token for John Doe's Visa
+                          cardType: VISA
+                          maskedCardNumber: '************0011'
+                          cardExpDate: '1225'
+                        cardType: VISA
+                        avsResult: Y
+                        cvvResult: M
+                        accountType: Credit
+                        hostResponseText: APPROVED 00
         '400':
           description: Request Error
           content:
@@ -4060,7 +4113,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions/physical-auth:
     post:
       operationId: authCardPresent
@@ -4092,10 +4144,10 @@ paths:
                     tax: 100
                     cashback: 0
                     tip: 0
-                  paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-                  invoiceNumber: 'inv_12345678'
-                  orderNumber: 'order_number_1234'
-                  referenceId: 'ref_s192i49i'
+                  paymentMethodId: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                  invoiceNumber: inv_12345678
+                  orderNumber: order_number_1234
+                  referenceId: ref_s192i49i
       responses:
         '200':
           description: A successful Card Present authorization response
@@ -4110,14 +4162,13 @@ paths:
                         allOf:
                           - $ref: '#/components/schemas/PaymentMethodDetails'
                           - type: object
-                            # TODO:rafal@fiska.com: this is the same override as transactions/physical-sale
                             description: |
                               The payment method used for this Card Present transaction.
 
                               If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
                             properties:
                               id:
-                                example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                                example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
               examples:
                 successfulResponse:
                   $ref: '#/components/examples/AuthCardPresentResponse'
@@ -4129,7 +4180,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions/virtual-auth:
     post:
       operationId: authCardNotPresent
@@ -4165,10 +4215,10 @@ paths:
                     tax: 100
                     cashback: 0
                     tip: 0
-                  paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                  invoiceNumber: 'inv_12345678'
-                  orderNumber: 'order_number_1234'
-                  referenceId: 'ref_s192i49i'
+                  paymentMethodId: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                  invoiceNumber: inv_12345678
+                  orderNumber: order_number_1234
+                  referenceId: ref_s192i49i
                   useJavaScriptCallback: true
       responses:
         '200':
@@ -4181,20 +4231,20 @@ paths:
                 successfulResponse:
                   summary: A successful response for a Card Not Present authorization transaction.
                   value:
-                    id: 'ifr_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    id: ifr_01J2F0EKHC7HY2R93C8ENBD1FG
                     paymentMethod:
-                      id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                      type: 'Virtual'
-                      currency: 'USD'
-                      description: 'Online Checkout Iframe'
-                    invoiceNumber: 'inv_12345678'
-                    orderNumber: 'order_number_1234'
-                    referenceId: 'ref_s192i49i'
+                      id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                      type: Virtual
+                      currency: USD
+                      description: Online Checkout Iframe
+                    invoiceNumber: inv_12345678
+                    orderNumber: order_number_1234
+                    referenceId: ref_s192i49i
                     requestedAmount: 1000
-                    sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
-                    iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                    sessionId: ses_01JSFAMY0AGW27QKP30C727512
+                    iframeUrl: https://hpf.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512
                     expirationTimestamp: '2025-04-17T14:19:03Z'
-                    status: 'Pending'
+                    status: Pending
         '400':
           description: Request Error
           content:
@@ -4203,7 +4253,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions/token-auth:
     post:
       operationId: authToken
@@ -4234,10 +4283,10 @@ paths:
                     tax: 100
                     cashback: 0
                     tip: 0
-                  paymentMethodId: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                  invoiceNumber: 'inv_12345678'
-                  orderNumber: 'order_number_1234'
-                  referenceId: 'ref_s192i49i'
+                  paymentMethodId: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                  invoiceNumber: inv_12345678
+                  orderNumber: order_number_1234
+                  referenceId: ref_s192i49i
       responses:
         '200':
           description: A successful Card On File authorization response
@@ -4249,50 +4298,48 @@ paths:
                 successfulResponse:
                   summary: A successful response for a Card On File authorization transaction.
                   value:
-                    id: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    id: trx_01J2F0EKHC7HY2R93C8ENBD1FG
                     timestamp: '2025-05-27T18:49:31Z'
-                    type: 'Auth'
+                    type: Auth
+                    status: Completed
                     paymentMethod:
-                      id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J'
-                      type: 'Token'
-                      currency: 'USD'
-                      description: "Token for John Doe's Visa"
-                      cardType: 'VISA'
+                      id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                      type: Token
+                      currency: USD
+                      description: Token for John Doe's Visa
+                      cardType: VISA
                       maskedCardNumber: '************0011'
                       cardExpDate: '1225'
-                    invoiceNumber: 'inv_12345678'
-                    orderNumber: 'order_number_1234'
-                    referenceId: 'ref_s192i49i'
+                    invoiceNumber: inv_12345678
+                    orderNumber: order_number_1234
+                    referenceId: ref_s192i49i
                     resultCode: 0
-                    resultText: 'Successful transaction request'
+                    resultText: Successful transaction request
                     requestedAmount: 1000
                     approvedAmount: 1000
                     balanceAmount: 0
                     transactionResponses:
-                      [
-                        {
-                          responseCode: 1,
-                          authCode: '000AAA',
-                          amountApproved: 1000,
-                          approvedAmountBreakdown:
-                            { amountGoodsAndServices: 900, tax: 100, cashback: 0, tip: 0 },
-                          paymentMethod:
-                            {
-                              id: 'pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J',
-                              type: 'Token',
-                              currency: 'USD',
-                              description: "Token for John Doe's Visa",
-                              maskedCardNumber: '************0011',
-                              cardType: 'VISA',
-                              cardExpDate: '1225',
-                            },
-                          cardType: 'VISA',
-                          avsResult: 'A',
-                          cvvResult: 'M',
-                          accountType: 'Credit',
-                          hostResponseText: 'APPROVED 00',
-                        },
-                      ]
+                      - responseCode: 1
+                        authCode: 000AAA
+                        amountApproved: 1000
+                        approvedAmountBreakdown:
+                          amountGoodsAndServices: 900
+                          tax: 100
+                          cashback: 0
+                          tip: 0
+                        paymentMethod:
+                          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                          type: Token
+                          currency: USD
+                          description: Token for John Doe's Visa
+                          maskedCardNumber: '************0011'
+                          cardType: VISA
+                          cardExpDate: '1225'
+                        cardType: VISA
+                        avsResult: Y
+                        cvvResult: M
+                        accountType: Credit
+                        hostResponseText: APPROVED 00
         '400':
           description: Request Error
           content:
@@ -4301,7 +4348,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions/capture:
     post:
       operationId: capture
@@ -4326,19 +4372,19 @@ paths:
               captureWithOriginalTransactionId:
                 summary: Capture using original transaction ID
                 value:
-                  originalTransactionId: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                  originalTransactionId: trx_01J2F0EKHC7HY2R93C8ENBD1FG
                   amount: 1000
-                  invoiceNumber: 'inv_12345678'
-                  orderNumber: 'order_number_1234'
-                  referenceId: 'ref_capture_12345'
+                  invoiceNumber: inv_12345678
+                  orderNumber: order_number_1234
+                  referenceId: ref_capture_12345
               captureWithOriginalReferenceId:
                 summary: Capture using original reference ID
                 value:
-                  originalReferenceId: 'ref_s192i49i'
+                  originalReferenceId: ref_s192i49i
                   amount: 1000
-                  invoiceNumber: 'inv_12345678'
-                  orderNumber: 'order_number_1234'
-                  referenceId: 'ref_capture_12345'
+                  invoiceNumber: inv_12345678
+                  orderNumber: order_number_1234
+                  referenceId: ref_capture_12345
       responses:
         '200':
           description: A successful capture response
@@ -4357,7 +4403,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions/refund:
     post:
       operationId: refund
@@ -4382,19 +4427,19 @@ paths:
               refundWithOriginalTransactionId:
                 summary: Refund using original transaction ID
                 value:
-                  originalTransactionId: 'trx_01J2F0EKHC7HY2R93C8ENBD1FG'
+                  originalTransactionId: trx_01J2F0EKHC7HY2R93C8ENBD1FG
                   amount: 1000
-                  invoiceNumber: 'ref_inv_12345678'
-                  orderNumber: 'ref_order_1234'
-                  referenceId: 'ref_refund_12345'
+                  invoiceNumber: ref_inv_12345678
+                  orderNumber: ref_order_1234
+                  referenceId: ref_refund_12345
               refundWithOriginalReferenceId:
                 summary: Refund using original reference ID
                 value:
-                  originalReferenceId: 'ref_s192i49i'
+                  originalReferenceId: ref_s192i49i
                   amount: 1000
-                  invoiceNumber: 'ref_inv_12345678'
-                  orderNumber: 'ref_order_1234'
-                  referenceId: 'ref_refund_12345'
+                  invoiceNumber: ref_inv_12345678
+                  orderNumber: ref_order_1234
+                  referenceId: ref_refund_12345
       responses:
         '200':
           description: A successful refund response
@@ -4413,7 +4458,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions/unreferenced-physical-refund:
     post:
       operationId: unreferencedRefundCardPresent
@@ -4442,10 +4486,10 @@ paths:
                 summary: Unreferenced Card Present refund request example
                 value:
                   amount: 1000
-                  paymentMethodId: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
-                  invoiceNumber: 'inv_12345678'
-                  orderNumber: 'order_number_1234'
-                  referenceId: 'ref_s192i49i'
+                  paymentMethodId: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+                  invoiceNumber: inv_12345678
+                  orderNumber: order_number_1234
+                  referenceId: ref_s192i49i
       responses:
         '200':
           description: A successful Card Present unreferenced refund response
@@ -4466,7 +4510,7 @@ paths:
                               If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
                             properties:
                               id:
-                                example: 'pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF'
+                                example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
               examples:
                 successfulResponse:
                   $ref: '#/components/examples/UnreferencedRefundCardPresentResponse'
@@ -4478,7 +4522,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
   /transactions/unreferenced-virtual-refund:
     post:
       operationId: unreferencedRefundCardNotPresent
@@ -4509,10 +4552,10 @@ paths:
                 summary: Unreferenced Card Not Present refund request example
                 value:
                   amount: 1000
-                  paymentMethodId: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                  invoiceNumber: 'inv_12345678'
-                  orderNumber: 'order_number_1234'
-                  referenceId: 'ref_s192i49i'
+                  paymentMethodId: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                  invoiceNumber: inv_12345678
+                  orderNumber: order_number_1234
+                  referenceId: ref_s192i49i
                   useJavaScriptCallback: true
       responses:
         '200':
@@ -4525,20 +4568,20 @@ paths:
                 successfulResponse:
                   summary: A successful response for a Card Not Present unreferenced refund transaction.
                   value:
-                    id: 'ifr_01J2F0EKHC7HY2R93C8ENBD1FG'
+                    id: ifr_01J2F0EKHC7HY2R93C8ENBD1FG
                     paymentMethod:
-                      id: 'pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS'
-                      type: 'Virtual'
-                      currency: 'USD'
-                      description: 'Online Checkout Iframe'
-                    invoiceNumber: 'inv_12345678'
-                    orderNumber: 'order_number_1234'
-                    referenceId: 'ref_s192i49i'
+                      id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
+                      type: Virtual
+                      currency: USD
+                      description: Online Checkout Iframe
+                    invoiceNumber: inv_12345678
+                    orderNumber: order_number_1234
+                    referenceId: ref_s192i49i
                     requestedAmount: 1000
-                    sessionId: 'ses_01JSFAMY0AGW27QKP30C727512'
-                    iframeUrl: 'https://iframe.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512'
+                    sessionId: ses_01JSFAMY0AGW27QKP30C727512
+                    iframeUrl: https://hpf.integratedcommerce.io/session/01JSFAMY0AGW27QKP30C727512
                     expirationTimestamp: '2025-04-17T14:19:03Z'
-                    status: 'Pending'
+                    status: Pending
         '400':
           description: Request Error
           content:
@@ -4547,7 +4590,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
 webhooks:
   SaleCompleted:
     post:
@@ -4564,7 +4606,6 @@ webhooks:
       responses:
         '200':
           $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
-
   AuthCompleted:
     post:
       operationId: webhookAuthCompleted
@@ -4580,7 +4621,6 @@ webhooks:
       responses:
         '200':
           $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
-
   CaptureCompleted:
     post:
       operationId: webhookCaptureCompleted
@@ -4596,7 +4636,6 @@ webhooks:
       responses:
         '200':
           $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
-
   RefundCompleted:
     post:
       operationId: webhookRefundCompleted
@@ -4612,7 +4651,6 @@ webhooks:
       responses:
         '200':
           $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
-
   TokenCreated:
     post:
       operationId: webhookTokenCreated
@@ -4628,7 +4666,6 @@ webhooks:
       responses:
         '200':
           $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
-
   TokenUpdated:
     post:
       operationId: webhookTokenUpdated
@@ -4644,7 +4681,6 @@ webhooks:
       responses:
         '200':
           $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
-
   TokenRemoved:
     post:
       operationId: webhookTokenRemoved

@@ -4,7 +4,7 @@
   content: |
     # Hosted Payment Form
 
-    The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Form (HPF) solution that simplifies payment collection while maintaining strong security and compliance standards.
+    Test - The Integrated Commerce Omni-Channel Payment API offers a secure Hosted Payment Form (HPF) solution that simplifies payment collection while maintaining strong security and compliance standards.
 
     ## How It Works
 
@@ -248,6 +248,7 @@
       "success": true,
       "id": "trx_01J2F0EKHC7HY2R93C8ENBD1FG",
       "type": "Sale",
+      "status":"Completed",
       "referenceId": "ref_s192i49i",
       "orderNumber": "order_number_1234",
       "invoiceNumber": "inv_12345678",
@@ -340,7 +341,6 @@
       <h4 style="margin-top: 15px; font-size: 16px;">Responsive Design</h4>
       <p>Ensure your payment page layout accommodates the iframe appropriately on all devices.</p>
     </div>
-
 - title: Test Cards
   slug: test-cards
   description: Test cards for integration testing
