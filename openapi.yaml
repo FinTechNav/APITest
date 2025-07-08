@@ -489,7 +489,7 @@ components:
       description: |
         An optional alphanumeric invoice number for this transaction. If provided, the same value will be populated in the response.
 
-        **Card Present Limit**: Maximum length is 35 characters. If this limit is exceeded, the terminal will display "Transaction Cancelled; Invoice Number Limit Exceeds" and the transaction will be cancelled/declined.
+        **Card Present Limit**: Maximum length is 35 characters. If this limit is exceeded, the API will return a validation error.
       example: inv_12345678
     OrderNumber:
       type: string
@@ -928,7 +928,7 @@ components:
             You can retrieve all available physical payment terminal IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
           example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
         invoiceNumber:
-          $ref: '#/components/schemas/InvoiceNumber'
+          $ref: '#/components/schemas/InvoiceNumberCardPresent'
         orderNumber:
           $ref: '#/components/schemas/OrderNumber'
         referenceId:
