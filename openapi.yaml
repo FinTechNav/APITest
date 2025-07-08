@@ -4,7 +4,7 @@ info:
   description: |
     ### Introduction
 
-    The Integrated Commerce Omni-Channel Payment API is a RESTful API that provides a unified interface for processing payments across multiple channels. This API enables developers to integrate payment processing capabilities into their applications with a single set of endpoints, simplifying implementation and reducing development time.
+    TEST DEPLOYMENT - The Integrated Commerce Omni-Channel Payment API is a RESTful API that provides a unified interface for processing payments across multiple channels. This API enables developers to integrate payment processing capabilities into their applications with a single set of endpoints, simplifying implementation and reducing development time.
 
     The API supports integration in both the United States and Canada, using USD and CAD currencies.
 
