@@ -213,7 +213,7 @@ components:
          * `0` - UNKNOWN
          * `1` - APPROVED - Transaction was approved
          * `2` - PARTIAL_APPROVED - Transaction was partially approved, but not for the full requested amount.
-         * `10` - DECLINED - Declined by the issuer or bank.
+         * `10` - DECLINED - Transaction was declined by the issuer or bank.  For Card-Present, the transaction can also be declined offline by the terminal.
          * `11` - INSUFFICIENT_FUNDS - Rejected due to insufficient funds in the account.
          * `12` - CARD_EXPIRED - The card used for the transaction has expired.
          * `13` - FRAUD_SUSPECTED - The transaction was flagged for potential fraud.
