@@ -2212,7 +2212,10 @@ components:
                       - 'RECORD #         0656191'
                       - 'HOST INVOICE #    000038'
                       - 'HOST SEQ #    1720656191'
-                      - MERCH INVOICE.  fgj24344
+                      - 'MERCH                   '
+                      - 'INVOICE inv_123456789012'
+                      - '        3456789012354678'
+                      - '        901             '
                       - '------------------------'
                       - CARD    ************0011
                       - VISA             Contact
@@ -2248,7 +2251,10 @@ components:
                       - 'RECORD #         0656191'
                       - 'HOST INVOICE #    000038'
                       - 'HOST SEQ #    1720656191'
-                      - MERCH INVOICE.  fgj24344
+                      - 'MERCH                   '
+                      - 'INVOICE inv_123456789012'
+                      - '        3456789012354678'
+                      - '        901             '
                       - '------------------------'
                       - CARD    ************0011
                       - VISA             Contact
@@ -2339,7 +2345,10 @@ components:
                   - 'RECORD #         0656191'
                   - 'HOST INVOICE #    000038'
                   - 'HOST SEQ #    1720656191'
-                  - MERCH INVOICE.  fgj24344
+                  - 'MERCH                   '
+                  - 'INVOICE inv_123456789012'
+                  - '        3456789012354678'
+                  - '        901             '
                   - '------------------------'
                   - CARD    ************0011
                   - VISA             Contact
@@ -2373,7 +2382,10 @@ components:
                   - 'RECORD #         0656191'
                   - 'HOST INVOICE #    000038'
                   - 'HOST SEQ #    1720656191'
-                  - MERCH INVOICE.  fgj24344
+                  - 'MERCH                   '
+                  - 'INVOICE inv_123456789012'
+                  - '        3456789012354678'
+                  - '        901             '
                   - '------------------------'
                   - CARD    ************0011
                   - VISA             Contact
@@ -2462,7 +2474,10 @@ components:
                   - 'RECORD #         0656191'
                   - 'HOST INVOICE #    000038'
                   - 'HOST SEQ #    1720656191'
-                  - MERCH INVOICE.  fgj24344
+                  - 'MERCH                   '
+                  - 'INVOICE inv_123456789012'
+                  - '        3456789012354678'
+                  - '        901             '
                   - '------------------------'
                   - CARD    ************0011
                   - VISA             Contact
@@ -2495,7 +2510,10 @@ components:
                   - 'RECORD #         0656191'
                   - 'HOST INVOICE #    000038'
                   - 'HOST SEQ #    1720656191'
-                  - MERCH INVOICE.  fgj24344
+                  - 'MERCH                   '
+                  - 'INVOICE inv_123456789012'
+                  - '        3456789012354678'
+                  - '        901             '
                   - '------------------------'
                   - CARD    ************0011
                   - VISA             Contact
@@ -2688,7 +2706,10 @@ components:
                 - 'RECORD #         0656191'
                 - 'HOST INVOICE #    000038'
                 - 'HOST SEQ #    1720656191'
-                - MERCH INVOICE.  fgj24344
+                - 'MERCH                   '
+                - 'INVOICE inv_123456789012'
+                - '        3456789012354678'
+                - '        901             '
                 - '------------------------'
                 - CARD    ************0011
                 - VISA             Contact
@@ -2727,7 +2748,10 @@ components:
                 - 'RECORD #         0656191'
                 - 'HOST INVOICE #    000038'
                 - 'HOST SEQ #    1720656191'
-                - MERCH INVOICE.  fgj24344
+                - 'MERCH                   '
+                - 'INVOICE inv_123456789012'
+                - '        3456789012354678'
+                - '        901             '
                 - '------------------------'
                 - CARD    ************0011
                 - VISA             Contact
@@ -2808,7 +2832,10 @@ components:
                 - 'RECORD #         0656191'
                 - 'HOST INVOICE #    000038'
                 - 'HOST SEQ #    1720656191'
-                - MERCH INVOICE.  fgj24344
+                - 'MERCH                   '
+                - 'INVOICE inv_123456789012'
+                - '        3456789012354678'
+                - '        901             '
                 - '------------------------'
                 - CARD    ************0011
                 - VISA             Contact
@@ -2844,7 +2871,10 @@ components:
                 - 'RECORD #         0656191'
                 - 'HOST INVOICE #    000038'
                 - 'HOST SEQ #    1720656191'
-                - MERCH INVOICE.  fgj24344
+                - 'MERCH                   '
+                - 'INVOICE inv_123456789012'
+                - '        3456789012354678'
+                - '        901             '
                 - '------------------------'
                 - CARD    ************0011
                 - VISA             Contact
@@ -2919,7 +2949,10 @@ components:
             - 'RECORD #         0656191'
             - 'HOST INVOICE #    000038'
             - 'HOST SEQ #    1720656191'
-            - MERCH INVOICE.  fgj24344
+            - 'MERCH                   '
+            - 'INVOICE inv_123456789012'
+            - '        3456789012354678'
+            - '        901             '
             - '------------------------'
             - CARD    ************0011
             - VISA             Contact
@@ -2953,7 +2986,10 @@ components:
             - 'RECORD #         0656191'
             - 'HOST INVOICE #    000038'
             - 'HOST SEQ #    1720656191'
-            - MERCH INVOICE.  fgj24344
+            - 'MERCH                   '
+            - 'INVOICE inv_123456789012'
+            - '        3456789012354678'
+            - '        901             '
             - '------------------------'
             - CARD    ************0011
             - VISA             Contact
@@ -3026,7 +3062,10 @@ components:
             - 'RECORD #         0656191'
             - 'HOST INVOICE #    000038'
             - 'HOST SEQ #    1720656191'
-            - MERCH INVOICE.  fgj24344
+            - 'MERCH                   '
+            - 'INVOICE inv_123456789012'
+            - '        3456789012354678'
+            - '        901             '
             - '------------------------'
             - CARD    ************0011
             - VISA             Contact
@@ -3059,7 +3098,10 @@ components:
             - 'RECORD #         0656191'
             - 'HOST INVOICE #    000038'
             - 'HOST SEQ #    1720656191'
-            - MERCH INVOICE.  fgj24344
+            - 'MERCH                   '
+            - 'INVOICE inv_123456789012'
+            - '        3456789012354678'
+            - '        901             '
             - '------------------------'
             - CARD    ************0011
             - VISA             Contact
@@ -3113,7 +3155,10 @@ components:
             - 'RECORD #         0656191'
             - 'HOST INVOICE #    000038'
             - 'HOST SEQ #    1720656191'
-            - MERCH INVOICE.  fgj24344
+            - 'MERCH                   '
+            - 'INVOICE inv_123456789012'
+            - '        3456789012354678'
+            - '        901             '
             - '------------------------'
             - CARD    ************0011
             - VISA             Contact
@@ -3146,7 +3191,10 @@ components:
             - 'RECORD #         0656191'
             - 'HOST INVOICE #    000038'
             - 'HOST SEQ #    1720656191'
-            - MERCH INVOICE.  fgj24344
+            - 'MERCH                   '
+            - 'INVOICE inv_123456789012'
+            - '        3456789012354678'
+            - '        901             '
             - '------------------------'
             - CARD    ************0011
             - VISA             Contact
