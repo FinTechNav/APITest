@@ -355,7 +355,10 @@ components:
             - 'RECORD #         0656191'
             - 'HOST INVOICE #    000038'
             - 'HOST SEQ #    1720656191'
-            - MERCH INVOICE.  fgj24344
+            - 'MERCH                   '
+            - 'INVOICE inv_123456789012'
+            - '        3456789012354678'
+            - '        901             '
             - '------------------------'
             - CARD    ************0011
             - VISA             Contact
@@ -396,7 +399,10 @@ components:
             - 'RECORD #         0656191'
             - 'HOST INVOICE #    000038'
             - 'HOST SEQ #    1720656191'
-            - MERCH INVOICE.  fgj24344
+            - 'MERCH                   '
+            - 'INVOICE inv_123456789012'
+            - '        3456789012354678'
+            - '        901             '
             - '------------------------'
             - CARD    ************0011
             - VISA             Contact
@@ -482,7 +488,7 @@ components:
       maxLength: 100
       description: |
         An optional alphanumeric invoice number for this transaction. If provided, the same value will be populated in the response.
-      example: inv_12345678
+      example: inv_1234567890123456789012354678901
     InvoiceNumberCardPresent:
       type: string
       maxLength: 35
@@ -490,7 +496,7 @@ components:
         An optional alphanumeric invoice number for this transaction. If provided, the same value will be populated in the response.
 
         **Card Present Limit**: Maximum length is 35 characters. If this limit is exceeded, the API will return a validation error.
-      example: inv_12345678
+      example: inv_1234567890123456789012354678901
     OrderNumber:
       type: string
       maxLength: 100
@@ -1196,7 +1202,7 @@ components:
                 description: Online Checkout Iframe
               referenceId: ref_s192i49i
               orderNumber: order_number_1234
-              invoiceNumber: inv_12345678
+              invoiceNumber: inv_1234567890123456789012354678901
               resultCode: 0
               resultText: APPROVED
               requestedAmount: 0
@@ -1750,7 +1756,7 @@ components:
               type: Physical
               currency: USD
               description: Main Store Terminal
-            invoiceNumber: inv_12345678
+            invoiceNumber: inv_1234567890123456789012354678901
             orderNumber: order_number_1234
             referenceId: ref_s192i49i
             resultCode: 0
@@ -1809,7 +1815,7 @@ components:
               type: Physical
               currency: USD
               description: Main Store Terminal
-            invoiceNumber: inv_12345678
+            invoiceNumber: inv_1234567890123456789012354678901
             orderNumber: order_number_1234
             referenceId: ref_s192i49i
             resultCode: 0
@@ -1859,7 +1865,7 @@ components:
               cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            invoiceNumber: inv_12345678
+            invoiceNumber: inv_1234567890123456789012354678901
             orderNumber: order_number_1234
             resultCode: 0
             resultText: APPROVED
@@ -1900,8 +1906,8 @@ components:
               cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
-            invoiceNumber: ref_inv_12345678
-            orderNumber: ref_order_1234
+            invoiceNumber: inv_1234567890123456789012354678901
+            orderNumber: order_number_1234
             resultCode: 0
             resultText: APPROVED
             requestedAmount: 1000
@@ -2028,7 +2034,7 @@ components:
                 type: Physical
                 currency: USD
                 description: Main Store Terminal
-              invoiceNumber: inv_12345678
+              invoiceNumber: inv_1234567890123456789012354678901
               orderNumber: order_number_1234
               referenceId: ref_s192i49i
               resultCode: 0
@@ -2159,7 +2165,7 @@ components:
                 type: Physical
                 currency: USD
                 description: Main Store Terminal
-              invoiceNumber: inv_12345678
+              invoiceNumber: inv_1234567890123456789012354678901
               orderNumber: order_number_1234
               referenceId: ref_s192i49i
               resultCode: 0
@@ -2287,7 +2293,7 @@ components:
                 cardType: VISA
                 maskedCardNumber: '************0011'
                 cardExpDate: '1225'
-              invoiceNumber: inv_12345678
+              invoiceNumber: inv_1234567890123456789012354678901
               orderNumber: order_number_1234
               referenceId: ref_s192i49i
               resultCode: 0
@@ -2410,8 +2416,8 @@ components:
                 cardType: VISA
                 maskedCardNumber: '************0011'
                 cardExpDate: '1225'
-              invoiceNumber: ref_inv_12345678
-              orderNumber: ref_order_1234
+              invoiceNumber: inv_1234567890123456789012354678901
+              orderNumber: order_number_1234
               referenceId: ref_s192i49i
               resultCode: 0
               resultText: APPROVED
@@ -2637,7 +2643,7 @@ components:
           type: Physical
           currency: USD
           description: Main Store Terminal
-        invoiceNumber: inv_12345678
+        invoiceNumber: inv_1234567890123456789012354678901
         orderNumber: order_number_1234
         referenceId: ref_s192i49i
         resultCode: 0
@@ -2757,7 +2763,7 @@ components:
           type: Physical
           currency: USD
           description: Main Store Terminal
-        invoiceNumber: inv_12345678
+        invoiceNumber: inv_1234567890123456789012354678901
         orderNumber: order_number_1234
         referenceId: ref_s192i49i
         resultCode: 0
@@ -2875,7 +2881,7 @@ components:
           cardType: VISA
           maskedCardNumber: '************0011'
           cardExpDate: '1225'
-        invoiceNumber: inv_12345678
+        invoiceNumber: inv_1234567890123456789012354678901
         orderNumber: order_number_1234
         resultCode: 0
         resultText: APPROVED
@@ -2982,8 +2988,8 @@ components:
           cardType: VISA
           maskedCardNumber: '************0011'
           cardExpDate: '1225'
-        invoiceNumber: ref_inv_12345678
-        orderNumber: ref_order_1234
+        invoiceNumber: inv_1234567890123456789012354678901
+        orderNumber: order_number_1234
         resultCode: 0
         resultText: APPROVED
         requestedAmount: 1000
@@ -3084,7 +3090,7 @@ components:
           type: Physical
           currency: USD
           description: Main Store Terminal
-        invoiceNumber: inv_12345678
+        invoiceNumber: inv_1234567890123456789012354678901
         orderNumber: order_number_1234
         resultCode: 0
         resultText: APPROVED
@@ -3743,7 +3749,7 @@ paths:
                         resultText: APPROVED
                         referenceId: ref_s192i49i
                         orderNumber: order_number_1234
-                        invoiceNumber: inv_12345678
+                        invoiceNumber: inv_1234567890123456789012354678901
                         requestedAmount: 1000
                         approvedAmount: 1000
                         balanceAmount: 0
@@ -3777,7 +3783,7 @@ paths:
                         resultText: APPROVED
                         referenceId: ref_s192i49i
                         orderNumber: order_number_1234
-                        invoiceNumber: inv_12345678
+                        invoiceNumber: inv_1234567890123456789012354678901
                         requestedAmount: 1000
                         approvedAmount: 1000
                         balanceAmount: 0
@@ -3818,7 +3824,7 @@ paths:
                         resultText: APPROVED
                         referenceId: ref_s192i49i
                         orderNumber: order_number_1234
-                        invoiceNumber: inv_12345678
+                        invoiceNumber: inv_1234567890123456789012354678901
                         timestamp: '2025-05-27T18:59:31Z'
                         type: Capture
                         status: Completed
@@ -3853,7 +3859,7 @@ paths:
                         resultText: APPROVED
                         referenceId: ref_s192i49i
                         orderNumber: order_number_1234
-                        invoiceNumber: inv_12345678
+                        invoiceNumber: inv_1234567890123456789012354678901
                         timestamp: '2025-05-27T18:49:31Z'
                         type: Sale
                         status: Completed
@@ -3917,7 +3923,7 @@ paths:
                     cashback: 0
                     tip: 0
                   paymentMethodId: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
-                  invoiceNumber: inv_12345678
+                  invoiceNumber: inv_1234567890123456789012354678901
                   orderNumber: order_number_1234
                   referenceId: ref_s192i49i
       responses:
@@ -3988,7 +3994,7 @@ paths:
                     cashback: 0
                     tip: 0
                   paymentMethodId: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
-                  invoiceNumber: inv_12345678
+                  invoiceNumber: inv_1234567890123456789012354678901
                   orderNumber: order_number_1234
                   referenceId: ref_s192i49i
                   useJavaScriptCallback: true
@@ -4009,7 +4015,7 @@ paths:
                       type: Virtual
                       currency: USD
                       description: Online Checkout Iframe
-                    invoiceNumber: inv_12345678
+                    invoiceNumber: inv_1234567890123456789012354678901
                     orderNumber: order_number_1234
                     referenceId: ref_s192i49i
                     requestedAmount: 1000
@@ -4056,7 +4062,7 @@ paths:
                     cashback: 0
                     tip: 0
                   paymentMethodId: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-                  invoiceNumber: inv_12345678
+                  invoiceNumber: inv_1234567890123456789012354678901
                   orderNumber: order_number_1234
                   referenceId: ref_s192i49i
       responses:
@@ -4083,7 +4089,7 @@ paths:
                       cardType: VISA
                       maskedCardNumber: '************0011'
                       cardExpDate: '1225'
-                    invoiceNumber: inv_12345678
+                    invoiceNumber: inv_1234567890123456789012354678901
                     orderNumber: order_number_1234
                     referenceId: ref_s192i49i
                     resultCode: 0
@@ -4153,7 +4159,7 @@ paths:
                     cashback: 0
                     tip: 0
                   paymentMethodId: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
-                  invoiceNumber: inv_12345678
+                  invoiceNumber: inv_1234567890123456789012354678901
                   orderNumber: order_number_1234
                   referenceId: ref_s192i49i
       responses:
@@ -4224,7 +4230,7 @@ paths:
                     cashback: 0
                     tip: 0
                   paymentMethodId: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
-                  invoiceNumber: inv_12345678
+                  invoiceNumber: inv_1234567890123456789012354678901
                   orderNumber: order_number_1234
                   referenceId: ref_s192i49i
                   useJavaScriptCallback: true
@@ -4245,7 +4251,7 @@ paths:
                       type: Virtual
                       currency: USD
                       description: Online Checkout Iframe
-                    invoiceNumber: inv_12345678
+                    invoiceNumber: inv_1234567890123456789012354678901
                     orderNumber: order_number_1234
                     referenceId: ref_s192i49i
                     requestedAmount: 1000
@@ -4292,7 +4298,7 @@ paths:
                     cashback: 0
                     tip: 0
                   paymentMethodId: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-                  invoiceNumber: inv_12345678
+                  invoiceNumber: inv_1234567890123456789012354678901
                   orderNumber: order_number_1234
                   referenceId: ref_s192i49i
       responses:
@@ -4318,7 +4324,7 @@ paths:
                       cardType: VISA
                       maskedCardNumber: '************0011'
                       cardExpDate: '1225'
-                    invoiceNumber: inv_12345678
+                    invoiceNumber: inv_1234567890123456789012354678901
                     orderNumber: order_number_1234
                     referenceId: ref_s192i49i
                     resultCode: 0
@@ -4382,7 +4388,7 @@ paths:
                 value:
                   originalTransactionId: trx_01J2F0EKHC7HY2R93C8ENBD1FG
                   amount: 1000
-                  invoiceNumber: inv_12345678
+                  invoiceNumber: inv_1234567890123456789012354678901
                   orderNumber: order_number_1234
                   referenceId: ref_capture_12345
               captureWithOriginalReferenceId:
@@ -4390,7 +4396,7 @@ paths:
                 value:
                   originalReferenceId: ref_s192i49i
                   amount: 1000
-                  invoiceNumber: inv_12345678
+                  invoiceNumber: inv_1234567890123456789012354678901
                   orderNumber: order_number_1234
                   referenceId: ref_capture_12345
       responses:
@@ -4437,16 +4443,16 @@ paths:
                 value:
                   originalTransactionId: trx_01J2F0EKHC7HY2R93C8ENBD1FG
                   amount: 1000
-                  invoiceNumber: ref_inv_12345678
-                  orderNumber: ref_order_1234
+                  invoiceNumber: inv_1234567890123456789012354678901
+                  orderNumber: order_number_1234
                   referenceId: ref_refund_12345
               refundWithOriginalReferenceId:
                 summary: Refund using original reference ID
                 value:
                   originalReferenceId: ref_s192i49i
                   amount: 1000
-                  invoiceNumber: ref_inv_12345678
-                  orderNumber: ref_order_1234
+                  invoiceNumber: inv_1234567890123456789012354678901
+                  orderNumber: order_number_1234
                   referenceId: ref_refund_12345
       responses:
         '200':
@@ -4495,7 +4501,7 @@ paths:
                 value:
                   amount: 1000
                   paymentMethodId: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
-                  invoiceNumber: inv_12345678
+                  invoiceNumber: inv_1234567890123456789012354678901
                   orderNumber: order_number_1234
                   referenceId: ref_s192i49i
       responses:
@@ -4561,7 +4567,7 @@ paths:
                 value:
                   amount: 1000
                   paymentMethodId: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
-                  invoiceNumber: inv_12345678
+                  invoiceNumber: inv_1234567890123456789012354678901
                   orderNumber: order_number_1234
                   referenceId: ref_s192i49i
                   useJavaScriptCallback: true
@@ -4582,7 +4588,7 @@ paths:
                       type: Virtual
                       currency: USD
                       description: Online Checkout Iframe
-                    invoiceNumber: inv_12345678
+                    invoiceNumber: inv_1234567890123456789012354678901
                     orderNumber: order_number_1234
                     referenceId: ref_s192i49i
                     requestedAmount: 1000
