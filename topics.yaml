@@ -247,6 +247,7 @@
     {
       "success": true,
       "id": "trx_01J2F0EKHC7HY2R93C8ENBD1FG",
+      "timestamp": "2025-06-02T23:56:18.2102020Z",
       "type": "Sale",
       "status":"Completed",
       "referenceId": "ref_s192i49i",
@@ -274,13 +275,13 @@
             "cardExpDate": "1225"
           },
           "cardType": "VISA",
-          "accountType": "Credit",
-          "hostResponseText": "APPROVED"
+          "avsResult": "Y",
+          "cvvResult": "M",
+          "accountType": "Credit"
         }
       ],
       "resultCode": 0,
-      "resultText": "Card successfully tokenized",
-      "timestamp": "2025-06-02T23:56:18.2102020Z"
+      "resultText": "APPROVED"
     }
     ```
     Example Failed Transaction Response

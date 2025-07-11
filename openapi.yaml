@@ -4,7 +4,7 @@ info:
   description: |
     ### Introduction
 
-    TEST DEPLOYMENT - The Integrated Commerce Omni-Channel Payment API is a RESTful API that provides a unified interface for processing payments across multiple channels. This API enables developers to integrate payment processing capabilities into their applications with a single set of endpoints, simplifying implementation and reducing development time.
+    The Integrated Commerce Omni-Channel Payment API is a RESTful API that provides a unified interface for processing payments across multiple channels. This API enables developers to integrate payment processing capabilities into their applications with a single set of endpoints, simplifying implementation and reducing development time.
 
     The API supports integration in both the United States and Canada, using USD and CAD currencies.
 
@@ -65,7 +65,7 @@ info:
     ### Support
 
     For technical assistance, please contact our support team at [support@integratedcommerce.io](mailto:support@integratedcommerce.io).
-  version: 2025.07.09
+  version: 2025.07.14
   contact:
     name: Integrated Commerce Support
     url: https://docs.omni.integratedcommerce.io
@@ -226,9 +226,9 @@ components:
          * `20` - RECORD_NOT_FOUND - Indicates that the requested record for a transaction was not found (e.g.: to VOID a reference).
          * `21` - ALREADY_VOIDED - Indicates that the transaction has already been voided and cannot be processed again.
          * `50` - NETWORK_ERROR - Rejected due to network or communication issues with the payment gateway.
-         * `51` - INVALID_ECR_PARAMETER - Terminal or system-specific errors.
+         * `51` - INVALID_ECR_PARAMETER - Payment Terminal or system-specific errors.
          * `52` - NOT_SUPPORTED - Rejected because the requested operation is not supported.
-         * `53` - BUSY_OR_UNAVAILABLE - Terminal or system is busy or unavailable.
+         * `53` - BUSY_OR_UNAVAILABLE - The Payment Terminal, Payment App or system is busy or unavailable.
          * `54` - CANCELLED - Cancelled by the user or merchant.
          * `55` - USER_CANCELLED - Specific to scenarios where the user cancels the transaction.
          * `56` - TIMED_OUT_ON_USER_INPUT - Failed to complete the transaction in time.
@@ -581,7 +581,7 @@ components:
       description: |
         Result codes:
         * `0` - Successful transaction request. (Check each transactionResponse's responseCode to determine if a transaction was approved or declined, card was tokenized, etc.)
-        * `1003` - No payment terminal available.
+        * `1003` - The payment terminal is busy or unavailable. (If this error persists, the user may need to close and re-open the Payment Application on the terminal or restart the terminal)
         * `1005` - The specified terminal could not be found.
         * `3000` - An unexpected error occurred. Please try again.
         * `3002` - The transaction could not be completed because the payment terminal could not find the related transaction.
