@@ -2006,7 +2006,7 @@ components:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
               type: Token
               currency: USD
-              dateDeleted: 2025-05-11T17:40:33+00:00
+              dateDeleted: '2025-05-11T17:40:33+00:00'
               cardType: VISA
             referenceId: ref_remove_card_12345
             resultCode: 0
@@ -2632,7 +2632,7 @@ components:
                 id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                 type: Token
                 currency: USD
-                dateDeleted: 2025-05-29T20:07:50.4723483Z
+                dateDeleted: '2025-05-29T20:07:50.4723483Z'
                 cardType: VISA
               referenceId: ref_remove_card_12345
               resultCode: 0
@@ -3276,7 +3276,7 @@ components:
           id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
           type: Token
           currency: USD
-          dateDeleted: 2025-05-11T17:40:33.7688544Z
+          dateDeleted: '2025-05-11T17:40:33.7688544Z'
           cardType: VISA
         referenceId: ref_remove_card_12345
         resultCode: 0
