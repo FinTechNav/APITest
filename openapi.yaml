@@ -3619,7 +3619,23 @@ paths:
       operationId: removeToken
       summary: Remove Token
       description: |
-        Removes a previously tokenized card from the system. When a token is successfully removed, the `dateDeleted` timestamp will be immediately reflected in all future List Transactions responses for transactions that used this token. Sensitive card details ('maskedCardNumber', 'cardExpDate') will be removed for security purposes.
+        Remove a previously tokenized card from the system. 
+
+        **IMPORTANT:** Once a payment method token is removed, it cannot be used for any future transactions, including:
+        - New sales or authorizations
+        - Referenced captures of existing authorizations  
+        - Referenced refunds of completed transactions
+        - Any other transaction operations
+
+        **Before removing a token, ensure that:**
+        - All pending authorizations have been captured or voided
+        - No future captures or refunds will be needed for transactions using this token
+        - All business processes dependent on this token are complete
+
+        **Post-removal effects:**
+        - The `dateDeleted` timestamp will be immediately reflected in all future List Transactions responses for transactions that used this token
+        - Sensitive card details (`maskedCardNumber`, `cardExpDate`) will be removed for security purposes
+        - Historical transaction data (amounts, authorization codes, reference IDs) remains intact for reconciliation
 
         #### Webhook Events
 
