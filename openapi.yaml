@@ -609,6 +609,19 @@ components:
           type: string
           description: The unique identifier of the payment method. This ID has a prefix that makes it human-readable (pmt_trm_* for physical terminals, pmt_vrt_* for virtual terminals, pmt_tkn_* for tokenized cards), but applications should always use the `type` field to determine the payment method type rather than parsing this ID.
           example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+        dateDeleted:
+          type: string
+          format: date-time
+          description: |
+            The date and time (UTC) when this payment method token was removed from the system using the Remove Token endpoint. This parameter will only be returned if the token was removed/deleted from the system.
+            
+            This field will be present in three scenarios:
+            - As part of a successful Remove Token endpoint response  
+            - In token.removed webhook notifications
+            - In List Transactions responses for transactions where the associated token was later removed
+            
+            When this field is present, sensitive card details (maskedCardNumber, cardExpDate) will be removed for security purposes, but all other transaction data remains intact.
+          example: '2025-07-14T14:05:48.869225Z'
         type:
           type: string
           enum:
@@ -1993,10 +2006,8 @@ components:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
               type: Token
               currency: USD
-              description: Token for John Doe's Visa
+              dateDeleted: 2025-05-11T17:40:33+00:00
               cardType: VISA
-              maskedCardNumber: '************0011'
-              cardExpDate: '1225'
             referenceId: ref_remove_card_12345
             resultCode: 0
             resultText: Card successfully removed
@@ -3610,7 +3621,7 @@ paths:
       operationId: removeToken
       summary: Remove Token
       description: |
-        Remove a previously tokenized card from the system.
+        Removes a previously tokenized card from the system. When a token is successfully removed, the `dateDeleted` timestamp will be immediately reflected in all future List Transactions responses for transactions that used this token. Sensitive card details (maskedCardNumber, cardExpDate) will be removed for security purposes.
 
         #### Webhook Events
 
@@ -3692,6 +3703,12 @@ paths:
 
         **Note:** Most card transactions move directly from `Created` to `Completed` status within seconds. The `Pending` status is primarily reserved for ACH transactions (coming soon) and other payment methods that require extended processing time.
 
+        #### Deleted Token Behavior
+
+        When a token has been removed from the system, transactions that used that token will show:
+        - `dateDeleted` timestamp in the paymentMethod object
+        - Sensitive fields (maskedCardNumber, cardExpDate) will be removed for security
+        - All other transaction data (amounts, authorization codes, card type) remains intact
 
         #### Filter Operators:
 
