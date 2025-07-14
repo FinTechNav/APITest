@@ -3267,10 +3267,8 @@ components:
           id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
           type: Token
           currency: USD
-          description: Token for John Doe's Visa
+          dateDeleted: 2025-05-11T17:40:33.7688544Z
           cardType: VISA
-          maskedCardNumber: '************0011'
-          cardExpDate: '1225'
         referenceId: ref_remove_card_12345
         resultCode: 0
         resultText: Card successfully removed
@@ -3654,14 +3652,13 @@ paths:
               example:
                 code: 2000
                 status: Rejected
-                message: One or more validation errors occurred.
+                message: Payment method not found
                 traceId: 1-6838bcce-5c0074e82ac7170d4f990d87
                 timestamp: '2025-05-29T20:00:15.5752808Z'
                 errorDetails:
                   - code: 2000
-                    field: id
-                    message: Request validation failed
-                    details: '''Id'' must not be empty.'
+                    field: PaymentMethod
+                    message: Payment method not found
         '401':
           $ref: '#/components/responses/UnauthorizedError'
   /transactions:
