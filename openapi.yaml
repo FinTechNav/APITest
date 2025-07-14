@@ -2632,10 +2632,8 @@ components:
                 id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                 type: Token
                 currency: USD
-                description: Token for John Doe's Visa
+                dateDeleted: 2025-05-29T20:07:50.4723483Z
                 cardType: VISA
-                maskedCardNumber: '************0011'
-                cardExpDate: '1225'
               referenceId: ref_remove_card_12345
               resultCode: 0
               resultText: Card successfully removed
