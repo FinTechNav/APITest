@@ -3619,7 +3619,7 @@ paths:
       operationId: removeToken
       summary: Remove Token
       description: |
-        Removes a previously tokenized card from the system. When a token is successfully removed, the `dateDeleted` timestamp will be immediately reflected in all future [List Transactions](#operation-getTransactions) responses for transactions that used this token. Sensitive card details ('maskedCardNumber', 'cardExpDate') will be removed for security purposes.
+        Removes a previously tokenized card from the system. When a token is successfully removed, the `dateDeleted` timestamp will be immediately reflected in all future List Transactions responses for transactions that used this token. Sensitive card details ('maskedCardNumber', 'cardExpDate') will be removed for security purposes.
 
         #### Webhook Events
 
