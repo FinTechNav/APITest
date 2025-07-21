@@ -4879,6 +4879,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              example:
+                code: 2000
+                status: Rejected
+                message: Capture request is invalid
+                traceId: 1-687e6e13-1880890d11a9634059a9e735
+                timestamp: '2025-06-21T16:42:59.3137438Z'
+                errorDetails:
+                  - code: 2000
+                    message: Capture amount of 1000 exceeds the available balance of 0 for transaction ID trx_01J2F0EKHC7HY2R93C8ENBD1FG
         '401':
           $ref: '#/components/responses/UnauthorizedError'
   /transactions/refund:
