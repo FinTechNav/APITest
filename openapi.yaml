@@ -17,7 +17,7 @@ info:
     - Capture: Complete a previously authorized transaction.  The cardholder is billed for the transaction, and the transaction is settled to the merchant.
     - Sale: Combined authorization and capture in a single step.
     - Refund: Process reversal of a previous sale transaction (automatically performs a void if the transaction is in the current batch, or a refund if already settled)
-    - Void: Cancel a previously completed transaction (sale, authorization, capture, or refund) if it is still in the current batch (typically same day)
+    - Void: Cancel a previously completed transaction (sale, authorization or capture) if it is still in the current batch (typically same day)
 
     Card Present transactions are processed through Verifone T650c (countertop) and T650p (portable) Android-based payment terminals.
 
@@ -30,7 +30,7 @@ info:
     - Sale: Combined authorization and capture in a single step.
       - Includes AVS (Address Verification Service) and CVV validation support
     - Refund: Process reversal of a previous sale transaction (automatically performs a void if the transaction is in the current batch, or a refund if already settled)
-    - Void: Cancel a previously completed transaction (sale, authorization, capture, or refund) if it is still in the current batch (typically same day)
+    - Void: Cancel a previously completed transaction (sale, authorization or capture) if it is still in the current batch (typically same day)
     - AVS (Address Verification Service) and CVV validation
 
     #### Tokenization
@@ -4959,7 +4959,7 @@ paths:
       operationId: void
       summary: Void
       description: |
-        Process a void for a previously completed sale, authorization, capture, or refund transaction. Voids are typically only available for transactions in the current batch (same day). If the batch has been closed, the void will fail.
+        Process a void for a previously completed sale, authorization or capture transaction. Voids are typically only available for transactions in the current batch (same day). If the batch has been closed, the void will fail.
 
         #### Webhook Events
 
