@@ -4943,6 +4943,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              example:
+                code: 2000
+                status: Rejected
+                message: Refund request is invalid
+                traceId: 1-687e7080-78cb54a51c8121ee32df9e35
+                timestamp: '2025-06-21T16:53:20.9949208Z'
+                errorDetails:
+                  - code: 2000
+                    message: Refund amount of 1000 exceeds the available balance of 0 for transaction ID trx_01J2F0EKHC7HY2R93C8ENBD1FG
         '401':
           $ref: '#/components/responses/UnauthorizedError'
   /transactions/void:
