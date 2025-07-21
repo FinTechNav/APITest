@@ -17,6 +17,7 @@ info:
     - Capture: Complete a previously authorized transaction.  The cardholder is billed for the transaction, and the transaction is settled to the merchant.
     - Sale: Combined authorization and capture in a single step.
     - Refund: Process reversal of a previous sale transaction (automatically performs a void if the transaction is in the current batch, or a refund if already settled)
+    - Void: Cancel a previously completed transaction (sale, authorization, capture, or refund) if it is still in the current batch (typically same day)
 
     Card Present transactions are processed through Verifone T650c (countertop) and T650p (portable) Android-based payment terminals.
 
@@ -29,6 +30,7 @@ info:
     - Sale: Combined authorization and capture in a single step.
       - Includes AVS (Address Verification Service) and CVV validation support
     - Refund: Process reversal of a previous sale transaction (automatically performs a void if the transaction is in the current batch, or a refund if already settled)
+    - Void: Cancel a previously completed transaction (sale, authorization, capture, or refund) if it is still in the current batch (typically same day)
     - AVS (Address Verification Service) and CVV validation
 
     #### Tokenization
@@ -41,7 +43,7 @@ info:
     #### Webhooks
 
     Real-time notifications via webhooks for:
-    - Transaction events ([sales](#operation-webhooksalecompleted), [authorizations](#operation-webhookauthcompleted), [captures](#operation-webhookcapturecompleted), [refunds](#operation-webhookrefundcompleted))
+    - Transaction events ([sales](#operation-webhooksalecompleted), [authorizations](#operation-webhookauthcompleted), [captures](#operation-webhookcapturecompleted), [refunds](#operation-webhookrefundcompleted), [voids](#operation-webhookvoidcompleted))
     - Token operations ([creation](#operation-webhooktokencreated), [updates](#operation-webhooktokenupdated), [deletion](#operation-webhooktokenremoved))
 
     #### Payment Methods
@@ -96,6 +98,7 @@ tags:
       - [`auth.completed`](#operation-webhookauthcompleted)
       - [`capture.completed`](#operation-webhookcapturecompleted)
       - [`refund.completed`](#operation-webhookrefundcompleted)
+      - [`void.completed`](#operation-webhookvoidcompleted)
 
       See the [Token Notifications](#webhook-token-notifications) section for available token notifications.
 
@@ -929,6 +932,27 @@ components:
         - title: Refund using Reference ID
           required:
             - originalReferenceId
+    VoidRequest:
+      type: object
+      description: Represents the request to void a previously completed transaction.
+      properties:
+        originalTransactionId:
+          $ref: '#/components/schemas/OriginalTransactionId'
+        originalReferenceId:
+          $ref: '#/components/schemas/OriginalReferenceId'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForTransactions'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+      oneOf:
+        - title: Void using Transaction ID
+          required:
+            - originalTransactionId
+        - title: Void using Reference ID
+          required:
+            - originalReferenceId
     UnreferencedPhysicalRefundRequest:
       type: object
       description: Represents the request to process a Card Present unreferenced refund without a matching completed sale or capture transaction.
@@ -1530,6 +1554,85 @@ components:
               properties:
                 lines:
                   description: The receipt lines.
+    VoidResponse:
+      type: object
+      description: Represents the response to a void request.
+      properties:
+        id:
+          type: string
+          description: Unique ID for this void transaction.
+          example: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
+        timestamp:
+          type: string
+          format: date-time
+          description: Transaction timestamp in UTC
+          example: '2025-05-27T18:49:31Z'
+        type:
+          type: string
+          enum:
+            - Sale
+            - Auth
+            - Capture
+            - Refund
+            - Void
+          description: Type of transaction
+          example: Void
+        status:
+          type: string
+          enum:
+            - Created
+            - Completed
+            - Pending
+          description: The current status of the transaction
+          example: Completed
+        paymentMethod:
+          allOf:
+            - $ref: '#/components/schemas/PaymentMethodDetails'
+            - type: object
+              description: The payment method used for this transaction.
+              properties:
+                id:
+                  example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+          example:
+            id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+            type: Token
+            currency: USD
+            description: Token for John Doe's Visa
+            cardType: VISA
+            maskedCardNumber: '************0011'
+            cardExpDate: '1225'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        orderNumber:
+          $ref: '#/components/schemas/OrderNumber'
+        referenceId:
+          $ref: '#/components/schemas/ReferenceIdForResponse'
+        resultCode:
+          $ref: '#/components/schemas/ResultCode'
+        resultText:
+          $ref: '#/components/schemas/ResultText'
+        requestedAmount:
+          type: number
+          description: The amount requested for void. This will be the full transaction amount.
+          example: 1000
+        approvedAmount:
+          type: number
+          description: The amount that was successfully voided.
+          example: 1000
+        transactionResponses:
+          type: array
+          description: A list of all transaction responses received during the void. In most cases, there will be only one response.
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+        receipt:
+          allOf:
+            - $ref: '#/components/schemas/Receipt'
+            - type: object
+              description: |
+                The receipt for the void transaction, if available. If the original transaction was a Card Present transaction, the receipt will be included. For Card Not Present transactions, the receipt will be empty.
+              properties:
+                lines:
+                  description: The receipt lines.
     CardOnFileAddResponse:
       type: object
       description: Represents the response to a physical card tokenization request.
@@ -1909,6 +2012,47 @@ components:
             id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
             timestamp: '2025-05-27T18:49:31Z'
             type: Refund
+            status: Completed
+            referenceId: ref_s192i49i
+            paymentMethod:
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
+            invoiceNumber: inv_1234567890123456789012354678901
+            orderNumber: order_number_1234
+            resultCode: 0
+            resultText: APPROVED
+            requestedAmount: 1000
+            approvedAmount: 1000
+      required:
+        - event
+        - originalResponse
+    VoidCompletedWebhook:
+      type: object
+      description: Represents the webhook triggered when a transaction void for a previously completed transaction is completed.
+      properties:
+        event:
+          allOf:
+            - $ref: '#/components/schemas/WebhookEvent'
+            - type: object
+              properties:
+                type:
+                  example: void.completed
+          example:
+            id: evt_01JS21X856RR8R69GV5F17XK9C
+            type: void.completed
+            timestamp: '2025-04-16T14:30:00Z'
+        originalResponse:
+          allOf:
+            - $ref: '#/components/schemas/VoidResponse'
+          example:
+            id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
+            timestamp: '2025-05-27T18:49:31Z'
+            type: Void
             status: Completed
             referenceId: ref_s192i49i
             paymentMethod:
@@ -2548,6 +2692,133 @@ components:
                   - '                        '
                   - '                        '
                   - '     CUSTOMER COPY      '
+    VoidCompletedWebhook:
+      description: The request body for the `void.completed` webhook event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VoidCompletedWebhook'
+          example:
+            event:
+              id: evt_01JS21X856RR8R69GV5F17XK9C
+              type: void.completed
+              timestamp: '2025-04-16T14:30:00Z'
+            originalResponse:
+              id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
+              timestamp: '2025-05-27T18:49:31Z'
+              type: Void
+              status: Completed
+              paymentMethod:
+                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                type: Token
+                currency: USD
+                description: Token for John Doe's Visa
+                cardType: VISA
+                maskedCardNumber: '************0011'
+                cardExpDate: '1225'
+              invoiceNumber: inv_1234567890123456789012354678901
+              orderNumber: order_number_1234
+              referenceId: ref_s192i49i
+              resultCode: 0
+              resultText: APPROVED
+              requestedAmount: 1000
+              approvedAmount: 1000
+              transactionResponses:
+                - responseCode: 1
+                  authCode: 000AAA
+                  amountApproved: 1000
+                  approvedAmountBreakdown:
+                    amountGoodsAndServices: 900
+                    tax: 100
+                    cashback: 0
+                    tip: 0
+                  paymentMethod:
+                    id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                    type: Token
+                    currency: USD
+                    description: Token for John Doe's Visa
+                    cardType: VISA
+                    maskedCardNumber: '************0011'
+                    cardExpDate: '1225'
+                  cardType: VISA
+                  avsResult: Y
+                  cvvResult: M
+                  accountType: Credit
+                  hostResponseText: APPROVED 00
+              receipt:
+                lines:
+                  - '     Test Merchant      '
+                  - '      300 S Wacker      '
+                  - '         Loop,          '
+                  - '                        '
+                  - '                        '
+                  - 'TERM #          11000367'
+                  - 'RECORD #         0656191'
+                  - 'HOST INVOICE #    000038'
+                  - 'HOST SEQ #    1720656191'
+                  - 'MERCH                   '
+                  - 'INVOICE inv_123456789012'
+                  - '        3456789012354678'
+                  - '        901             '
+                  - '------------------------'
+                  - CARD    ************0011
+                  - VISA             Contact
+                  - 07/10/2024      20:03:05
+                  - '------------------------'
+                  - '       VOID SALE        '
+                  - '                        '
+                  - TOTAL         USD $10.00
+                  - '------------------------'
+                  - AUTH#:000AAA       B:171
+                  - '                        '
+                  - '      APPROVED 00       '
+                  - '       THANK YOU        '
+                  - '                        '
+                  - '      Visa Credit       '
+                  - '                        '
+                  - '                        '
+                  - '                        '
+                  - '                        '
+                  - '                        '
+                  - '                        '
+                  - '                        '
+                  - '     MERCHANT COPY      '
+                  - '     Test Merchant      '
+                  - '      300 S Wacker      '
+                  - '         Loop,          '
+                  - '                        '
+                  - '                        '
+                  - 'TERM #          11000367'
+                  - 'RECORD #         0656191'
+                  - 'HOST INVOICE #    000038'
+                  - 'HOST SEQ #    1720656191'
+                  - 'MERCH                   '
+                  - 'INVOICE inv_123456789012'
+                  - '        3456789012354678'
+                  - '        901             '
+                  - '------------------------'
+                  - CARD    ************0011
+                  - VISA             Contact
+                  - 07/10/2024      20:03:05
+                  - '------------------------'
+                  - '       VOID SALE        '
+                  - '                        '
+                  - TOTAL         USD $10.00
+                  - '------------------------'
+                  - AUTH#:000AAA       B:171
+                  - '                        '
+                  - '      APPROVED 00       '
+                  - '       THANK YOU        '
+                  - '                        '
+                  - '      Visa Credit       '
+                  - '                        '
+                  - '                        '
+                  - '                        '
+                  - '                        '
+                  - '                        '
+                  - '                        '
+                  - '                        '
+                  - '     CUSTOMER COPY      '
     TokenCreatedWebhook:
       description: The request body for the `token.created` webhook event.
       content:
@@ -3029,6 +3300,117 @@ components:
         id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         timestamp: '2025-05-27T18:49:31Z'
         type: Refund
+        status: Completed
+        referenceId: ref_s192i49i
+        paymentMethod:
+          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+          type: Token
+          currency: USD
+          description: Token for John Doe's Visa
+          cardType: VISA
+          maskedCardNumber: '************0011'
+          cardExpDate: '1225'
+        invoiceNumber: inv_1234567890123456789012354678901
+        orderNumber: order_number_1234
+        resultCode: 0
+        resultText: APPROVED
+        requestedAmount: 1000
+        approvedAmount: 1000
+        transactionResponses:
+          - responseCode: 1
+            authCode: 000AAA
+            amountApproved: 1000
+            paymentMethod:
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              description: Token for John Doe's Visa
+              cardType: VISA
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
+            cardType: VISA
+            accountType: Credit
+            hostResponseText: APPROVED 00
+        receipt:
+          lines:
+            - '     Test Merchant      '
+            - '      300 S Wacker      '
+            - '         Loop,          '
+            - '                        '
+            - '                        '
+            - 'TERM #          11000367'
+            - 'RECORD #         0656191'
+            - 'HOST INVOICE #    000038'
+            - 'HOST SEQ #    1720656191'
+            - 'MERCH                   '
+            - 'INVOICE inv_123456789012'
+            - '        3456789012354678'
+            - '        901             '
+            - '------------------------'
+            - CARD    ************0011
+            - VISA             Contact
+            - 07/10/2024      20:03:05
+            - '------------------------'
+            - '       VOID SALE        '
+            - '                        '
+            - TOTAL         USD $10.00
+            - '------------------------'
+            - AUTH#:000AAA       B:171
+            - '                        '
+            - '      APPROVED 00       '
+            - '       THANK YOU        '
+            - '                        '
+            - '      Visa Credit       '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '     MERCHANT COPY      '
+            - '     Test Merchant      '
+            - '      300 S Wacker      '
+            - '         Loop,          '
+            - '                        '
+            - '                        '
+            - 'TERM #          11000367'
+            - 'RECORD #         0656191'
+            - 'HOST INVOICE #    000038'
+            - 'HOST SEQ #    1720656191'
+            - 'MERCH                   '
+            - 'INVOICE inv_123456789012'
+            - '        3456789012354678'
+            - '        901             '
+            - '------------------------'
+            - CARD    ************0011
+            - VISA             Contact
+            - 07/10/2024      20:03:05
+            - '------------------------'
+            - '       VOID SALE        '
+            - '                        '
+            - TOTAL         USD $10.00
+            - '------------------------'
+            - AUTH#:000AAA       B:171
+            - '                        '
+            - '      APPROVED 00       '
+            - '       THANK YOU        '
+            - '                        '
+            - '      Visa Credit       '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '                        '
+            - '     CUSTOMER COPY      '
+    VoidResponse:
+      description: A successful response for a void transaction.
+      value:
+        id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
+        timestamp: '2025-05-27T18:49:31Z'
+        type: Void
         status: Completed
         referenceId: ref_s192i49i
         paymentMethod:
@@ -4554,6 +4936,59 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+  /transactions/void:
+    post:
+      operationId: void
+      summary: Void
+      description: |
+        Process a void for a previously completed sale, authorization, capture, or refund transaction. Voids are typically only available for transactions in the current batch (same day). If the batch has been closed, the void will fail.
+
+        #### Webhook Events
+
+        The following webhook events will be triggered during the void process:
+        - `void.completed` - when a transaction void for a previously completed transaction is completed.
+      tags:
+        - Transactions
+      requestBody:
+        description: The request to void a previously completed transaction.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoidRequest'
+            examples:
+              voidWithOriginalTransactionId:
+                summary: Void using original transaction ID
+                value:
+                  originalTransactionId: trx_01J2F0EKHC7HY2R93C8ENBD1FG
+                  invoiceNumber: inv_1234567890123456789012354678901
+                  orderNumber: order_number_1234
+                  referenceId: ref_void_12345
+              voidWithOriginalReferenceId:
+                summary: Void using original reference ID
+                value:
+                  originalReferenceId: ref_s192i49i
+                  invoiceNumber: inv_1234567890123456789012354678901
+                  orderNumber: order_number_1234
+                  referenceId: ref_void_12345
+      responses:
+        '200':
+          description: A successful void response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidResponse'
+              examples:
+                successfulResponse:
+                  $ref: '#/components/examples/VoidResponse'
+        '400':
+          description: Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
   /transactions/unreferenced-physical-refund:
     post:
       operationId: unreferencedRefundCardPresent
@@ -4744,6 +5179,21 @@ webhooks:
         - $ref: '#/components/parameters/WebhookSignatureHeader'
       requestBody:
         $ref: '#/components/requestBodies/RefundCompletedWebhook'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
+  VoidCompleted:
+    post:
+      operationId: webhookVoidCompleted
+      tags:
+        - Transaction Notifications
+      summary: Void completed
+      description: This webhook event is triggered when a transaction void for a previously completed transaction is completed.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/WebhookSignatureHeader'
+      requestBody:
+        $ref: '#/components/requestBodies/VoidCompletedWebhook'
       responses:
         '200':
           $ref: '#/components/responses/SuccessfulWebhookAcknowledgement'
