@@ -4987,6 +4987,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+              example:
+                  code: 2000
+                  status: Rejected
+                  message: Void request is invalid
+                  traceId: 1-687d8c7d-1da33e5604b964d92e9b7dd3
+                  timestamp: '2025-06-21T00:40:29.4532741Z'
+                  errorDetails:
+                    - code: 2000
+                      message: Original transaction ID trx_01J2F0EKHC7HY2R93C8ENBD1FG has already been voided.              
         '401':
           $ref: '#/components/responses/UnauthorizedError'
   /transactions/unreferenced-physical-refund:
