@@ -1476,14 +1476,14 @@ components:
               properties:
                 id:
                   example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
-              example:
-                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-                type: Token
-                currency: USD
-                description: "Token for John Doe's Visa"
-                cardType: VISA
-                maskedCardNumber: "************0011"
-                cardExpDate: "1225"              
+          example:
+            id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+            type: Token
+            currency: USD
+            description: "Token for John Doe's Visa"
+            cardType: VISA
+            maskedCardNumber: "************0011"
+            cardExpDate: "1225"              
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -1555,6 +1555,14 @@ components:
               properties:
                 id:
                   example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+          example:
+            id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+            type: Token
+            currency: USD
+            description: "Token for John Doe's Visa"
+            cardType: VISA
+            maskedCardNumber: "************0011"
+            cardExpDate: "1225"     
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -1673,6 +1681,16 @@ components:
               properties:
                 lines:
                   description: The receipt lines.
+          example:  # ADD THIS AT PARENT LEVEL
+            lines:
+              - "     Test Merchant      "
+              - "      300 S Wacker      "
+              - "         Loop,          "
+              - "------------------------"
+              - "       VOID SALE        "
+              - "TOTAL         USD $10.00"
+              - "------------------------"
+              - "      APPROVED 00       "
     CardOnFileAddResponse:
       type: object
       description: Represents the response to a physical card tokenization request.
@@ -1831,14 +1849,14 @@ components:
               properties:
                 id:
                   example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-              example:  # ADD THIS BLOCK
-                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-                type: Token
-                currency: USD
-                description: "Token for John Doe's Visa"
-                cardType: VISA
-                maskedCardNumber: "************0011"
-                cardExpDate: "1225"
+          example:
+            id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+            type: Token
+            currency: USD
+            description: "Token for John Doe's Visa"
+            cardType: VISA
+            maskedCardNumber: "************0011"
+            cardExpDate: "1225"
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
         resultCode:
@@ -1861,6 +1879,12 @@ components:
               properties:
                 id:
                   example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              example:
+                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                type: Token
+                currency: USD
+                cardType: VISA
+                dateDeleted: '2025-05-11T17:40:33.7688544Z'
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
         resultCode:
