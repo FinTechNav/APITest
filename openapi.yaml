@@ -463,6 +463,12 @@ components:
       description: |
         An optional custom reference ID for this transaction. Include this if you want to use your own reference system for linking transactions together (for example, when processing captures and refunds). If provided, this value must be unique per merchant. The reference ID can be used for processing captures and referenced refunds by including it in the originalReferenceId field of subsequent transactions. If not provided, a unique reference ID will be generated automatically by the system.
       example: ref_s192i49i
+    ReferenceIdForVoid:
+      type: string
+      maxLength: 100
+      description: |
+        An optional custom reference ID for this void transaction. Include this if you want to use your own reference system for linking transactions together. If provided, this value must be unique per merchant. If not provided, a unique reference ID will be generated automatically by the system.
+      example: ref_void_12345      
     ReferenceIdForTokens:
       type: string
       maxLength: 100
@@ -480,12 +486,23 @@ components:
       description: |
         The unique transaction ID of the original transaction to be captured or refunded. This is the 'id' value returned from a previous sale or capture transaction. Use this parameter if you prefer to rely on system-generated transaction IDs rather than managing your own reference system. Either originalTransactionId or originalReferenceId must be provided.
       example: trx_01J2F0EKHC7HY2R93C8ENBD1FG
+    OriginalTransactionIdForVoid:
+      type: string
+      description: |
+        The unique transaction ID of the original transaction to be voided. This is the 'id' value returned from a previous sale, authorization, or capture transaction. Use this parameter if you prefer to rely on system-generated transaction IDs rather than managing your own reference system. Either originalTransactionId or originalReferenceId must be provided.
+      example: trx_01J2F0EKHC7HY2R93C8ENBD1FG
     OriginalReferenceId:
       type: string
       maxLength: 100
       description: |
         The reference ID of the original transaction to be captured or refunded. This should match the referenceId from a previous sale, authorization, or capture transaction (either a custom reference ID you provided or one that was generated automatically by the system). Use this parameter if you want to link transactions using reference IDs rather than system transaction IDs. Either originalTransactionId or originalReferenceId must be provided.
       example: ref_s192i49i
+    OriginalReferenceIdForVoid:
+      type: string
+      maxLength: 100
+      description: |
+        The reference ID of the original transaction to be voided. This should match the referenceId from a previous sale, authorization, or capture transaction (either a custom reference ID you provided or one that was generated automatically by the system). Use this parameter if you want to link transactions using reference IDs rather than system transaction IDs. Either originalTransactionId or originalReferenceId must be provided.
+      example: ref_s192i49i    
     InvoiceNumber:
       type: string
       maxLength: 100
@@ -937,11 +954,11 @@ components:
       description: Represents the request to void a previously completed transaction.
       properties:
         originalTransactionId:
-          $ref: '#/components/schemas/OriginalTransactionId'
+          $ref: '#/components/schemas/OriginalTransactionIdForVoid'
         originalReferenceId:
-          $ref: '#/components/schemas/OriginalReferenceId'
+          $ref: '#/components/schemas/OriginalReferenceIdForVoid'
         referenceId:
-          $ref: '#/components/schemas/ReferenceIdForTransactions'
+          $ref: '#/components/schemas/ReferenceIdForVoid'
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
