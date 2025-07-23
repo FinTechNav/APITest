@@ -1011,6 +1011,7 @@ components:
             - REQUIRED if you have multiple hosted payment forms configured
 
             You can retrieve all available hosted payment form IDs for your account using the [`GET /payment-methods`](#operation-getpaymentmethods) endpoint.
+          example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -1429,6 +1430,13 @@ components:
           description: A list of all transaction responses received during the transaction. In most cases, there will be only one response.
           items:
             $ref: '#/components/schemas/TransactionResponse'
+          example:
+            - responseCode: 1
+              authCode: "000AAA"
+              amountApproved: 1000
+              cardType: "VISA"
+              accountType: "Credit"
+              hostResponseText: "APPROVED 00"
     CaptureResponse:
       type: object
       description: Represents the response to a capture request.
@@ -1468,6 +1476,14 @@ components:
               properties:
                 id:
                   example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+              example:
+                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                type: Token
+                currency: USD
+                description: "Token for John Doe's Visa"
+                cardType: VISA
+                maskedCardNumber: "************0011"
+                cardExpDate: "1225"              
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
@@ -1641,6 +1657,13 @@ components:
           description: A list of all transaction responses received during the void. In most cases, there will be only one response.
           items:
             $ref: '#/components/schemas/TransactionResponse'
+          example:
+            - responseCode: 1
+              authCode: "000AAA"
+              amountApproved: 1000
+              cardType: "VISA"
+              accountType: "Credit"
+              hostResponseText: "APPROVED 00"
         receipt:
           allOf:
             - $ref: '#/components/schemas/Receipt'
@@ -1808,6 +1831,14 @@ components:
               properties:
                 id:
                   example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              example:  # ADD THIS BLOCK
+                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                type: Token
+                currency: USD
+                description: "Token for John Doe's Visa"
+                cardType: VISA
+                maskedCardNumber: "************0011"
+                cardExpDate: "1225"
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
         resultCode:
