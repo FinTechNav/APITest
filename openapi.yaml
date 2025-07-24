@@ -1507,6 +1507,13 @@ components:
           description: A list of all transaction responses received during the capture. In most cases, there will be only one response.
           items:
             $ref: '#/components/schemas/TransactionResponse'
+          example:
+            - responseCode: 1
+              authCode: "000AAA"
+              amountApproved: 1000
+              cardType: "VISA"
+              accountType: "Credit"
+              hostResponseText: "APPROVED 00"
         receipt:
           allOf:
             - $ref: '#/components/schemas/Receipt'
@@ -1586,6 +1593,13 @@ components:
           description: A list of all transaction responses received during the refund. In most cases, there will be only one response.
           items:
             $ref: '#/components/schemas/TransactionResponse'
+          example:
+            - responseCode: 1
+              authCode: "000AAA"
+              amountApproved: 1000
+              cardType: "VISA"
+              accountType: "Credit"
+              hostResponseText: "APPROVED 00"
         receipt:
           allOf:
             - $ref: '#/components/schemas/Receipt'
