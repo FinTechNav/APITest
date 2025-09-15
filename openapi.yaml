@@ -1342,10 +1342,10 @@ components:
             billingContact:
               name: John Doe
               countryCode: US
-              zipCode: "12345"
-              address: 123 Main St
-              state: NY
-              city: Anytown
+              zipCode: "60606"
+              address: 300 S Wacker Dr
+              state: IL
+              city: Chicago
             cardType: VISA
             maskedCardNumber: "************0011"
             cardExpDate: "1225"
@@ -1355,10 +1355,10 @@ components:
             billingContact:
               name: John Doe
               countryCode: US
-              zipCode: "12345"
-              address: 123 Main St
-              state: NY
-              city: Anytown
+              zipCode: "60606"
+              address: 300 S Wacker Dr
+              state: IL
+              city: Chicago
             cardType: AMEX
             maskedCardNumber: "3****6452"
             cardExpDate: "0826"
@@ -4104,44 +4104,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/AccountHolderPaymentMethodsListResponse'
               examples:
-                externalIdNewestFirst:
-                  summary: External ID example
-                  value:
-                    totalCount: 2
-                    page: 1
-                    pageSize: 10
-                    totalPages: 1
-                    hasNextPage: false
-                    hasPreviousPage: false
-                    items:
-                      - id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-                        type: Token
-                        currency: USD
-                        billingContact:
-                          name: John Doe
-                          countryCode: US
-                          zipCode: 12345
-                          address: 123 Main St
-                          state: NY
-                          city: Anytown
-                        cardType: VISA
-                        maskedCardNumber: "************0011"
-                        cardExpDate: "1225"
-                      - id: pmt_tkn_01JRZPQW7FXMG62D8HJTPK3Y5VB
-                        type: Token
-                        currency: USD
-                        billingContact:
-                          name: John Doe
-                          countryCode: US
-                          zipCode: 12345
-                          address: 123 Main St
-                          state: NY
-                          city: Anytown
-                        cardType: AMEX
-                        maskedCardNumber: "3****6452"
-                        cardExpDate: "0826"
-                internalIdOldestFirst:
-                  summary: Internal ID example
+                listAccountHolderPaymentMethods:
+                  summary: List of an Account Holder's Payment Methods
                   value:
                     totalCount: 3
                     page: 1
@@ -4156,10 +4120,10 @@ paths:
                         billingContact:
                           name: Jane Smith
                           countryCode: US
-                          zipCode: 30316
-                          address: 155 Walthall St SE
-                          state: GA
-                          city: Atlanta
+                          zipCode: "10001"
+                          address: 123 Broadway Ave
+                          state: NY
+                          city: New York
                         cardType: MASTERCARD
                         maskedCardNumber: "5****1234"
                         cardExpDate: "0927"
@@ -4169,10 +4133,10 @@ paths:
                         billingContact:
                           name: Jane Smith
                           countryCode: US
-                          zipCode: 30316
-                          address: 155 Walthall St SE
-                          state: GA
-                          city: Atlanta
+                          zipCode: "10001"
+                          address: 123 Broadway Ave
+                          state: NY
+                          city: New York
                         cardType: VISA
                         maskedCardNumber: "4****9876"
                         cardExpDate: "1226"
@@ -4182,10 +4146,10 @@ paths:
                         billingContact:
                           name: Jane Smith
                           countryCode: US
-                          zipCode: 30316
-                          address: 155 Walthall St SE
-                          state: GA
-                          city: Atlanta
+                          zipCode: "10001"
+                          address: 123 Broadway Ave
+                          state: NY
+                          city: New York
                         cardType: DISCOVER
                         maskedCardNumber: "6****5555"
                         cardExpDate: "0328"
