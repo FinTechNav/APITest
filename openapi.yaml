@@ -4153,25 +4153,45 @@ paths:
                         cardType: DISCOVER
                         maskedCardNumber: "6****5555"
                         cardExpDate: "0328"
-        '400':
-          description: Bad Request - Invalid account holder ID format or parameters
+        '401':
+          description: Unauthorized - Missing or invalid API key
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 1000
+                  status:
+                    type: string
+                    example: Rejected
+                  message:
+                    type: string
+                    example: API key cannot be empty
+                  traceId:
+                    type: string
+                    example: 1-6838be96-74c62f8e2804352739e63476
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: 2025-05-29T20:07:50.4723483Z
+                  errorDetails:
+                    type: array
+                    items: {}
+                    example: []
               examples:
-                invalidAccountHolderId:
-                  summary: Invalid account holder ID format
+                missingApiKey:
+                  summary: Missing or invalid API key
                   value:
-                    errorCode: INVALID_ACCOUNT_HOLDER_ID
-                    errorMessage: "Account holder ID format is invalid. Must be either internal format (aho_...) or external format."
-                    errorDetails:
-                      field: accountHolderId
-                      details: "Invalid ID format provided"
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
+                    code: 1000
+                    status: Rejected
+                    message: "API key cannot be empty"
+                    traceId: "1-6838be96-74c62f8e2804352739e63476"
+                    timestamp: "2025-05-29T20:07:50.4723483Z"
+                    errorDetails: []
         '404':
-          description: Account holder not found
+          description: Resource not found
           content:
             application/json:
               schema:
@@ -4185,29 +4205,37 @@ paths:
                     example: Rejected
                   message:
                     type: string
-                    example: Account holder with external ID usr_1234567890123 not found
+                    example: Resource not found
                   traceId:
                     type: string
-                    example: 1-12a345b6-78cd901e2fg3h4i567jk8lmn
+                    example: 1-68c8732b-3bbe2a8223345463532cef92
                   timestamp:
                     type: string
                     format: date-time
-                    example: 2025-09-15T14:22:33.1234567Z
+                    example: 2025-09-15T20:12:27.8469482Z
                   errorDetails:
                     type: array
                     items: {}
                     example: []
               examples:
+                noUserProvided:
+                  summary: No user provided in path
+                  value:
+                    code: 4000
+                    status: Rejected
+                    message: "Resource not found"
+                    traceId: "1-68c8732b-3bbe2a8223345463532cef92"
+                    timestamp: "2025-09-15T20:12:27.8469482Z"
+                    errorDetails: []
                 accountHolderNotFound:
                   summary: Account holder not found
                   value:
                     code: 4000
                     status: Rejected
                     message: "Account holder with external ID usr_1234567890123 not found"
-                    traceId: "1-12a345b6-78cd901e2fg3h4i567jk8lmn"
-                    timestamp: "2025-09-15T14:22:33.1234567Z"
+                    traceId: "1-68c87350-11897437327b7fdb7611df33"
+                    timestamp: "2025-09-15T20:13:04.9126994Z"
                     errorDetails: []
-
   /payment-methods/physical:
     post:
       operationId: createCardPresentToken
