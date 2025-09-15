@@ -58,6 +58,16 @@ info:
 
     Each payment method includes details such as its ID, type (physical or virtual), currency, description, and whether it's set as a default. This information helps you determine which payment method to use for different transaction scenarios.
 
+    #### Account Holder Management
+
+    The API supports account holder management for organizing and retrieving tokenized payment methods. When processing sale/auth transactions, you can specify an account holder (either by creating a new one or referencing an existing one), and the system will automatically associate tokenized cards with that account holder. This enables you to:
+
+    - Retrieve all payment methods associated with a specific account holder
+    - Organize customer payment methods by account holder ID (internal or external)
+    - Query an account holder's payment methods with filtering and sorting capabilities
+
+    When you call the [`GET /payment-methods/account-holder/{accountHolderId}`](#operation-getaccountholderpaymentmethods) endpoint, the API returns a list of all tokenized payment methods associated with a specific account holder.
+
     #### Transaction Retrieval
 
     The API provides transaction retrieval capabilities that allow you to query and check the status of transactions when processing errors occur. This feature is essential for handling scenarios where API responses are not received due to network timeouts, webhooks fail to deliver, or when a transaction returns an "Interrupted" status indicating unknown final state.
