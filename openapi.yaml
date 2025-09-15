@@ -1223,6 +1223,153 @@ components:
         - hasNextPage
         - hasPreviousPage
         - items
+    
+    AccountHolderPaymentMethodsListResponse:
+      type: object
+      description: Paginated response containing account holder payment methods
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of payment methods that match the filter criteria
+          example: 2
+        page:
+          type: integer
+          description: The current page number (starts at 1)
+          example: 1
+        pageSize:
+          type: integer
+          description: Number of items per page
+          example: 10
+        totalPages:
+          type: integer
+          description: Total number of pages available
+          example: 1
+        hasNextPage:
+          type: boolean
+          description: True if there are more pages of results available
+          example: false
+        hasPreviousPage:
+          type: boolean
+          description: True if there are previous pages of results available
+          example: false
+        items:
+          type: array
+          description: List of tokenized payment methods for the account holder
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: |
+                  The tokenized payment method ID.
+                  Example format: `pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J`
+                example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type:
+                type: string
+                enum:
+                  - Token
+                example: Token
+              currency:
+                type: string
+                enum:
+                  - USD
+                  - CAD
+                example: USD
+              billingContact:
+                type: object
+                description: Billing contact information associated with the payment method
+                properties:
+                  name:
+                    type: string
+                    example: John Doe
+                  countryCode:
+                    type: string
+                    example: US
+                  zipCode:
+                    type: string
+                    example: "12345"
+                  address:
+                    type: string
+                    example: 123 Main St
+                  state:
+                    type: string
+                    example: NY
+                  city:
+                    type: string
+                    example: Anytown
+              cardType:
+                type: string
+                enum:
+                  - VISA
+                  - MASTERCARD
+                  - AMEX
+                  - DISCOVER
+                example: VISA
+              maskedCardNumber:
+                type: string
+                description: Masked version of the card number for display purposes
+                example: "************0011"
+              cardExpDate:
+                type: string
+                description: Card expiration date in MMYY format
+                example: "1225"
+              dateCreated:
+                type: string
+                format: date-time
+                description: ISO 8601 timestamp when the payment method was created
+                example: "2025-09-15T10:30:00Z"
+            required:
+              - id
+              - type
+              - currency
+              - cardType
+              - maskedCardNumber
+              - cardExpDate
+      required:
+        - totalCount
+        - page
+        - pageSize
+        - totalPages
+        - hasNextPage
+        - hasPreviousPage
+        - items
+      example:
+        totalCount: 2
+        page: 1
+        pageSize: 10
+        totalPages: 1
+        hasNextPage: false
+        hasPreviousPage: false
+        items:
+          - id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+            type: Token
+            currency: USD
+            billingContact:
+              name: John Doe
+              countryCode: US
+              zipCode: "12345"
+              address: 123 Main St
+              state: NY
+              city: Anytown
+            cardType: VISA
+            maskedCardNumber: "************0011"
+            cardExpDate: "1225"
+            dateCreated: "2025-09-15T10:30:00Z"
+          - id: pmt_tkn_01JRZPQW7FXMG62D8HJTPK3Y5VB
+            type: Token
+            currency: USD
+            billingContact:
+              name: John Doe
+              countryCode: US
+              zipCode: "12345"
+              address: 123 Main St
+              state: NY
+              city: Anytown
+            cardType: AMEX
+            maskedCardNumber: "3****6452"
+            cardExpDate: "0826"
+            dateCreated: "2025-09-10T14:22:00Z"
+    
     TransactionsListResponse:
       type: object
       description: Paginated response containing transactions
@@ -3900,6 +4047,215 @@ paths:
                         description: Online Checkout Iframe
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+  
+  /payment-methods/account-holder/{accountHolderId}:
+    get:
+      operationId: getAccountHolderPaymentMethods
+      summary: List Account Holder Payment Methods
+      description: |
+        Returns a paginated list of tokenized payment methods (cards) associated with a specific account holder.
+        
+        You can specify either an internal account holder ID (assigned by our system) or an external account holder ID (assigned by your POS or CRM system).
+        
+        The endpoint supports filtering and sorting to help you organize and retrieve payment methods efficiently.
+      parameters:
+        - name: accountHolderId
+          in: path
+          required: true
+          description: |
+            The account holder ID to retrieve payment methods for. Can be either:
+            - Internal ID format: `aho_01JRZPRGFF4J2SZC3HMDBYEN2J` (assigned by our system)
+            - External ID format: `usr_1757945457790` (assigned by your POS/CRM system)
+          schema:
+            type: string
+          example: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+        - name: sorts
+          in: query
+          required: false
+          description: |
+            Comma-separated list of fields to sort by. Prefix with `-` for descending order.
+            Available fields: id, type, currency, cardType, maskedCardNumber, cardExpDate, dateCreated
+          schema:
+            type: string
+          example: -dateCreated,cardType
+        - name: page
+          in: query
+          required: false
+          description: |
+            Page number to retrieve (starts at 1).
+            For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: pageSize
+          in: query
+          required: false
+          description: |
+            Number of records per page.
+            For example, if you have 100 records with 10 per page, page 2 gives you records 11 to 20.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          example: 10
+      tags:
+        - Payment Methods
+      responses:
+        '200':
+          description: A successful paginated response containing account holder payment methods
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountHolderPaymentMethodsListResponse'
+              examples:
+                externalIdNewestFirst:
+                  summary: External ID with newest cards first
+                  value:
+                    totalCount: 2
+                    page: 1
+                    pageSize: 10
+                    totalPages: 1
+                    hasNextPage: false
+                    hasPreviousPage: false
+                    items:
+                      - id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                        type: Token
+                        currency: USD
+                        billingContact:
+                          name: John Doe
+                          countryCode: US
+                          zipCode: 12345
+                          address: 123 Main St
+                          state: NY
+                          city: Anytown
+                        cardType: VISA
+                        maskedCardNumber: "************0011"
+                        cardExpDate: "1225"
+                        dateCreated: "2025-09-15T10:30:00Z"
+                      - id: pmt_tkn_01JRZPQW7FXMG62D8HJTPK3Y5VB
+                        type: Token
+                        currency: USD
+                        billingContact:
+                          name: John Doe
+                          countryCode: US
+                          zipCode: 12345
+                          address: 123 Main St
+                          state: NY
+                          city: Anytown
+                        cardType: AMEX
+                        maskedCardNumber: "3****6452"
+                        cardExpDate: "0826"
+                        dateCreated: "2025-09-10T14:22:00Z"
+                internalIdOldestFirst:
+                  summary: Internal ID with oldest cards first
+                  value:
+                    totalCount: 3
+                    page: 1
+                    pageSize: 10
+                    totalPages: 1
+                    hasNextPage: false
+                    hasPreviousPage: false
+                    items:
+                      - id: pmt_tkn_01JRZPMK5YQ1N8S7CXFVG2H9TB
+                        type: Token
+                        currency: USD
+                        billingContact:
+                          name: Jane Smith
+                          countryCode: US
+                          zipCode: 30316
+                          address: 155 Walthall St SE
+                          state: GA
+                          city: Atlanta
+                        cardType: MASTERCARD
+                        maskedCardNumber: "5****1234"
+                        cardExpDate: "0927"
+                        dateCreated: "2025-08-01T09:15:00Z"
+                      - id: pmt_tkn_01JRZPN8K2R7M4J9BWEX3A6QFC
+                        type: Token
+                        currency: USD
+                        billingContact:
+                          name: Jane Smith
+                          countryCode: US
+                          zipCode: 30316
+                          address: 155 Walthall St SE
+                          state: GA
+                          city: Atlanta
+                        cardType: VISA
+                        maskedCardNumber: "4****9876"
+                        cardExpDate: "1226"
+                        dateCreated: "2025-08-15T16:45:00Z"
+                      - id: pmt_tkn_01JRZPPV9X3K7L2DMQTY8Z5RGH
+                        type: Token
+                        currency: USD
+                        billingContact:
+                          name: Jane Smith
+                          countryCode: US
+                          zipCode: 30316
+                          address: 155 Walthall St SE
+                          state: GA
+                          city: Atlanta
+                        cardType: DISCOVER
+                        maskedCardNumber: "6****5555"
+                        cardExpDate: "0328"
+                        dateCreated: "2025-09-05T11:20:00Z"
+        '400':
+          description: Bad Request - Invalid account holder ID format or parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidAccountHolderId:
+                  summary: Invalid account holder ID format
+                  value:
+                    errorCode: INVALID_ACCOUNT_HOLDER_ID
+                    errorMessage: "Account holder ID format is invalid. Must be either internal format (aho_...) or external format."
+                    errorDetails:
+                      field: accountHolderId
+                      details: "Invalid ID format provided"
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Account holder not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 4000
+                  status:
+                    type: string
+                    example: Rejected
+                  message:
+                    type: string
+                    example: Account holder with external ID usr_1234567890123 not found
+                  traceId:
+                    type: string
+                    example: 1-12a345b6-78cd901e2fg3h4i567jk8lmn
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: 2025-09-15T14:22:33.1234567Z
+                  errorDetails:
+                    type: array
+                    items: {}
+                    example: []
+              examples:
+                accountHolderNotFound:
+                  summary: Account holder not found
+                  value:
+                    code: 4000
+                    status: Rejected
+                    message: "Account holder with external ID usr_1234567890123 not found"
+                    traceId: "1-12a345b6-78cd901e2fg3h4i567jk8lmn"
+                    timestamp: "2025-09-15T14:22:33.1234567Z"
+                    errorDetails: []
+
   /payment-methods/physical:
     post:
       operationId: createCardPresentToken
