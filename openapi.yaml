@@ -1313,11 +1313,6 @@ components:
                 type: string
                 description: Card expiration date in MMYY format
                 example: "1225"
-              dateCreated:
-                type: string
-                format: date-time
-                description: ISO 8601 timestamp when the payment method was created
-                example: "2025-09-15T10:30:00Z"
             required:
               - id
               - type
@@ -1354,7 +1349,6 @@ components:
             cardType: VISA
             maskedCardNumber: "************0011"
             cardExpDate: "1225"
-            dateCreated: "2025-09-15T10:30:00Z"
           - id: pmt_tkn_01JRZPQW7FXMG62D8HJTPK3Y5VB
             type: Token
             currency: USD
@@ -1368,7 +1362,6 @@ components:
             cardType: AMEX
             maskedCardNumber: "3****6452"
             cardExpDate: "0826"
-            dateCreated: "2025-09-10T14:22:00Z"
     
     TransactionsListResponse:
       type: object
@@ -4112,7 +4105,7 @@ paths:
                 $ref: '#/components/schemas/AccountHolderPaymentMethodsListResponse'
               examples:
                 externalIdNewestFirst:
-                  summary: External ID with newest cards first
+                  summary: External ID example
                   value:
                     totalCount: 2
                     page: 1
@@ -4134,7 +4127,6 @@ paths:
                         cardType: VISA
                         maskedCardNumber: "************0011"
                         cardExpDate: "1225"
-                        dateCreated: "2025-09-15T10:30:00Z"
                       - id: pmt_tkn_01JRZPQW7FXMG62D8HJTPK3Y5VB
                         type: Token
                         currency: USD
@@ -4148,9 +4140,8 @@ paths:
                         cardType: AMEX
                         maskedCardNumber: "3****6452"
                         cardExpDate: "0826"
-                        dateCreated: "2025-09-10T14:22:00Z"
                 internalIdOldestFirst:
-                  summary: Internal ID with oldest cards first
+                  summary: Internal ID example
                   value:
                     totalCount: 3
                     page: 1
@@ -4172,7 +4163,6 @@ paths:
                         cardType: MASTERCARD
                         maskedCardNumber: "5****1234"
                         cardExpDate: "0927"
-                        dateCreated: "2025-08-01T09:15:00Z"
                       - id: pmt_tkn_01JRZPN8K2R7M4J9BWEX3A6QFC
                         type: Token
                         currency: USD
@@ -4186,7 +4176,6 @@ paths:
                         cardType: VISA
                         maskedCardNumber: "4****9876"
                         cardExpDate: "1226"
-                        dateCreated: "2025-08-15T16:45:00Z"
                       - id: pmt_tkn_01JRZPPV9X3K7L2DMQTY8Z5RGH
                         type: Token
                         currency: USD
@@ -4200,7 +4189,6 @@ paths:
                         cardType: DISCOVER
                         maskedCardNumber: "6****5555"
                         cardExpDate: "0328"
-                        dateCreated: "2025-09-05T11:20:00Z"
         '400':
           description: Bad Request - Invalid account holder ID format or parameters
           content:
