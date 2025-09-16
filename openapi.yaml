@@ -2331,6 +2331,13 @@ components:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
               type: Token
               currency: USD
+              billingContact:
+                name: John Doe
+                countryCode: US
+                zipCode: "12345"
+                address: 123 Main St
+                state: NY
+                city: Anytown
               description: Token for John Doe's Visa
               cardType: VISA
               maskedCardNumber: '************0011'
@@ -2341,6 +2348,25 @@ components:
             resultText: APPROVED
             requestedAmount: 1000
             approvedAmount: 1000
+            accountHolder:
+              id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+              externalId: usr_1234567890123
+              contact:
+                name: John Doe
+                countryCode: US
+                zipCode: "60606"
+                address: 300 S Wacker Dr
+                state: IL
+                city: Chicago
+            transactionResponses:
+              - responseCode: 1
+                authCode: 000AAA
+                amountApproved: 1000
+                cardType: VISA
+                avsResult: Y
+                cvvResult: M 
+                accountType: Credit
+            
       required:
         - event
         - originalResponse
@@ -2372,6 +2398,13 @@ components:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
               type: Token
               currency: USD
+              billingContact:
+                name: John Doe
+                countryCode: US
+                zipCode: "12345"
+                address: 123 Main St
+                state: NY
+                city: Anytown
               description: Token for John Doe's Visa
               cardType: VISA
               maskedCardNumber: '************0011'
@@ -2382,6 +2415,24 @@ components:
             resultText: APPROVED
             requestedAmount: 1000
             approvedAmount: 1000
+            accountHolder:
+              id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+              externalId: usr_1234567890123
+              contact:
+                name: John Doe
+                countryCode: US
+                zipCode: "60606"
+                address: 300 S Wacker Dr
+                state: IL
+                city: Chicago
+            transactionResponses:
+              - responseCode: 1
+                authCode: 000AAA
+                amountApproved: 1000
+                cardType: VISA
+                avsResult: Y
+                cvvResult: M 
+                accountType: Credit
       required:
         - event
         - originalResponse
@@ -2413,6 +2464,13 @@ components:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
               type: Token
               currency: USD
+              billingContact:
+                name: John Doe
+                countryCode: US
+                zipCode: "12345"
+                address: 123 Main St
+                state: NY
+                city: Anytown
               description: Token for John Doe's Visa
               cardType: VISA
               maskedCardNumber: '************0011'
@@ -2423,6 +2481,24 @@ components:
             resultText: APPROVED
             requestedAmount: 1000
             approvedAmount: 1000
+            accountHolder:
+              id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+              externalId: usr_1234567890123
+              contact:
+                name: John Doe
+                countryCode: US
+                zipCode: "60606"
+                address: 300 S Wacker Dr
+                state: IL
+                city: Chicago
+            transactionResponses:
+              - responseCode: 1
+                authCode: 000AAA
+                amountApproved: 1000
+                cardType: VISA
+                avsResult: Y
+                cvvResult: M 
+                accountType: Credit
       required:
         - event
         - originalResponse
