@@ -2518,7 +2518,55 @@ components:
             type: token.created
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          $ref: '#/components/schemas/CardOnFileAddResponse'
+          allOf:
+            - $ref: '#/components/schemas/CardOnFileAddResponse'
+            - type: object
+          example:
+            id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
+            timestamp: '2025-05-27T18:49:31Z'
+            type: Auth
+            status: Completed
+            accountHolder:
+              id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+              externalId: usr_1234567890123
+              contact:
+                name: John Doe
+                countryCode: US
+                zipCode: "60606"
+                address: 300 S Wacker Dr
+                state: IL
+                city: Chicago
+            paymentMethod:
+              id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+              type: Physical
+              currency: USD
+              description: Main Store Terminal
+            referenceId: ref_add_card_12345
+            resultCode: 0
+            resultText: APPROVED
+            requestedAmount: 0
+            approvedAmount: 0
+            transactionResponses:
+              - responseCode: 1
+                authCode: 000AAA
+                amountApproved: 0
+                paymentMethod:
+                  id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                  type: Token
+                  currency: USD
+                  billingContact:
+                    name: John Doe
+                    countryCode: US
+                    zipCode: "12345"
+                    address: 123 Main St
+                    state: NY
+                    city: Anytown
+                  cardType: VISA
+                  maskedCardNumber: '************0011'
+                  cardExpDate: '1225'
+                cardType: VISA
+                accountType: Credit
+                hostResponseText: APPROVED 00
       required:
         - event
         - originalResponse
@@ -2547,6 +2595,13 @@ components:
               type: Token
               currency: USD
               description: Token for John Doe's Visa
+              billingContact:
+                name: John Doe
+                countryCode: US
+                zipCode: "12345"
+                address: 123 Main St
+                state: NY
+                city: Anytown
               cardType: VISA
               maskedCardNumber: '************0011'
               cardExpDate: '1225'
@@ -2580,6 +2635,13 @@ components:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
               type: Token
               currency: USD
+              billingContact:
+                name: John Doe
+                countryCode: US
+                zipCode: "12345"
+                address: 123 Main St
+                state: NY
+                city: Anytown
               dateDeleted: '2025-05-11T17:40:33+00:00'
               cardType: VISA
             referenceId: ref_remove_card_12345
