@@ -2161,6 +2161,7 @@ components:
             - type: object
               properties:
                 type:
+                  type: string
                   example: sale.completed
           example:
             id: evt_01JS21X856RR8R69GV5F17XK9C
@@ -2237,6 +2238,7 @@ components:
             - type: object
               properties:
                 type:
+                  type: string
                   example: auth.completed
           example:
             id: evt_01JS21X856RR8R69GV5F17XK9C
@@ -2313,6 +2315,7 @@ components:
             - type: object
               properties:
                 type:
+                  type: string
                   example: capture.completed
           example:
             id: evt_01JS21X856RR8R69GV5F17XK9C
@@ -2380,6 +2383,7 @@ components:
             - type: object
               properties:
                 type:
+                  type: string
                   example: refund.completed
           example:
             id: evt_01JS21X856RR8R69GV5F17XK9C
@@ -2446,6 +2450,7 @@ components:
             - type: object
               properties:
                 type:
+                  type: string
                   example: void.completed
           example:
             id: evt_01JS21X856RR8R69GV5F17XK9C
@@ -2512,6 +2517,7 @@ components:
             - type: object
               properties:
                 type:
+                  type: string
                   example: token.created
           example:
             id: evt_01JS21X856RR8R69GV5F17XK9C
@@ -2580,6 +2586,7 @@ components:
             - type: object
               properties:
                 type:
+                  type: string
                   example: token.updated
           example:
             id: evt_01JS21X856RR8R69GV5F17XK9C
@@ -2621,6 +2628,7 @@ components:
             - type: object
               properties:
                 type:
+                  type: string
                   example: token.removed
           example:
             id: evt_01JS21X856RR8R69GV5F17XK9C
@@ -3899,79 +3907,6 @@ components:
             cardType: VISA
             accountType: Credit
             hostResponseText: APPROVED 00
-
-            - '     Test Merchant      '
-            - '      300 S Wacker      '
-            - '         Loop,          '
-            - '                        '
-            - '                        '
-            - 'TERM #          11000367'
-            - 'RECORD #         0656191'
-            - 'HOST INVOICE #    000038'
-            - 'HOST SEQ #    1720656191'
-            - 'MERCH                   '
-            - 'INVOICE inv_123456789012'
-            - '        3456789012354678'
-            - '        901             '
-            - '------------------------'
-            - CARD    ************0011
-            - VISA             Contact
-            - 07/10/2024      20:03:05
-            - '------------------------'
-            - '       VOID SALE        '
-            - '                        '
-            - TOTAL         USD $10.00
-            - '------------------------'
-            - AUTH#:000AAA       B:171
-            - '                        '
-            - '      APPROVED 00       '
-            - '       THANK YOU        '
-            - '                        '
-            - '      Visa Credit       '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '     MERCHANT COPY      '
-            - '     Test Merchant      '
-            - '      300 S Wacker      '
-            - '         Loop,          '
-            - '                        '
-            - '                        '
-            - 'TERM #          11000367'
-            - 'RECORD #         0656191'
-            - 'HOST INVOICE #    000038'
-            - 'HOST SEQ #    1720656191'
-            - 'MERCH                   '
-            - 'INVOICE inv_123456789012'
-            - '        3456789012354678'
-            - '        901             '
-            - '------------------------'
-            - CARD    ************0011
-            - VISA             Contact
-            - 07/10/2024      20:03:05
-            - '------------------------'
-            - '       VOID SALE        '
-            - '                        '
-            - TOTAL         USD $10.00
-            - '------------------------'
-            - AUTH#:000AAA       B:171
-            - '                        '
-            - '      APPROVED 00       '
-            - '       THANK YOU        '
-            - '                        '
-            - '      Visa Credit       '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '     CUSTOMER COPY      '
     VoidResponse:
       description: A successful response for a void transaction.
       value:
