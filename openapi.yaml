@@ -675,6 +675,11 @@ components:
           type: string
           description: A human-readable name for the payment method.
           example: Token for John Doe's Visa
+        billingContact:
+          allOf:
+            - $ref: '#/components/schemas/BillingContact'
+            - type: object
+              description: Billing contact information. Only returned for tokenized payment methods from Card Not Present transactions.
         cardType:
           type: string
           enum:
@@ -1363,6 +1368,67 @@ components:
             maskedCardNumber: "3****6452"
             cardExpDate: "0826"
     
+    AccountHolder:
+      type: object
+      description: Account holder information associated with the transaction
+      properties:
+        id:
+          type: string
+          description: Internal account holder ID assigned by the system
+          example: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+        externalId:
+          type: string
+          description: External account holder ID assigned by POS or CRM system
+          example: usr_1234567890123
+        contact:
+          type: object
+          description: Contact information for the account holder
+          properties:
+            name:
+              type: string
+              example: John Doe
+            countryCode:
+              type: string
+              example: US
+            zipCode:
+              type: string
+              example: "60606"
+            address:
+              type: string
+              example: 300 S Wacker Dr
+            state:
+              type: string
+              example: IL
+            city:
+              type: string
+              example: Chicago
+      required:
+        - id
+        - externalId
+
+    BillingContact:
+      type: object
+      description: Billing contact information associated with the payment method
+      properties:
+        name:
+          type: string
+          example: John Doe
+        countryCode:
+          type: string
+          example: US
+        zipCode:
+          type: string
+          example: "12345"
+        address:
+          type: string
+          example: 123 Main St
+        state:
+          type: string
+          example: NY
+        city:
+          type: string
+          example: Anytown
+
     TransactionsListResponse:
       type: object
       description: Paginated response containing transactions
@@ -1452,6 +1518,11 @@ components:
             - Pending
           description: The current status of the transaction
           example: Completed
+        accountHolder:
+          allOf:
+            - $ref: '#/components/schemas/AccountHolder'
+            - type: object
+              description: Account holder information. Only returned for Card Not Present transactions and their follow-on transactions.
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -2116,6 +2187,16 @@ components:
             requestedAmount: 1000
             approvedAmount: 1000
             balanceAmount: 0
+            accountHolder:
+              id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+              externalId: usr_1234567890123
+              contact:
+                name: John Doe
+                countryCode: US
+                zipCode: "60606"
+                address: 300 S Wacker Dr
+                state: IL
+                city: Chicago
             transactionResponses:
               - responseCode: 1
                 authCode: 000AAA
@@ -2129,6 +2210,13 @@ components:
                   id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                   type: Token
                   currency: USD
+                  billingContact:
+                    name: John Doe
+                    countryCode: US
+                    zipCode: "12345"
+                    address: 123 Main St
+                    state: NY
+                    city: Anytown
                   description: Token for John Doe's Visa
                   cardType: VISA
                   maskedCardNumber: '************0011'
@@ -2175,10 +2263,40 @@ components:
             requestedAmount: 1000
             approvedAmount: 1000
             balanceAmount: 0
+            accountHolder:
+              id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+              externalId: usr_1234567890123
+              contact:
+                name: John Doe
+                countryCode: US
+                zipCode: "60606"
+                address: 300 S Wacker Dr
+                state: IL
+                city: Chicago
             transactionResponses:
               - responseCode: 1
                 authCode: 000AAA
                 amountApproved: 1000
+                approvedAmountBreakdown:
+                  amountGoodsAndServices: 900
+                  tax: 100
+                  cashback: 0
+                  tip: 0
+                paymentMethod:
+                  id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                  type: Token
+                  currency: USD
+                  billingContact:
+                    name: John Doe
+                    countryCode: US
+                    zipCode: "12345"
+                    address: 123 Main St
+                    state: NY
+                    city: Anytown
+                  description: Token for John Doe's Visa
+                  cardType: VISA
+                  maskedCardNumber: '************0011'
+                  cardExpDate: '1225'
                 cardType: VISA
                 accountType: Credit
                 hostResponseText: APPROVED 00
