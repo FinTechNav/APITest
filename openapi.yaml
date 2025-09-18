@@ -1112,6 +1112,7 @@ components:
               description: The payment method used for this Card Not Present transaction.
               properties:
                 id:
+                  type: string
                   example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
           example:
             id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
@@ -1537,6 +1538,7 @@ components:
                 If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
               properties:
                 id:
+                  type: string
                   example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
@@ -1576,6 +1578,7 @@ components:
                           If a new card was tokenized during the transaction, the tokenized card ID and details will be returned (`pmt_tkn_*`). This value should be stored in your system if you wish to use it for subsequent Card On File transactions.
                         properties:
                           id:
+                            type: string
                             example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
     CNPTransactionResponse:
       type: object
@@ -1615,6 +1618,7 @@ components:
               description: The payment method used for this transaction.
               properties:
                 id:
+                  type: string
                   example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
           example:
             id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -1696,6 +1700,7 @@ components:
               description: The payment method used for this transaction.
               properties:
                 id:
+                  type: string
                   example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
           example:
             id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -1782,6 +1787,7 @@ components:
               description: The payment method used for this transaction.
               properties:
                 id:
+                  type: string
                   example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
           example:
             id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -1868,6 +1874,7 @@ components:
               description: The payment method used for this transaction.
               properties:
                 id:
+                  type: string
                   example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
           example:
             id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -1967,6 +1974,7 @@ components:
                 Example format: `pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J`
               properties:
                 id:
+                  type: string
                   example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
@@ -2034,6 +2042,7 @@ components:
               description: The payment method used for this transaction.
               properties:
                 id:
+                  type: string
                   example: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
           example:
             id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
@@ -2083,6 +2092,7 @@ components:
               description: The tokenized card that was updated.
               properties:
                 id:
+                  type: string
                   example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
           example:
             id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2113,6 +2123,7 @@ components:
               description: The tokenized card that was removed.
               properties:
                 id:
+                  type: string
                   example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
               example:
                 id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2383,8 +2394,7 @@ components:
                 cardType: VISA
                 avsResult: Y
                 cvvResult: M 
-                accountType: Credit
-            
+                accountType: Credit 
       required:
         - event
         - originalResponse
@@ -5183,6 +5193,7 @@ paths:
                               If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
                             properties:
                               id:
+                                type: string
                                 example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
               examples:
                 successfulResponse:
@@ -5419,6 +5430,7 @@ paths:
                               If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
                             properties:
                               id:
+                                type: string
                                 example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
               examples:
                 successfulResponse:
@@ -5841,6 +5853,7 @@ paths:
                               If a new card was tokenized during the transaction, the tokenized card ID and details will be returned in the `transactionResponses`'s `paymentMethod` object.
                             properties:
                               id:
+                                type: string
                                 example: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
               examples:
                 successfulResponse:
