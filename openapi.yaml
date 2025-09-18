@@ -2365,6 +2365,21 @@ components:
               - responseCode: 1
                 authCode: 000AAA
                 amountApproved: 1000
+                paymentMethod:
+                  id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                  type: Token
+                  currency: USD
+                  billingContact:
+                    name: John Doe
+                    countryCode: US
+                    zipCode: "12345"
+                    address: 123 Main St
+                    state: NY
+                    city: Anytown
+                  description: Token for John Doe's Visa
+                  cardType: VISA
+                  maskedCardNumber: '************0011'
+                  cardExpDate: '1225'
                 cardType: VISA
                 avsResult: Y
                 cvvResult: M 
@@ -2433,6 +2448,21 @@ components:
               - responseCode: 1
                 authCode: 000AAA
                 amountApproved: 1000
+                paymentMethod:
+                  id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                  type: Token
+                  currency: USD
+                  billingContact:
+                    name: John Doe
+                    countryCode: US
+                    zipCode: "12345"
+                    address: 123 Main St
+                    state: NY
+                    city: Anytown
+                  description: Token for John Doe's Visa
+                  cardType: VISA
+                  maskedCardNumber: '************0011'
+                  cardExpDate: '1225'
                 cardType: VISA
                 avsResult: Y
                 cvvResult: M 
@@ -2500,6 +2530,21 @@ components:
               - responseCode: 1
                 authCode: 000AAA
                 amountApproved: 1000
+                paymentMethod:
+                  id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                  type: Token
+                  currency: USD
+                  billingContact:
+                    name: John Doe
+                    countryCode: US
+                    zipCode: "12345"
+                    address: 123 Main St
+                    state: NY
+                    city: Anytown
+                  description: Token for John Doe's Visa
+                  cardType: VISA
+                  maskedCardNumber: '************0011'
+                  cardExpDate: '1225'
                 cardType: VISA
                 avsResult: Y
                 cvvResult: M 
@@ -3175,6 +3220,21 @@ components:
                 - responseCode: 1
                   authCode: 000AAA
                   amountApproved: 1000
+                  paymentMethod:
+                    id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+                    type: Token
+                    currency: USD
+                    billingContact:
+                      name: John Doe
+                      countryCode: US
+                      zipCode: "12345"
+                      address: 123 Main St
+                      state: NY
+                      city: Anytown
+                    description: Token for John Doe's Visa
+                    cardType: VISA
+                    maskedCardNumber: '************0011'
+                    cardExpDate: '1225'
                   cardType: VISA
                   avsResult: Y
                   cvvResult: M
@@ -3904,6 +3964,21 @@ components:
           - responseCode: 1
             authCode: 000AAA
             amountApproved: 1000
+            paymentMethod:
+              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+              type: Token
+              currency: USD
+              billingContact:
+                name: John Doe
+                countryCode: US
+                zipCode: "12345"
+                address: 123 Main St
+                state: NY
+                city: Anytown
+              description: Token for John Doe's Visa
+              cardType: VISA
+              maskedCardNumber: '************0011'
+              cardExpDate: '1225'
             cardType: VISA
             accountType: Credit
             hostResponseText: APPROVED 00
