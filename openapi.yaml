@@ -1379,7 +1379,7 @@ components:
           example: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
         externalId:
           type: string
-          description: External account holder ID assigned by POS or CRM system
+          description: External account holder ID assigned by the integrator. Contact information for the account holder. Only returned for Card Not Present transactions.
           example: usr_1234567890123
         contact:
           type: object
@@ -1523,7 +1523,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/AccountHolder'
             - type: object
-              description: Account holder information. Only returned for Card Not Present transactions and their follow-on transactions.
+              description: Account holder information. Always returned for transactions. The contact field is only included for Card Not Present transactions.
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1693,6 +1693,11 @@ components:
             - Pending
           description: The current status of the transaction
           example: Completed
+        accountHolder:
+          allOf:
+            - $ref: '#/components/schemas/AccountHolder'
+            - type: object
+              description: Account holder information. Always returned for transactions. The contact field is only included for Card Not Present transactions where this data is collected.
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1780,6 +1785,11 @@ components:
             - Pending
           description: The current status of the transaction
           example: Completed
+        accountHolder:
+          allOf:
+            - $ref: '#/components/schemas/AccountHolder'
+            - type: object
+              description: Account holder information. Always returned for transactions. The contact field is only included for Card Not Present transactions where this data is collected.
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1867,6 +1877,11 @@ components:
             - Pending
           description: The current status of the transaction
           example: Completed
+        accountHolder:
+          allOf:
+            - $ref: '#/components/schemas/AccountHolder'
+            - type: object
+              description: Account holder information. Always returned for transactions. The contact field is only included for Card Not Present transactions where this data is collected.
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
