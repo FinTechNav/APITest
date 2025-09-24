@@ -733,7 +733,7 @@ components:
         authCode:
           type: string
           description: The authorization code provided by the card issuer, confirming transaction approval.
-          example: 000AAA
+          example: 123456
         amountApproved:
           type: number
           description: The amount approved for this transaction response.
@@ -1655,7 +1655,7 @@ components:
             $ref: '#/components/schemas/TransactionResponse'
           example:
             - responseCode: 1
-              authCode: "000AAA"
+              authCode: "123456"
               amountApproved: 1000
               cardType: "VISA"
               accountType: "Credit"
@@ -1738,7 +1738,7 @@ components:
             $ref: '#/components/schemas/TransactionResponse'
           example:
             - responseCode: 1
-              authCode: "000AAA"
+              authCode: "123456"
               amountApproved: 1000
               cardType: "VISA"
               accountType: "Credit"
@@ -1830,7 +1830,7 @@ components:
             $ref: '#/components/schemas/TransactionResponse'
           example:
             - responseCode: 1
-              authCode: "000AAA"
+              authCode: "123456"
               amountApproved: 1000
               cardType: "VISA"
               accountType: "Credit"
@@ -1922,7 +1922,7 @@ components:
             $ref: '#/components/schemas/TransactionResponse'
           example:
             - responseCode: 1
-              authCode: "000AAA"
+              authCode: "123456"
               amountApproved: 1000
               cardType: "VISA"
               accountType: "Credit"
@@ -2025,7 +2025,7 @@ components:
         approvedAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: 000AAA
+            authCode: 123456
             amountApproved: 0
             paymentMethod:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2224,7 +2224,7 @@ components:
                 city: Chicago
             transactionResponses:
               - responseCode: 1
-                authCode: 000AAA
+                authCode: 123456
                 amountApproved: 1000
                 approvedAmountBreakdown:
                   amountGoodsAndServices: 900
@@ -2301,7 +2301,7 @@ components:
                 city: Chicago
             transactionResponses:
               - responseCode: 1
-                authCode: 000AAA
+                authCode: 123456
                 amountApproved: 1000
                 approvedAmountBreakdown:
                   amountGoodsAndServices: 900
@@ -2387,7 +2387,7 @@ components:
                 city: Chicago
             transactionResponses:
               - responseCode: 1
-                authCode: 000AAA
+                authCode: 123456
                 amountApproved: 1000
                 paymentMethod:
                   id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2469,7 +2469,7 @@ components:
                 city: Chicago
             transactionResponses:
               - responseCode: 1
-                authCode: 000AAA
+                authCode: 123456
                 amountApproved: 1000
                 paymentMethod:
                   id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2551,7 +2551,7 @@ components:
                 city: Chicago
             transactionResponses:
               - responseCode: 1
-                authCode: 000AAA
+                authCode: 123456
                 amountApproved: 1000
                 paymentMethod:
                   id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2622,7 +2622,7 @@ components:
             approvedAmount: 0
             transactionResponses:
               - responseCode: 1
-                authCode: 000AAA
+                authCode: 123456
                 amountApproved: 0
                 paymentMethod:
                   id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2777,7 +2777,7 @@ components:
               balanceAmount: 0
               transactionResponses:
                 - responseCode: 1
-                  authCode: 000AAA
+                  authCode: 123456
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -2829,7 +2829,7 @@ components:
                       - '                        '
                       - TOTAL         USD $10.00
                       - '------------------------'
-                      - AUTH#:000AAA       B:171
+                      - AUTH#:123456       B:171
                       - '          Sale          '
                       - '      APPROVED 00       '
                       - '       THANK YOU        '
@@ -2870,7 +2870,7 @@ components:
                       - '                        '
                       - TOTAL         USD $10.00
                       - '------------------------'
-                      - AUTH#:000AAA       B:171
+                      - AUTH#:123456       B:171
                       - '          Sale          '
                       - '      APPROVED 00       '
                       - '       THANK YOU        '
@@ -2929,7 +2929,7 @@ components:
               balanceAmount: 0
               transactionResponses:
                 - responseCode: 1
-                  authCode: 000AAA
+                  authCode: 123456
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -2978,7 +2978,7 @@ components:
                       - '        PRE AUTH        '
                       - TOTAL         USD $10.00
                       - '------------------------'
-                      - 'AUTH#:000AAA            '
+                      - 'AUTH#:123456            '
                       - '                        '
                       - '      APPROVED 00       '
                       - '       THANK YOU        '
@@ -3016,7 +3016,7 @@ components:
                       - '        PRE AUTH        '
                       - TOTAL         USD $10.00
                       - '------------------------'
-                      - 'AUTH#:000AAA            '
+                      - 'AUTH#:123456            '
                       - '                        '
                       - '      APPROVED 00       '
                       - '       THANK YOU        '
@@ -3084,7 +3084,7 @@ components:
               approvedAmount: 1000
               transactionResponses:
                 - responseCode: 1
-                  authCode: 000AAA
+                  authCode: 123456
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -3135,7 +3135,7 @@ components:
                   - '                        '
                   - TOTAL         USD $10.00
                   - '------------------------'
-                  - AUTH#:000AAA       B:171
+                  - AUTH#:123456       B:171
                   - '                        '
                   - '      APPROVED 00       '
                   - '       THANK YOU        '
@@ -3171,7 +3171,7 @@ components:
                   - '                        '
                   - TOTAL         USD $10.00
                   - '------------------------'
-                  - AUTH#:000AAA       B:171
+                  - AUTH#:123456       B:171
                   - '                        '
                   - '      APPROVED 00       '
                   - '       THANK YOU        '
@@ -3235,7 +3235,7 @@ components:
               approvedAmount: 1000
               transactionResponses:
                 - responseCode: 1
-                  authCode: 000AAA
+                  authCode: 123456
                   amountApproved: 1000
                   paymentMethod:
                     id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -3307,7 +3307,7 @@ components:
               approvedAmount: 1000
               transactionResponses:
                 - responseCode: 1
-                  authCode: 000AAA
+                  authCode: 123456
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -3357,7 +3357,7 @@ components:
                   - '                        '
                   - TOTAL         USD $10.00
                   - '------------------------'
-                  - AUTH#:000AAA       B:171
+                  - AUTH#:123456       B:171
                   - '                        '
                   - '      APPROVED 00       '
                   - '       THANK YOU        '
@@ -3392,7 +3392,7 @@ components:
                   - '                        '
                   - TOTAL         USD $10.00
                   - '------------------------'
-                  - AUTH#:000AAA       B:171
+                  - AUTH#:123456       B:171
                   - '                        '
                   - '      APPROVED 00       '
                   - '       THANK YOU        '
@@ -3444,7 +3444,7 @@ components:
               approvedAmount: 0
               transactionResponses:
                 - responseCode: 1
-                  authCode: 000AAA
+                  authCode: 123456
                   amountApproved: 0
                   paymentMethod:
                     id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -4016,7 +4016,7 @@ components:
         approvedAmount: 1000
         transactionResponses:
           - responseCode: 1
-            authCode: ""
+            authCode: 123456
             amountApproved: 1000
             paymentMethod:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -4070,7 +4070,7 @@ components:
             - '                        '
             - TOTAL         USD $10.00
             - '------------------------'
-            - AUTH#:000AAA       B:171
+            - AUTH#:123456       B:171
             - '                        '
             - '      APPROVED 00       '
             - '       THANK YOU        '
@@ -4105,7 +4105,7 @@ components:
             - '                        '
             - TOTAL         USD $10.00
             - '------------------------'
-            - AUTH#:000AAA       B:171
+            - AUTH#:123456       B:171
             - '                        '
             - '      APPROVED 00       '
             - '       THANK YOU        '
@@ -4143,7 +4143,7 @@ components:
         balanceAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: 123456
+            authCode: '123456'
             amountApproved: 1
             approvedAmountBreakdown:
               amountGoodsAndServices: 1
@@ -5381,7 +5381,7 @@ paths:
                     balanceAmount: 0
                     transactionResponses:
                       - responseCode: 1
-                        authCode: 000AAA
+                        authCode: 123456
                         amountApproved: 1000
                         approvedAmountBreakdown:
                           amountGoodsAndServices: 900
@@ -5617,7 +5617,7 @@ paths:
                     balanceAmount: 0
                     transactionResponses:
                       - responseCode: 1
-                        authCode: 000AAA
+                        authCode: 123456
                         amountApproved: 1000
                         approvedAmountBreakdown:
                           amountGoodsAndServices: 900
