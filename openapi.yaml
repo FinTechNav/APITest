@@ -1672,11 +1672,29 @@ components:
             $ref: '#/components/schemas/TransactionResponse'
           example:
             - responseCode: 1
-              authCode: "123456"
-              amountApproved: 1000
-              cardType: "VISA"
-              accountType: "Credit"
-              hostResponseText: "APPROVED 00"
+              authCode: "111797"
+              amountApproved: 300
+              approvedAmountBreakdown:
+                amountGoodsAndServices: 300
+                tax: 0
+                cashback: 0
+                tip: 0
+              paymentMethod:
+                id: pmt_tkn_01K5Y8S248TQYBKBHV1EQ1MMAR
+                type: Token
+                currency: USD
+                billingContact:
+                  name: John Doe
+                  countryCode: US
+                  zipCode: "30316"
+                  address: 155 Walthall St. SE
+                  state: GA
+                  city: Atlanta
+                cardType: AMEX
+                maskedCardNumber: "3****6452"
+                cardExpDate: "1225"
+              receipt:
+                lines: []
     CaptureResponse:
       type: object
       description: Represents the response to a capture request.
