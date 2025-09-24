@@ -3570,12 +3570,15 @@ components:
         timestamp: '2025-05-27T18:49:31Z'
         type: Sale
         status: Completed
+        accountHolder:
+          id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+          externalId: usr_1234567890123
         paymentMethod:
           id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
           type: Physical
           currency: USD
           description: Main Store Terminal
-        invoiceNumber: inv_1234567890123456789012354678901
+        invoiceNumber: inv_1234567890123456
         orderNumber: order_number_1234
         referenceId: ref_s192i49i
         resultCode: 0
@@ -3585,11 +3588,11 @@ components:
         balanceAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: 000AAA
+            authCode: 123456
             amountApproved: 1000
             approvedAmountBreakdown:
-              amountGoodsAndServices: 900
-              tax: 100
+              amountGoodsAndServices: 1000
+              tax: 0
               cashback: 0
               tip: 0
             paymentMethod:
@@ -3599,7 +3602,6 @@ components:
               description: Token for John Doe's Visa
               cardType: VISA
               maskedCardNumber: '************0011'
-              cardExpDate: '1225'
             cardType: VISA
             accountType: Credit
             hostResponseText: APPROVED 00
@@ -3610,85 +3612,97 @@ components:
                 - '         Loop,          '
                 - '                        '
                 - '                        '
+                - ' '
                 - 'TERM #          11000367'
                 - 'RECORD #         0656191'
                 - 'HOST INVOICE #    000038'
                 - 'HOST SEQ #    1720656191'
-                - 'MERCH                   '
+                - 'MERCH'
                 - 'INVOICE inv_123456789012'
-                - '        3456789012354678'
-                - '        901             '
+                - '        3456'
                 - '------------------------'
-                - CARD    ************0011
-                - VISA             Contact
-                - 07/10/2024      20:03:05
+                - 'CARD    ************0011'
+                - 'VISA             Contact'
+                - '07/10/2024      20:03:05'
                 - '------------------------'
-                - Purchase      USD $10.00
-                - Tip           USD  $0.00
-                - Cashback      USD  $0.00
-                - '                        '
-                - TOTAL         USD $10.00
+                - 'CLERK ID               1'
+                - '          SALE          '
+                - ''
+                - ''
+                - 'TOTAL         USD $10.00'
                 - '------------------------'
-                - AUTH#:000AAA       B:171
-                - '          Sale          '
-                - '      APPROVED 00       '
-                - '       THANK YOU        '
+                - 'AUTH#:123456       B:171'
+                - ''
+                - '      APPROVED 00      '
+                - '       THANK YOU       '
+                - ' '
+                - '     NO CARDHOLDER     '
+                - '      VERIFICATION      '
+                - ''
+                - ' '
+                - ' Visa                    '
+                - 'AID: A0000000031010     '
+                - 'TC: 43F4ACF64B07551A    '
+                - 'TVR: 8000008000         '
+                - 'TSI: 7800               '
+                - ''
+                - '  Retain this copy for  '
+                - '  statement validation  '
+                - ''
                 - '                        '
-                - '      Visa Credit       '
-                - 'AID:      A0000000031010'
-                - 'TC:     43F4ACF64B07551A'
-                - 'TVR:          8000008000'
-                - 'TSI:                7800'
                 - '                        '
                 - '                        '
                 - '                        '
                 - '                        '
-                - '                        '
-                - '                        '
-                - '                        '
-                - '     MERCHANT COPY      '
+                - '     CUSTOMER COPY     '
+                - ''
                 - '     Test Merchant      '
                 - '      300 S Wacker      '
                 - '         Loop,          '
                 - '                        '
                 - '                        '
+                - ' '
                 - 'TERM #          11000367'
                 - 'RECORD #         0656191'
                 - 'HOST INVOICE #    000038'
                 - 'HOST SEQ #    1720656191'
-                - 'MERCH                   '
+                - 'MERCH'
                 - 'INVOICE inv_123456789012'
-                - '        3456789012354678'
-                - '        901             '
+                - '        3456'
                 - '------------------------'
-                - CARD    ************0011
-                - VISA             Contact
-                - 07/10/2024      20:03:05
+                - 'CARD    ************0011'
+                - 'VISA             Contact'
+                - '07/10/2024      20:03:05'
                 - '------------------------'
-                - Purchase      USD $10.00
-                - Tip           USD  $0.00
-                - Cashback      USD  $0.00
-                - '                        '
-                - TOTAL         USD $10.00
+                - 'CLERK ID               1'
+                - '          SALE          '
+                - ''
+                - ''
+                - 'TOTAL         USD $10.00'
                 - '------------------------'
-                - AUTH#:000AAA       B:171
-                - '          Sale          '
-                - '      APPROVED 00       '
-                - '       THANK YOU        '
+                - 'AUTH#:123456       B:171'
+                - ''
+                - '      APPROVED 00      '
+                - '       THANK YOU       '
+                - ' '
+                - '     NO CARDHOLDER     '
+                - '      VERIFICATION      '
+                - ''
+                - ' '
+                - ' Visa                    '
+                - 'AID: A0000000031010     '
+                - 'TC: 43F4ACF64B07551A    '
+                - 'TVR: 8000008000         '
+                - 'TSI: 7800               '
+                - ''
+                - ''
+                - ''
                 - '                        '
-                - '      Visa Credit       '
-                - 'AID:      A0000000031010'
-                - 'TC:     43F4ACF64B07551A'
-                - 'TVR:          8000008000'
-                - 'TSI:                7800'
                 - '                        '
                 - '                        '
                 - '                        '
                 - '                        '
-                - '                        '
-                - '                        '
-                - '                        '
-                - '     CUSTOMER COPY      '
+                - '     MERCHANT COPY     '
     AuthCardPresentResponse:
       description: A successful response for a Card Present authorization transaction.
       value:
@@ -3696,12 +3710,15 @@ components:
         timestamp: '2025-05-27T18:49:31Z'
         type: Auth
         status: Completed
+        accountHolder:
+          id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+          externalId: usr_1234567890123
         paymentMethod:
           id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
           type: Physical
           currency: USD
           description: Main Store Terminal
-        invoiceNumber: inv_1234567890123456789012354678901
+        invoiceNumber: inv_1234567890123456
         orderNumber: order_number_1234
         referenceId: ref_s192i49i
         resultCode: 0
@@ -3711,11 +3728,11 @@ components:
         balanceAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: 000AAA
+            authCode: 123456
             amountApproved: 1000
             approvedAmountBreakdown:
-              amountGoodsAndServices: 900
-              tax: 100
+              amountGoodsAndServices: 1000
+              tax: 0
               cashback: 0
               tip: 0
             paymentMethod:
@@ -3725,7 +3742,6 @@ components:
               description: Token for John Doe's Visa
               cardType: VISA
               maskedCardNumber: '************0011'
-              cardExpDate: '1225'
             cardType: VISA
             accountType: Credit
             hostResponseText: APPROVED 00
@@ -3736,79 +3752,97 @@ components:
                 - '         Loop,          '
                 - '                        '
                 - '                        '
+                - ' '
                 - 'TERM #          11000367'
                 - 'RECORD #         0656191'
                 - 'HOST INVOICE #    000038'
                 - 'HOST SEQ #    1720656191'
-                - 'MERCH                   '
+                - 'MERCH'
                 - 'INVOICE inv_123456789012'
-                - '        3456789012354678'
-                - '        901             '
+                - '        3456'
                 - '------------------------'
-                - CARD    ************0011
-                - VISA             Contact
-                - 07/10/2024      20:03:05
+                - 'CARD    ************0011'
+                - 'VISA             Contact'
+                - '07/10/2024      20:03:05'
                 - '------------------------'
+                - 'CLERK ID               1'
                 - '        PRE AUTH        '
-                - TOTAL         USD $10.00
+                - ''
+                - ''
+                - 'TOTAL         USD $10.00'
                 - '------------------------'
-                - 'AUTH#:000AAA            '
+                - 'AUTH#:123456            '
+                - ''
+                - '      APPROVED 00      '
+                - '       THANK YOU       '
+                - ' '
+                - '     NO CARDHOLDER     '
+                - '      VERIFICATION      '
+                - ''
+                - ' '
+                - ' Visa                    '
+                - 'AID: A0000000031010     '
+                - 'TC: 43F4ACF64B07551A    '
+                - 'TVR: 8000008000         '
+                - 'TSI: 7800               '
+                - ''
+                - '  Retain this copy for  '
+                - '  statement validation  '
+                - ''
                 - '                        '
-                - '      APPROVED 00       '
-                - '       THANK YOU        '
-                - '                        '
-                - '      Visa Credit       '
-                - 'AID:      A0000000031010'
-                - 'TC:     43F4ACF64B07551A'
-                - 'TVR:          8000008000'
-                - 'TSI:                7800'
                 - '                        '
                 - '                        '
                 - '                        '
                 - '                        '
-                - '                        '
-                - '                        '
-                - '                        '
-                - '     MERCHANT COPY      '
+                - '     CUSTOMER COPY     '
+                - ''
                 - '     Test Merchant      '
                 - '      300 S Wacker      '
                 - '         Loop,          '
                 - '                        '
                 - '                        '
+                - ' '
                 - 'TERM #          11000367'
                 - 'RECORD #         0656191'
                 - 'HOST INVOICE #    000038'
                 - 'HOST SEQ #    1720656191'
-                - 'MERCH                   '
+                - 'MERCH'
                 - 'INVOICE inv_123456789012'
-                - '        3456789012354678'
-                - '        901             '
+                - '        3456'
                 - '------------------------'
-                - CARD    ************0011
-                - VISA             Contact
-                - 07/10/2024      20:03:05
+                - 'CARD    ************0011'
+                - 'VISA             Contact'
+                - '07/10/2024      20:03:05'
                 - '------------------------'
+                - 'CLERK ID               1'
                 - '        PRE AUTH        '
-                - TOTAL         USD $10.00
+                - ''
+                - ''
+                - 'TOTAL         USD $10.00'
                 - '------------------------'
-                - 'AUTH#:000AAA            '
+                - 'AUTH#:123456            '
+                - ''
+                - '      APPROVED 00      '
+                - '       THANK YOU       '
+                - ' '
+                - '     NO CARDHOLDER     '
+                - '      VERIFICATION      '
+                - ''
+                - ' '
+                - ' Visa                    '
+                - 'AID: A0000000031010     '
+                - 'TC: 43F4ACF64B07551A    '
+                - 'TVR: 8000008000         '
+                - 'TSI: 7800               '
+                - ''
+                - ''
+                - ''
                 - '                        '
-                - '      APPROVED 00       '
-                - '       THANK YOU        '
-                - '                        '
-                - '      Visa Credit       '
-                - 'AID:      A0000000031010'
-                - 'TC:     43F4ACF64B07551A'
-                - 'TVR:          8000008000'
-                - 'TSI:                7800'
                 - '                        '
                 - '                        '
                 - '                        '
                 - '                        '
-                - '                        '
-                - '                        '
-                - '                        '
-                - '     CUSTOMER COPY      '
+                - '     MERCHANT COPY     '
     CaptureResponse:
       description: A successful response for a capture transaction.
       value:
@@ -3819,30 +3853,13 @@ components:
         accountHolder:
           id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
           externalId: usr_1234567890123
-          contact:
-            name: John Doe
-            countryCode: US
-            zipCode: "60606"
-            address: 300 S Wacker Dr
-            state: IL
-            city: Chicago
         referenceId: ref_s192i49i
         paymentMethod:
-          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-          type: Token
+          id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+          type: Physical
           currency: USD
-          description: Token for John Doe's Visa
-          billingContact:
-            name: John Doe
-            countryCode: US
-            zipCode: "12345"
-            address: 123 Main St
-            state: NY
-            city: Anytown
-          cardType: VISA
-          maskedCardNumber: '************0011'
-          cardExpDate: '1225'
-        invoiceNumber: inv_1234567890123456789012354678901
+          description: Main Store Terminal
+        invoiceNumber: inv_1234567890123456
         orderNumber: order_number_1234
         resultCode: 0
         resultText: APPROVED
@@ -3850,102 +3867,108 @@ components:
         approvedAmount: 1000
         transactionResponses:
           - responseCode: 1
-            authCode: 000AAA
+            authCode: 123456
             amountApproved: 1000
-            paymentMethod:
-              id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-              type: Token
-              currency: USD
-              description: Token for John Doe's Visa
-              billingContact:
-                name: John Doe
-                countryCode: US
-                zipCode: "12345"
-                address: 123 Main St
-                state: NY
-                city: Anytown
-              cardType: VISA
-              maskedCardNumber: '************0011'
-              cardExpDate: '1225'
+            approvedAmountBreakdown:
+              amountGoodsAndServices: 1000
+              tax: 0
+              cashback: 0
+              tip: 0
             cardType: VISA
             accountType: Credit
-            hostResponseText: APPROVED 00
-        receipt:
-          lines:
-            - '     Test Merchant      '
-            - '      300 S Wacker      '
-            - '         Loop,          '
-            - '                        '
-            - '                        '
-            - 'TERM #          11000367'
-            - 'RECORD #         0656191'
-            - 'HOST INVOICE #    000038'
-            - 'HOST SEQ #    1720656191'
-            - 'MERCH                   '
-            - 'INVOICE inv_123456789012'
-            - '        3456789012354678'
-            - '        901             '
-            - '------------------------'
-            - CARD    ************0011
-            - VISA             Contact
-            - 07/10/2024      20:03:05
-            - '------------------------'
-            - '                        '
-            - '   PRE AUTH COMPLETE    '
-            - '                        '
-            - TOTAL         USD $10.00
-            - '------------------------'
-            - AUTH#:000AAA       B:171
-            - '                        '
-            - '      APPROVED 00       '
-            - '       THANK YOU        '
-            - '                        '
-            - '      Visa Credit       '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '     MERCHANT COPY      '
-            - '     Test Merchant      '
-            - '      300 S Wacker      '
-            - '         Loop,          '
-            - '                        '
-            - '                        '
-            - 'TERM #          11000367'
-            - 'RECORD #         0656191'
-            - 'HOST INVOICE #    000038'
-            - 'HOST SEQ #    1720656191'
-            - 'MERCH                   '
-            - 'INVOICE inv_123456789012'
-            - '        3456789012354678'
-            - '        901             '
-            - '------------------------'
-            - CARD    ************0011
-            - VISA             Contact
-            - 07/10/2024      20:03:05
-            - '------------------------'
-            - '                        '
-            - '   PRE AUTH COMPLETE    '
-            - '                        '
-            - TOTAL         USD $10.00
-            - '------------------------'
-            - AUTH#:000AAA       B:171
-            - '                        '
-            - '      APPROVED 00       '
-            - '       THANK YOU        '
-            - '                        '
-            - '      Visa Credit       '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '     CUSTOMER COPY      '
+            hostResponseText: APPROVED
+            receipt:
+              lines:
+                - '     Test Merchant      '
+                - '      300 S Wacker      '
+                - '         Loop,          '
+                - '                        '
+                - '                        '
+                - ' '
+                - 'TERM #          11000367'
+                - 'RECORD #         0656191'
+                - 'HOST INVOICE #    000038'
+                - 'HOST SEQ #    1720656191'
+                - 'MERCH'
+                - 'INVOICE inv_123456789012'
+                - '        3456'
+                - '------------------------'
+                - 'CARD    ************0011'
+                - 'VISA             Contact'
+                - '07/10/2024      20:03:05'
+                - '------------------------'
+                - 'CLERK ID               1'
+                - '   PRE AUTH COMPLETE   '
+                - ''
+                - ''
+                - 'TOTAL         USD $10.00'
+                - '------------------------'
+                - 'AUTH#:123456       B:171'
+                - ''
+                - '        APPROVED        '
+                - '       THANK YOU       '
+                - ' '
+                - '     NO CARDHOLDER     '
+                - '      VERIFICATION      '
+                - ''
+                - ' '
+                - ' '
+                - ''
+                - ''
+                - '  Retain this copy for  '
+                - '  statement validation  '
+                - ''
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '     CUSTOMER COPY     '
+                - ''
+                - '     Test Merchant      '
+                - '      300 S Wacker      '
+                - '         Loop,          '
+                - '                        '
+                - '                        '
+                - ' '
+                - 'TERM #          11000367'
+                - 'RECORD #         0656191'
+                - 'HOST INVOICE #    000038'
+                - 'HOST SEQ #    1720656191'
+                - 'MERCH'
+                - 'INVOICE inv_123456789012'
+                - '        3456'
+                - '------------------------'
+                - 'CARD    ************0011'
+                - 'VISA             Contact'
+                - '07/10/2024      20:03:05'
+                - '------------------------'
+                - 'CLERK ID               1'
+                - '   PRE AUTH COMPLETE   '
+                - ''
+                - ''
+                - 'TOTAL         USD $10.00'
+                - '------------------------'
+                - 'AUTH#:123456       B:171'
+                - ''
+                - '        APPROVED        '
+                - '       THANK YOU       '
+                - ' '
+                - '     NO CARDHOLDER     '
+                - '      VERIFICATION      '
+                - ''
+                - ' '
+                - ' '
+                - ''
+                - ''
+                - ''
+                - ''
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '     MERCHANT COPY     '
     RefundResponse:
       description: A successful response for a refund transaction.
       value:
@@ -3956,30 +3979,13 @@ components:
         accountHolder:
           id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
           externalId: usr_1234567890123
-          contact:
-            name: John Doe
-            countryCode: US
-            zipCode: "60606"
-            address: 300 S Wacker Dr
-            state: IL
-            city: Chicago
         referenceId: ref_s192i49i
         paymentMethod:
-          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-          type: Token
+          id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+          type: Physical
           currency: USD
-          description: Token for John Doe's Visa
-          billingContact:
-            name: John Doe
-            countryCode: US
-            zipCode: "12345"
-            address: 123 Main St
-            state: NY
-            city: Anytown
-          cardType: VISA
-          maskedCardNumber: '************0011'
-          cardExpDate: '1225'
-        invoiceNumber: inv_1234567890123456789012354678901
+          description: Main Store Terminal
+        invoiceNumber: inv_1234567890123456
         orderNumber: order_number_1234
         resultCode: 0
         resultText: APPROVED
@@ -3987,43 +3993,32 @@ components:
         approvedAmount: 1000
         transactionResponses:
           - responseCode: 1
-            authCode: 000AAA
+            authCode: 123456
             amountApproved: 1000
             paymentMethod:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
               type: Token
               currency: USD
-              billingContact:
-                name: John Doe
-                countryCode: US
-                zipCode: "12345"
-                address: 123 Main St
-                state: NY
-                city: Anytown
-              description: Token for John Doe's Visa
               cardType: VISA
               maskedCardNumber: '************0011'
-              cardExpDate: '1225'
-            cardType: VISA
-            accountType: Credit
-            hostResponseText: APPROVED 00
+            receipt: {}
     VoidResponse:
       description: A successful response for a void transaction.
       value:
         id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
         timestamp: '2025-05-27T18:49:31Z'
         type: Void
-        status: Completed        
+        status: Completed
+        accountHolder:
+          id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+          externalId: usr_1234567890123
         referenceId: ref_s192i49i
         paymentMethod:
-          id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-          type: Token
+          id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
+          type: Physical
           currency: USD
-          description: Token for John Doe's Visa
-          cardType: VISA
-          maskedCardNumber: '************0011'
-          cardExpDate: '1225'
-        invoiceNumber: inv_1234567890123456789012354678901
+          description: Main Store Terminal
+        invoiceNumber: inv_1234567890123456
         orderNumber: order_number_1234
         resultCode: 0
         resultText: APPROVED
@@ -4031,93 +4026,15 @@ components:
         approvedAmount: 1000
         transactionResponses:
           - responseCode: 1
-            authCode: 000AAA
+            authCode: ""
             amountApproved: 1000
             paymentMethod:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
               type: Token
               currency: USD
-              description: Token for John Doe's Visa
               cardType: VISA
               maskedCardNumber: '************0011'
-              cardExpDate: '1225'
-            cardType: VISA
-            accountType: Credit
-            hostResponseText: APPROVED 00
-        receipt:
-          lines:
-            - '     Test Merchant      '
-            - '      300 S Wacker      '
-            - '         Loop,          '
-            - '                        '
-            - '                        '
-            - 'TERM #          11000367'
-            - 'RECORD #         0656191'
-            - 'HOST INVOICE #    000038'
-            - 'HOST SEQ #    1720656191'
-            - 'MERCH                   '
-            - 'INVOICE inv_123456789012'
-            - '        3456789012354678'
-            - '        901             '
-            - '------------------------'
-            - CARD    ************0011
-            - VISA             Contact
-            - 07/10/2024      20:03:05
-            - '------------------------'
-            - '       VOID SALE        '
-            - '                        '
-            - TOTAL         USD $10.00
-            - '------------------------'
-            - AUTH#:000AAA       B:171
-            - '                        '
-            - '      APPROVED 00       '
-            - '       THANK YOU        '
-            - '                        '
-            - '      Visa Credit       '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '     MERCHANT COPY      '
-            - '     Test Merchant      '
-            - '      300 S Wacker      '
-            - '         Loop,          '
-            - '                        '
-            - '                        '
-            - 'TERM #          11000367'
-            - 'RECORD #         0656191'
-            - 'HOST INVOICE #    000038'
-            - 'HOST SEQ #    1720656191'
-            - 'MERCH                   '
-            - 'INVOICE inv_123456789012'
-            - '        3456789012354678'
-            - '        901             '
-            - '------------------------'
-            - CARD    ************0011
-            - VISA             Contact
-            - 07/10/2024      20:03:05
-            - '------------------------'
-            - '       VOID SALE        '
-            - '                        '
-            - TOTAL         USD $10.00
-            - '------------------------'
-            - AUTH#:000AAA       B:171
-            - '                        '
-            - '      APPROVED 00       '
-            - '       THANK YOU        '
-            - '                        '
-            - '      Visa Credit       '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '                        '
-            - '     CUSTOMER COPY      '
+            receipt: {}
     UnreferencedRefundCardPresentResponse:
       description: A successful response for a Card Present unreferenced refund transaction.
       value:
@@ -4125,6 +4042,9 @@ components:
         timestamp: '2025-05-27T18:49:31Z'
         type: Refund
         status: Completed
+        accountHolder:
+          id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+          externalId: usr_1234567890123
         referenceId: ref_s192i49i
         paymentMethod:
           id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
@@ -4212,31 +4132,142 @@ components:
             - '                        '
             - '     CUSTOMER COPY      '
     CreateTokenCardPresentResponse:
-      description: A successful response for a card tokenization transaction.
+      description: A successful response for a Card Present tokenization transaction.
       value:
         id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
+        timestamp: '2025-05-27T18:49:31Z'
+        type: Auth
+        status: Completed
+        accountHolder:
+          id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+          externalId: usr_1234567890123
         paymentMethod:
           id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
           type: Physical
           currency: USD
           description: Main Store Terminal
+        invoiceNumber: inv_12345678901234567890
         referenceId: ref_add_card_12345
         resultCode: 0
         resultText: APPROVED
+        requestedAmount: 1
+        approvedAmount: 1
+        balanceAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: 000AAA
+            authCode: 123456
+            amountApproved: 1
+            approvedAmountBreakdown:
+              amountGoodsAndServices: 1
+              tax: 0
+              cashback: 0
+              tip: 0
             paymentMethod:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
               type: Token
               currency: USD
-              description: Token for John Doe's Visa
               cardType: VISA
               maskedCardNumber: '************0011'
-              cardExpDate: '1225'
             cardType: VISA
             accountType: Credit
-            hostResponseText: APPROVED 00
+            receipt:
+              lines:
+                - '     Test Merchant      '
+                - '      300 S Wacker      '
+                - '         Loop,          '
+                - '                        '
+                - '                        '
+                - ' '
+                - 'TERM #          11000367'
+                - 'RECORD #         0656191'
+                - 'HOST INVOICE #    000038'
+                - 'HOST SEQ #    1720656191'
+                - 'MERCH'
+                - 'INVOICE inv_123456789012'
+                - '        34567890'
+                - '------------------------'
+                - 'CARD    ************0011'
+                - 'VISA             Contact'
+                - '07/10/2024      20:03:05'
+                - '------------------------'
+                - 'CLERK ID               1'
+                - '        PRE AUTH        '
+                - ''
+                - ''
+                - 'TOTAL         USD  $0.01'
+                - '------------------------'
+                - 'AUTH#:123456            '
+                - ''
+                - '      APPROVED 00      '
+                - '       THANK YOU       '
+                - ' '
+                - '     NO CARDHOLDER     '
+                - '      VERIFICATION      '
+                - ''
+                - ' '
+                - ' Visa                    '
+                - 'AID: A0000000031010     '
+                - 'TC: 43F4ACF64B07551A    '
+                - 'TVR: 8000008000         '
+                - 'TSI: 7800               '
+                - ''
+                - '  Retain this copy for  '
+                - '  statement validation  '
+                - ''
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '     CUSTOMER COPY     '
+                - ''
+                - '     Test Merchant      '
+                - '      300 S Wacker      '
+                - '         Loop,          '
+                - '                        '
+                - '                        '
+                - ' '
+                - 'TERM #          11000367'
+                - 'RECORD #         0656191'
+                - 'HOST INVOICE #    000038'
+                - 'HOST SEQ #    1720656191'
+                - 'MERCH'
+                - 'INVOICE inv_123456789012'
+                - '        34567890'
+                - '------------------------'
+                - 'CARD    ************0011'
+                - 'VISA             Contact'
+                - '07/10/2024      20:03:05'
+                - '------------------------'
+                - 'CLERK ID               1'
+                - '        PRE AUTH        '
+                - ''
+                - ''
+                - 'TOTAL         USD  $0.01'
+                - '------------------------'
+                - 'AUTH#:123456            '
+                - ''
+                - '      APPROVED 00      '
+                - '       THANK YOU       '
+                - ' '
+                - '     NO CARDHOLDER     '
+                - '      VERIFICATION      '
+                - ''
+                - ' '
+                - ' Visa                    '
+                - 'AID: A0000000031010     '
+                - 'TC: 43F4ACF64B07551A    '
+                - 'TVR: 8000008000         '
+                - 'TSI: 7800               '
+                - ''
+                - ''
+                - ''
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '                        '
+                - '     MERCHANT COPY     '
     UpdateTokenResponse:
       description: A successful response for a tokenized card update transaction.
       value:
@@ -4255,7 +4286,7 @@ components:
     RemoveTokenResponse:
       description: A successful response for a tokenized card removal transaction.
       value:
-        id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
+        id: ops_01J2F0ZJ2JW5B63CJFPXRGAB1S
         paymentMethod:
           id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
           type: Token
