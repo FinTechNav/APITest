@@ -1630,13 +1630,19 @@ components:
                   type: string
                   example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
           example:
-            id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+            id: pmt_tkn_01K5Y8S248TQYBKBHV1EQ1MMAR
             type: Token
             currency: USD
-            description: Token for John Doe's Visa
-            cardType: VISA
-            maskedCardNumber: '************0011'
-            cardExpDate: '1225'
+            billingContact:
+              name: John Doe
+              countryCode: US
+              zipCode: "30316"
+              address: 155 Walthall St. SE
+              state: GA
+              city: Atlanta
+            cardType: AMEX
+            maskedCardNumber: "3****6452"
+            cardExpDate: "1225"
         invoiceNumber:
           $ref: '#/components/schemas/InvoiceNumber'
         orderNumber:
