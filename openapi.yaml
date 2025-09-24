@@ -626,7 +626,7 @@ components:
         * `3020` - An unsupported transaction result was received.
         * `9998` - The system is not ready to process a transaction.
         * `9999` - An unknown error has occurred. If available, an auxiliary error code will be provided in the message.
-      Example: 0
+      example: 0
     ResultText:
       type: string
       description: A message describing the result code in more detail.
