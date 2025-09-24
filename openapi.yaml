@@ -1227,7 +1227,6 @@ components:
         - hasNextPage
         - hasPreviousPage
         - items
-    
     AccountHolderPaymentMethodsListResponse:
       type: object
       description: Paginated response containing account holder payment methods
@@ -1366,7 +1365,6 @@ components:
             cardType: AMEX
             maskedCardNumber: "3****6452"
             cardExpDate: "0826"
-    
     AccountHolder:
       type: object
       description: Account holder information associated with the transaction
@@ -1404,7 +1402,6 @@ components:
       required:
         - id
         - externalId
-
     BillingContact:
       type: object
       description: Billing contact information associated with the payment method
@@ -1427,7 +1424,6 @@ components:
         city:
           type: string
           example: Anytown
-
     TransactionsListResponse:
       type: object
       description: Paginated response containing transactions
@@ -1609,6 +1605,21 @@ components:
             - Pending
           description: The current status of the transaction
           example: Completed
+        accountHolder:
+          allOf:
+            - $ref: '#/components/schemas/AccountHolder'
+            - type: object
+              description: Account holder information. Always returned for transactions. For Card Not Present transactions, includes full contact details.
+          example:
+            id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+            externalId: usr_1234567890123
+            contact:
+              name: John Doe
+              countryCode: US
+              zipCode: '60606'
+              address: 300 S Wacker Dr
+              state: IL
+              city: Chicago
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
