@@ -1377,11 +1377,11 @@ components:
           example: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
         externalId:
           type: string
-          description: External account holder ID assigned by the integrator. Contact information for the account holder. Only returned for Card Not Present transactions.
+          description: External account holder ID assigned by the integrator. 
           example: usr_1234567890123
         contact:
           type: object
-          description: Contact information for the account holder
+          description: Contact information for the account holder. Only returned for Card Not Present transactions.
           properties:
             name:
               type: string
