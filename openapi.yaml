@@ -5396,15 +5396,30 @@ paths:
                     timestamp: '2025-05-27T18:49:31Z'
                     type: Sale
                     status: Completed
+                    accountHolder:
+                      id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+                      externalId: usr_1234567890123
+                      contact:
+                        name: John Doe
+                        countryCode: US
+                        zipCode: "60606"
+                        address: 300 S Wacker Dr
+                        state: IL
+                        city: Chicago
                     paymentMethod:
                       id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                       type: Token
-                      status: Completed
                       currency: USD
-                      description: Token for John Doe's Visa
-                      cardType: VISA
-                      maskedCardNumber: '************0011'
-                      cardExpDate: '1225'
+                      billingContact:
+                        name: John Doe
+                        countryCode: US
+                        zipCode: "12345"
+                        address: 123 Main St
+                        state: NY
+                        city: Anytown
+                      cardType: AMEX
+                      maskedCardNumber: "3****6452"
+                      cardExpDate: "1225"
                     invoiceNumber: inv_1234567890123456
                     orderNumber: order_number_1234
                     referenceId: ref_s192i49i
@@ -5415,26 +5430,29 @@ paths:
                     balanceAmount: 0
                     transactionResponses:
                       - responseCode: 1
-                        authCode: 123456
+                        authCode: "123456"
                         amountApproved: 1000
                         approvedAmountBreakdown:
-                          amountGoodsAndServices: 900
-                          tax: 100
+                          amountGoodsAndServices: 1000
+                          tax: 0
                           cashback: 0
                           tip: 0
                         paymentMethod:
                           id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                           type: Token
                           currency: USD
-                          description: Token for John Doe's Visa
-                          cardType: VISA
-                          maskedCardNumber: '************0011'
-                          cardExpDate: '1225'
-                        cardType: VISA
-                        avsResult: Y
-                        cvvResult: M
-                        accountType: Credit
-                        hostResponseText: APPROVED 00
+                          billingContact:
+                            name: John Doe
+                            countryCode: US
+                            zipCode: "12345"
+                            address: 123 Main St
+                            state: NY
+                            city: Anytown
+                          cardType: AMEX
+                          maskedCardNumber: "3****6452"
+                          cardExpDate: "1225"
+                        receipt:
+                          lines: []
         '400':
           description: Request Error
           content:
@@ -5618,7 +5636,6 @@ paths:
                   invoiceNumber: inv_1234567890123456
                   orderNumber: order_number_1234
                   referenceId: ref_s192i49i
-      responses:
         '200':
           description: A successful Card On File authorization response
           content:
@@ -5633,14 +5650,30 @@ paths:
                     timestamp: '2025-05-27T18:49:31Z'
                     type: Auth
                     status: Completed
+                    accountHolder:
+                      id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+                      externalId: usr_1234567890123
+                      contact:
+                        name: John Doe
+                        countryCode: US
+                        zipCode: "60606"
+                        address: 300 S Wacker Dr
+                        state: IL
+                        city: Chicago
                     paymentMethod:
                       id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                       type: Token
                       currency: USD
-                      description: Token for John Doe's Visa
-                      cardType: VISA
-                      maskedCardNumber: '************0011'
-                      cardExpDate: '1225'
+                      billingContact:
+                        name: John Doe
+                        countryCode: US
+                        zipCode: "12345"
+                        address: 123 Main St
+                        state: NY
+                        city: Anytown
+                      cardType: AMEX
+                      maskedCardNumber: "3****6452"
+                      cardExpDate: "1225"
                     invoiceNumber: inv_1234567890123456
                     orderNumber: order_number_1234
                     referenceId: ref_s192i49i
@@ -5651,26 +5684,29 @@ paths:
                     balanceAmount: 0
                     transactionResponses:
                       - responseCode: 1
-                        authCode: 123456
+                        authCode: "123456"
                         amountApproved: 1000
                         approvedAmountBreakdown:
-                          amountGoodsAndServices: 900
-                          tax: 100
+                          amountGoodsAndServices: 1000
+                          tax: 0
                           cashback: 0
                           tip: 0
                         paymentMethod:
                           id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                           type: Token
                           currency: USD
-                          description: Token for John Doe's Visa
-                          maskedCardNumber: '************0011'
-                          cardType: VISA
-                          cardExpDate: '1225'
-                        cardType: VISA
-                        avsResult: Y
-                        cvvResult: M
-                        accountType: Credit
-                        hostResponseText: APPROVED 00
+                          billingContact:
+                            name: John Doe
+                            countryCode: US
+                            zipCode: "12345"
+                            address: 123 Main St
+                            state: NY
+                            city: Anytown
+                          cardType: AMEX
+                          maskedCardNumber: "3****6452"
+                          cardExpDate: "1225"
+                        receipt:
+                          lines: []
         '400':
           description: Request Error
           content:
