@@ -4460,7 +4460,6 @@ paths:
                         description: Online Checkout Iframe
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-  
   /payment-methods/account-holder/{accountHolderId}:
     get:
       operationId: getAccountHolderPaymentMethods
