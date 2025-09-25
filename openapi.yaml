@@ -5636,6 +5636,7 @@ paths:
                   invoiceNumber: inv_1234567890123456
                   orderNumber: order_number_1234
                   referenceId: ref_s192i49i
+      responses:
         '200':
           description: A successful Card On File authorization response
           content:
