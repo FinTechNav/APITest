@@ -447,7 +447,7 @@ components:
             - '     CUSTOMER COPY      '
     ApprovedAmountBreakdown:
       type: object
-      description: A breakdown of approvedAmount, where each amounts approved on the payment terminal are returned separately.
+      description: A breakdown of approvedAmount, where each amounts approved on the payment terminal are returned separately. Only returned on Sale, Auth and Capture transactions.
       properties:
         amountGoodsAndServices:
           type: number
