@@ -250,6 +250,17 @@
       "timestamp": "2025-06-02T23:56:18.2102020Z",
       "type": "Sale",
       "status":"Completed",
+      "accountHolder": {
+        "id": "aho_01JRZPRGFF4J2SZC3HMDBYEN2J",
+        "externalId": "usr_1234567890123",
+        "contact": {
+          "name": "John Doe",
+          "countryCode": "US",
+          "zipCode": "60606",
+          "address": "300 S Wacker Dr",
+          "state": "IL",
+          "city": "Chicago"
+        }
       "referenceId": "ref_s192i49i",
       "orderNumber": "order_number_1234",
       "invoiceNumber": "inv_12345678",
@@ -270,6 +281,14 @@
             "id": "pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J",
             "type": "Token",
             "currency": "USD",
+            "billingContact": {
+              "name": "John Doe",
+              "countryCode": "US",
+              "zipCode": "12345",
+              "address": "123 Main St",
+              "state": "NY",
+              "city": "Anytown"
+            },
             "cardType": "VISA",
             "maskedCardNumber": "4****1111",
             "cardExpDate": "1225"
