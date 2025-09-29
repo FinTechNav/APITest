@@ -2012,6 +2012,11 @@ components:
             - Created
           description: The current status of the transaction
           example: Completed
+        accountHolder:
+          allOf:
+            - $ref: '#/components/schemas/AccountHolder'
+            - type: object
+              description: Account holder information. Always returned for transactions. For Card Not Present transactions, includes full contact details.
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -2048,6 +2053,9 @@ components:
         timestamp: '2025-05-27T18:49:31Z'
         type: Auth
         status: Completed
+        accountHolder:
+          id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+          externalId: usr_1234567890123
         paymentMethod:
           id: pmt_trm_01JRZPTMTBN41PC3VPQNZ5T3HF
           type: Physical
