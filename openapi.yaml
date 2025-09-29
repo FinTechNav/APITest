@@ -521,7 +521,7 @@ components:
       type: string
       maxLength: 20
       description: |
-        An optional alphanumeric invoice number for this transaction. If provided in the request, the same value will be populated in the response.
+        An optional alphanumeric invoice number for this transaction. If provided in the request, the same value will be populated in the response and will appear on the receipt.
 
         **Card Present Limit**: Maximum length is 20 characters. If this limit is exceeded, the API will return a validation error.
       example: inv_1234567890123456
