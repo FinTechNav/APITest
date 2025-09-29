@@ -1280,7 +1280,7 @@ components:
                 example: USD
               billingContact:
                 type: object
-                description: Billing contact information associated with the payment method
+                description: Billing contact information associated with the payment method. Not returned on card present transactions or on refunds, captures, etc. of card present transactions. 
                 properties:
                   name:
                     type: string
@@ -1404,7 +1404,7 @@ components:
         - externalId
     BillingContact:
       type: object
-      description: Billing contact information associated with the payment method
+      description: Billing contact information associated with the payment method. Not returned on card present transactions or on refunds, captures, etc. of card present transactions.
       properties:
         name:
           type: string
@@ -1461,6 +1461,16 @@ components:
             - id: trx_01JWBPE27KHY2K4J7A13ATQ786
               timestamp: '2025-05-27T18:49:31Z'
               type: Auth
+              accountHolder:
+                id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+                externalId: usr_1234567890123
+                contact:
+                  name: John Doe
+                  countryCode: US
+                  zipCode: "60606"
+                  address: 300 S Wacker Dr
+                  state: IL
+                  city: Chicago              
               paymentMethod:
                 id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
                 type: Virtual
