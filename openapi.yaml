@@ -5068,6 +5068,16 @@ paths:
                         requestedAmount: 1000
                         approvedAmount: 1000
                         balanceAmount: 0
+                        accountHolder:
+                          id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+                          externalId: usr_1234567890123
+                          contact:
+                            name: John Doe
+                            countryCode: US
+                            zipCode: "60606"
+                            address: 300 S Wacker Dr
+                            state: IL
+                            city: Chicago
                         paymentMethod:
                           id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
                           type: Virtual
@@ -5086,6 +5096,13 @@ paths:
                               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                               type: Token
                               currency: USD
+                              billingContact:
+                                name: John Doe
+                                countryCode: US
+                                zipCode: "12345"
+                                address: 123 Main St
+                                state: NY
+                                city: Anytown
                               description: Token for John Doe's Visa
                               cardType: VISA
                               maskedCardNumber: 4****1111
@@ -5102,6 +5119,16 @@ paths:
                         requestedAmount: 1000
                         approvedAmount: 1000
                         balanceAmount: 0
+                        accountHolder:
+                          id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+                          externalId: usr_1234567890123
+                          contact:
+                            name: John Doe
+                            countryCode: US
+                            zipCode: "60606"
+                            address: 300 S Wacker Dr
+                            state: IL
+                            city: Chicago
                         paymentMethod:
                           id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                           type: Token
@@ -5120,6 +5147,13 @@ paths:
                               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                               type: Token
                               currency: USD
+                              billingContact:
+                                name: John Doe
+                                countryCode: US
+                                zipCode: "12345"
+                                address: 123 Main St
+                                state: NY
+                                city: Anytown
                               description: Token for John Doe's Visa
                               cardType: VISA
                               maskedCardNumber: 4****1111
@@ -5146,6 +5180,16 @@ paths:
                         requestedAmount: 450
                         approvedAmount: 450
                         balanceAmount: 0
+                        accountHolder:
+                          id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+                          externalId: usr_1234567890123
+                          contact:
+                            name: John Doe
+                            countryCode: US
+                            zipCode: "60606"
+                            address: 300 S Wacker Dr
+                            state: IL
+                            city: Chicago                        
                         paymentMethod:
                           id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                           type: Token
@@ -5166,6 +5210,13 @@ paths:
                               type: Token
                               currency: USD
                               description: Token for John Doe's Visa
+                              billingContact:
+                                name: John Doe
+                                countryCode: US
+                                zipCode: "12345"
+                                address: 123 Main St
+                                state: NY
+                                city: Anytown
                               cardType: VISA
                               maskedCardNumber: '************0011'
                               cardExpDate: '1225'
@@ -5181,6 +5232,16 @@ paths:
                         requestedAmount: 1000
                         approvedAmount: 1000
                         balanceAmount: 0
+                        accountHolder:
+                          id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+                          externalId: usr_1234567890123
+                          contact:
+                            name: John Doe
+                            countryCode: US
+                            zipCode: "60606"
+                            address: 300 S Wacker Dr
+                            state: IL
+                            city: Chicago
                         paymentMethod:
                           id: pmt_vrt_01JRZPTWS99Z7RB57Q1CVWSWDS
                           type: Virtual
@@ -5200,6 +5261,13 @@ paths:
                               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
                               type: Token
                               currency: USD
+                              billingContact:
+                                name: John Doe
+                                countryCode: US
+                                zipCode: "12345"
+                                address: 123 Main St
+                                state: NY
+                                city: Anytown
                               description: Token for John Doe's Visa
                               cardType: VISA
                               maskedCardNumber: '************0011'
