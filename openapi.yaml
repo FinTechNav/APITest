@@ -733,7 +733,7 @@ components:
         authCode:
           type: string
           description: The authorization code provided by the card issuer, confirming transaction approval.
-          example: 123456
+          example: '123456'
         amountApproved:
           type: number
           description: The amount approved for this transaction response.
@@ -2078,7 +2078,7 @@ components:
         approvedAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: 123456
+            authCode: '123456'
             amountApproved: 0
             paymentMethod:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2277,7 +2277,7 @@ components:
                 city: Chicago
             transactionResponses:
               - responseCode: 1
-                authCode: 123456
+                authCode: '123456'
                 amountApproved: 1000
                 approvedAmountBreakdown:
                   amountGoodsAndServices: 900
@@ -2354,7 +2354,7 @@ components:
                 city: Chicago
             transactionResponses:
               - responseCode: 1
-                authCode: 123456
+                authCode: '123456'
                 amountApproved: 1000
                 approvedAmountBreakdown:
                   amountGoodsAndServices: 900
@@ -2440,7 +2440,7 @@ components:
                 city: Chicago
             transactionResponses:
               - responseCode: 1
-                authCode: 123456
+                authCode: '123456'
                 amountApproved: 1000
                 paymentMethod:
                   id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2522,7 +2522,7 @@ components:
                 city: Chicago
             transactionResponses:
               - responseCode: 1
-                authCode: 123456
+                authCode: '123456'
                 amountApproved: 1000
                 paymentMethod:
                   id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2604,7 +2604,7 @@ components:
                 city: Chicago
             transactionResponses:
               - responseCode: 1
-                authCode: 123456
+                authCode: '123456'
                 amountApproved: 1000
                 paymentMethod:
                   id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2675,7 +2675,7 @@ components:
             approvedAmount: 0
             transactionResponses:
               - responseCode: 1
-                authCode: 123456
+                authCode: '123456'
                 amountApproved: 0
                 paymentMethod:
                   id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -2830,7 +2830,7 @@ components:
               balanceAmount: 0
               transactionResponses:
                 - responseCode: 1
-                  authCode: 123456
+                  authCode: '123456'
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -2982,7 +2982,7 @@ components:
               balanceAmount: 0
               transactionResponses:
                 - responseCode: 1
-                  authCode: 123456
+                  authCode: '123456'
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -3137,7 +3137,7 @@ components:
               approvedAmount: 1000
               transactionResponses:
                 - responseCode: 1
-                  authCode: 123456
+                  authCode: '123456'
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -3288,7 +3288,7 @@ components:
               approvedAmount: 1000
               transactionResponses:
                 - responseCode: 1
-                  authCode: 123456
+                  authCode: '123456'
                   amountApproved: 1000
                   paymentMethod:
                     id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -3360,7 +3360,7 @@ components:
               approvedAmount: 1000
               transactionResponses:
                 - responseCode: 1
-                  authCode: 123456
+                  authCode: '123456'
                   amountApproved: 1000
                   approvedAmountBreakdown:
                     amountGoodsAndServices: 900
@@ -3497,7 +3497,7 @@ components:
               approvedAmount: 0
               transactionResponses:
                 - responseCode: 1
-                  authCode: 123456
+                  authCode: '123456'
                   amountApproved: 0
                   paymentMethod:
                     id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -3631,7 +3631,7 @@ components:
         balanceAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: 123456
+            authCode: '123456'
             amountApproved: 1000
             approvedAmountBreakdown:
               amountGoodsAndServices: 1000
@@ -3771,7 +3771,7 @@ components:
         balanceAmount: 0
         transactionResponses:
           - responseCode: 1
-            authCode: 123456
+            authCode: '123456'
             amountApproved: 1000
             approvedAmountBreakdown:
               amountGoodsAndServices: 1000
@@ -3910,7 +3910,7 @@ components:
         approvedAmount: 1000
         transactionResponses:
           - responseCode: 1
-            authCode: 123456
+            authCode: '123456'
             amountApproved: 1000
             approvedAmountBreakdown:
               amountGoodsAndServices: 1000
@@ -4036,7 +4036,7 @@ components:
         approvedAmount: 1000
         transactionResponses:
           - responseCode: 1
-            authCode: 123456
+            authCode: '123456'
             amountApproved: 1000
             paymentMethod:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
@@ -4069,7 +4069,7 @@ components:
         approvedAmount: 1000
         transactionResponses:
           - responseCode: 1
-            authCode: 123456
+            authCode: '123456'
             amountApproved: 1000
             paymentMethod:
               id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
