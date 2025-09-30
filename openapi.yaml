@@ -1528,6 +1528,16 @@ components:
             - $ref: '#/components/schemas/AccountHolder'
             - type: object
               description: Account holder information. Always returned for transactions. The contact field is only included for Card Not Present transactions.
+          example:
+            id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+            externalId: usr_1234567890123
+            contact:
+              name: John Doe
+              countryCode: US
+              zipCode: '60606'
+              address: 300 S Wacker Dr
+              state: IL
+              city: Chicago
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1741,6 +1751,16 @@ components:
             - $ref: '#/components/schemas/AccountHolder'
             - type: object
               description: Account holder information. Always returned for transactions. The contact field is only included for Card Not Present transactions where this data is collected.
+          example:
+            id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+            externalId: usr_1234567890123
+            contact:
+              name: John Doe
+              countryCode: US
+              zipCode: '60606'
+              address: 300 S Wacker Dr
+              state: IL
+              city: Chicago
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1797,6 +1817,80 @@ components:
               properties:
                 lines:
                   description: The receipt lines.
+          example:
+            lines:
+              - '     Test Merchant      '
+              - '      300 S Wacker      '
+              - '         Loop,          '
+              - '                        '
+              - '                        '
+              - 'TERM #          11000367'
+              - 'RECORD #         0656191'
+              - 'HOST INVOICE #    000038'
+              - 'HOST SEQ #    1720656191'
+              - 'MERCH                   '
+              - 'INVOICE inv_123456789012'
+              - '        3456'
+              - '------------------------'
+              - CARD    ************0011
+              - VISA             Contact
+              - 07/10/2024      20:03:05
+              - '------------------------'
+              - '                        '
+              - '   PRE AUTH COMPLETE    '
+              - '                        '
+              - TOTAL         USD $10.00
+              - '------------------------'
+              - AUTH#:123456       B:171
+              - '                        '
+              - '      APPROVED 00       '
+              - '       THANK YOU        '
+              - '                        '
+              - '      Visa Credit       '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '     MERCHANT COPY      '
+              - '     Test Merchant      '
+              - '      300 S Wacker      '
+              - '         Loop,          '
+              - '                        '
+              - '                        '
+              - 'TERM #          11000367'
+              - 'RECORD #         0656191'
+              - 'HOST INVOICE #    000038'
+              - 'HOST SEQ #    1720656191'
+              - 'MERCH                   '
+              - 'INVOICE inv_123456789012'
+              - '        3456'
+              - '------------------------'
+              - CARD    ************0011
+              - VISA             Contact
+              - 07/10/2024      20:03:05
+              - '------------------------'
+              - '                        '
+              - '   PRE AUTH COMPLETE    '
+              - '                        '
+              - TOTAL         USD $10.00
+              - '------------------------'
+              - AUTH#:123456       B:171
+              - '                        '
+              - '      APPROVED 00       '
+              - '       THANK YOU        '
+              - '                        '
+              - '      Visa Credit       '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '     CUSTOMER COPY      '
     RefundResponse:
       type: object
       description: Represents the response to a refund request.
@@ -1833,6 +1927,16 @@ components:
             - $ref: '#/components/schemas/AccountHolder'
             - type: object
               description: Account holder information. Always returned for transactions. The contact field is only included for Card Not Present transactions where this data is collected.
+          example:
+            id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+            externalId: usr_1234567890123
+            contact:
+              name: John Doe
+              countryCode: US
+              zipCode: '60606'
+              address: 300 S Wacker Dr
+              state: IL
+              city: Chicago
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1889,6 +1993,9 @@ components:
               properties:
                 lines:
                   description: The receipt lines.
+          example: 
+            receipt:
+              lines: []
     VoidResponse:
       type: object
       description: Represents the response to a void request.
@@ -1925,6 +2032,16 @@ components:
             - $ref: '#/components/schemas/AccountHolder'
             - type: object
               description: Account holder information. Always returned for transactions. The contact field is only included for Card Not Present transactions where this data is collected.
+          example:
+            id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+            externalId: usr_1234567890123
+            contact:
+              name: John Doe
+              countryCode: US
+              zipCode: '60606'
+              address: 300 S Wacker Dr
+              state: IL
+              city: Chicago
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -1981,16 +2098,78 @@ components:
               properties:
                 lines:
                   description: The receipt lines.
-          example:  # ADD THIS AT PARENT LEVEL
+          example:
             lines:
-              - "     Test Merchant      "
-              - "      300 S Wacker      "
-              - "         Loop,          "
-              - "------------------------"
-              - "       VOID SALE        "
-              - "TOTAL         USD $10.00"
-              - "------------------------"
-              - "      APPROVED 00       "
+              - '     Test Merchant      '
+              - '      300 S Wacker      '
+              - '         Loop,          '
+              - '                        '
+              - '                        '
+              - 'TERM #          11000367'
+              - 'RECORD #         0656191'
+              - 'HOST INVOICE #    000038'
+              - 'HOST SEQ #    1720656191'
+              - 'MERCH                   '
+              - 'INVOICE inv_123456789012'
+              - '        3456'
+              - '------------------------'
+              - CARD    ************0011
+              - VISA             Contact
+              - 07/10/2024      20:03:05
+              - '------------------------'
+              - '       VOID SALE        '
+              - '                        '
+              - TOTAL         USD $10.00
+              - '------------------------'
+              - AUTH#:123456       B:171
+              - '                        '
+              - '      APPROVED 00       '
+              - '       THANK YOU        '
+              - '                        '
+              - '      Visa Credit       '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '     MERCHANT COPY      '
+              - '     Test Merchant      '
+              - '      300 S Wacker      '
+              - '         Loop,          '
+              - '                        '
+              - '                        '
+              - 'TERM #          11000367'
+              - 'RECORD #         0656191'
+              - 'HOST INVOICE #    000038'
+              - 'HOST SEQ #    1720656191'
+              - 'MERCH                   '
+              - 'INVOICE inv_123456789012'
+              - '        3456'
+              - '------------------------'
+              - CARD    ************0011
+              - VISA             Contact
+              - 07/10/2024      20:03:05
+              - '------------------------'
+              - '       VOID SALE        '
+              - '                        '
+              - TOTAL         USD $10.00
+              - '------------------------'
+              - AUTH#:123456       B:171
+              - '                        '
+              - '      APPROVED 00       '
+              - '       THANK YOU        '
+              - '                        '
+              - '      Visa Credit       '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '                        '
+              - '     CUSTOMER COPY      '
     CardOnFileAddResponse:
       type: object
       description: Represents the response to a physical card tokenization request.
@@ -2027,6 +2206,16 @@ components:
             - $ref: '#/components/schemas/AccountHolder'
             - type: object
               description: Account holder information. Always returned for transactions. For Card Not Present transactions, includes full contact details.
+          example:
+            id: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
+            externalId: usr_1234567890123
+            contact:
+              name: John Doe
+              countryCode: US
+              zipCode: '60606'
+              address: 300 S Wacker Dr
+              state: IL
+              city: Chicago
         paymentMethod:
           allOf:
             - $ref: '#/components/schemas/PaymentMethodDetails'
@@ -2191,12 +2380,12 @@ components:
                 id:
                   type: string
                   example: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-              example:
-                id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
-                type: Token
-                currency: USD
-                cardType: VISA
-                dateDeleted: '2025-05-11T17:40:33.7688544Z'
+          example:
+            id: pmt_tkn_01JRZPRGFF4J2SZC3HMDBYEN2J
+            type: Token
+            currency: USD
+            cardType: VISA
+            dateDeleted: '2025-05-11T17:40:33.7688544Z'
         referenceId:
           $ref: '#/components/schemas/ReferenceIdForResponse'
         resultCode:
