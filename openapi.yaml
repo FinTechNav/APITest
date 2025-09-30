@@ -934,9 +934,11 @@ components:
           $ref: '#/components/schemas/OrderNumber'
       oneOf:
         - title: Capture using Transaction ID
+          type: string
           required:
             - originalTransactionId
         - title: Capture using Reference ID
+          type: string
           required:
             - originalReferenceId
     RefundRequest:
@@ -957,9 +959,11 @@ components:
           $ref: '#/components/schemas/OrderNumber'
       oneOf:
         - title: Refund using Transaction ID
+          type: string
           required:
             - originalTransactionId
         - title: Refund using Reference ID
+          type: string
           required:
             - originalReferenceId
     VoidRequest:
@@ -978,9 +982,11 @@ components:
           $ref: '#/components/schemas/OrderNumber'
       oneOf:
         - title: Void using Transaction ID
+          type: string
           required:
             - originalTransactionId
         - title: Void using Reference ID
+          type: string
           required:
             - originalReferenceId
     UnreferencedPhysicalRefundRequest:
@@ -1816,6 +1822,9 @@ components:
                 The receipt for the capture transaction, if available. If the original transaction was a Card Present transaction, the receipt will be included. For Card Not Present transactions, the receipt will be empty.
               properties:
                 lines:
+                  type: array
+                  items:
+                    type: string
                   description: The receipt lines.
           example:
             lines:
@@ -1992,6 +2001,9 @@ components:
                 The receipt for the refund transaction, if available. If the original transaction was a Card Present transaction, the receipt will be included. For Card Not Present transactions, the receipt will be empty.
               properties:
                 lines:
+                  type: array
+                  items:
+                    type: string
                   description: The receipt lines.
           example: 
             receipt:
@@ -2097,6 +2109,9 @@ components:
                 The receipt for the void transaction, if available. If the original transaction was a Card Present transaction, the receipt will be included. For Card Not Present transactions, the receipt will be empty.
               properties:
                 lines:
+                  type: array
+                  items:
+                    type: string
                   description: The receipt lines.
           example:
             lines:
@@ -4804,7 +4819,8 @@ paths:
                     example: 2025-05-29T20:07:50.4723483Z
                   errorDetails:
                     type: array
-                    items: {}
+                    items:
+                      $ref: '#/components/schemas/ErrorDetail'
                     example: []
               examples:
                 missingApiKey:
@@ -4841,7 +4857,8 @@ paths:
                     example: 2025-09-15T20:12:27.8469482Z
                   errorDetails:
                     type: array
-                    items: {}
+                    items:
+                      $ref: '#/components/schemas/ErrorDetail'
                     example: []
               examples:
                 noUserProvided:
