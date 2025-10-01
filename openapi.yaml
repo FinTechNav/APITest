@@ -4681,7 +4681,7 @@ paths:
       description: |
         Returns a paginated list of tokenized payment methods (cards) associated with a specific account holder.
         
-        You can specify either an internal account holder ID (assigned by our system) or an external account holder ID (assigned by your POS or CRM system).
+        You can specify either an internal account holder ID (assigned by our system) or an external account holder ID (assigned by your system).
         
         The endpoint supports filtering and sorting to help you organize and retrieve payment methods efficiently.
       parameters:
@@ -4691,7 +4691,7 @@ paths:
           description: |
             The account holder ID to retrieve payment methods for. Can be either:
             - Internal ID format: `aho_01JRZPRGFF4J2SZC3HMDBYEN2J` (assigned by our system)
-            - External ID format: `usr_1757945457790` (assigned by your POS/CRM system)
+            - External ID format: `usr_1757945457790` (assigned by your system)
           schema:
             type: string
           example: aho_01JRZPRGFF4J2SZC3HMDBYEN2J
