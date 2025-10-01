@@ -830,8 +830,7 @@ components:
         amount:
           $ref: '#/components/schemas/Amount'
         amountBreakdown:
-          allOf:
-            - $ref: '#/components/schemas/AmountBreakdown'
+          $ref: '#/components/schemas/AmountBreakdown'
           example:
             amountGoodsAndServices: 900
             tax: 100
@@ -2449,8 +2448,7 @@ components:
             type: sale.completed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          allOf:
-            - $ref: '#/components/schemas/TransactionResponseObject'
+          $ref: '#/components/schemas/TransactionResponseObject'
           example:
             id: trx_01J2F0EKHC7HY2R93C8ENBD1FG
             timestamp: '2025-05-27T18:49:31Z'
@@ -2526,8 +2524,7 @@ components:
             type: auth.completed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          allOf:
-            - $ref: '#/components/schemas/TransactionResponseObject'
+          $ref: '#/components/schemas/TransactionResponseObject'
           example:
             id: trx_01J2F0EKHC7HY2R93C8ENBD1FG
             timestamp: '2025-05-27T18:49:31Z'
@@ -2603,8 +2600,7 @@ components:
             type: capture.completed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          allOf:
-            - $ref: '#/components/schemas/CaptureResponse'
+          $ref: '#/components/schemas/CaptureResponse'
           example:
             id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
             timestamp: '2025-05-27T18:49:31Z'
@@ -2685,8 +2681,7 @@ components:
             type: refund.completed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          allOf:
-            - $ref: '#/components/schemas/RefundResponse'
+          $ref: '#/components/schemas/RefundResponse'
           example:
             id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
             timestamp: '2025-05-27T18:49:31Z'
@@ -2767,8 +2762,7 @@ components:
             type: void.completed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          allOf:
-            - $ref: '#/components/schemas/VoidResponse'
+          $ref: '#/components/schemas/VoidResponse'
           example:
             id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
             timestamp: '2025-05-27T18:49:31Z'
@@ -2918,8 +2912,7 @@ components:
             type: token.updated
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          allOf:
-            - $ref: '#/components/schemas/CardOnFileUpdateResponse'
+          $ref: '#/components/schemas/CardOnFileUpdateResponse'
           example:
             id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
             paymentMethod:
@@ -2960,8 +2953,7 @@ components:
             type: token.removed
             timestamp: '2025-04-16T14:30:00Z'
         originalResponse:
-          allOf:
-            - $ref: '#/components/schemas/CardOnFileRemoveResponse'
+          $ref: '#/components/schemas/CardOnFileRemoveResponse'
           example:
             id: trx_01J2F0ZJ2JW5B63CJFPXRGAB1S
             paymentMethod:
